@@ -170,7 +170,7 @@ app.post('/api/login', async (req, res, next) =>
   var ln = '';
 
   const { login, password } = req.body;
-  const connectionString = 'postgres://jangqtdalxqjzp:f7a7330ff115df87fc6d43e36533cf8d7b0c75c8218c489e7cab440d3fcb6734@ec2-54-91-223-99.compute-1.amazonaws.com:5432/d75o8gl9f67ouf';
+  const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
     connectionString: connectionString,
