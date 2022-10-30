@@ -191,16 +191,46 @@ app.post('/api/login', async (req, res, next) =>
     fn = now.rows[0]["firstname"];
     ln = now.rows[0]["lastname"];
   }
-/*
-  client.query('SELECT * FROM users;', (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row)); 
-    }
-    client.end();
-  });
-  */
+  var ret = { id:id, firstName:fn, lastName:ln, error:''};
+  res.status(200).json(ret);
+});
 
+app.post('/api/register', async (req, res, next) => 
+{
+  // incoming: login, password
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+  var id = -1;
+  var fn = '';
+  var ln = '';
+
+  const { login, password, email, firstname, lastname, securityquestion, securityanswer } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+  await client.connect();
+  const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
+  const valueslogincheck = [login];
+  const logincheck = await client.query(duplicatelogin, valueslogincheck);
+  
+  if(logincheck.rowCount == 0)
+  {
+    const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
+    const values = [login, password, email, firstname, lastname, securityquestion, securityanswer];
+    const now = await client.query(text, values);
+  }
+  await client.end();
+
+  if(now.rowCount > 0){
+    console.log(now.rows[0]["id"]);
+    id = now.rows[0]["id"];
+    fn = now.rows[0]["firstname"];
+    ln = now.rows[0]["lastname"];
+  }
   var ret = { id:id, firstName:fn, lastName:ln, error:''};
   res.status(200).json(ret);
 });
