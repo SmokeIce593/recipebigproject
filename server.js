@@ -170,9 +170,7 @@ app.post('/api/login', async (req, res, next) =>
   var ln = '';
 
   const { login, password } = req.body;
-
-  require('dotenv').config();
-  const connectionString = process.env.DATABASE_URL
+  const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
     connectionString: connectionString,
