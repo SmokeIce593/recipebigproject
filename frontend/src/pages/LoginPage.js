@@ -8,17 +8,9 @@ import Login from '../components/Login';
 const LoginPage = () =>
 {
     return(
-      <div className="main-container" style={{height:'100vh'}} >
-        <div class="block" style={{"height":"400px;"}}>
-          <div className="centered">
-            <div style={{display: 'flex', justifyContent:'center', alignItems:'center' , height:'50vh'}}>
-              <PageTitle />
-            </div>
-            <div class="child">
-              <Login />
-            </div>  
-          </div>
-        </div>
+      <div className='main-container'>
+        <PageTitle />
+        <Login />
       </div>
     );
 };
