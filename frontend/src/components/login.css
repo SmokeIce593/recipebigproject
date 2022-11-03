@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:400");
+
+html {background-color: #3da0a6}
+
+img{
+	max-width: 100%;
+	height:auto;
+}
+
+.loginbutton{
+	position: relative;
+    height: 60px;
+    width: 370px;
+    background-color: #F87227;
+    border-radius: 10px;
+    font-size: 36px;
+    margin-top: 4%;
+    margin-bottom: 2%;
+        display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.registerbutton{
+	position: inline-block;
+    height: 60px;
+    width: 370px;
+    background-color: #F87227;
+    border-radius: 10px;
+    font-size: 36px;
+    margin-top: 4%;
+    margin-left: 11%;
+}
+
+
+.loginBox{
+	position: relative;
+    background-color: white;
+    border: 1px solid;
+    border-color: black;
+    border-radius: 21px;
+    height: 466px;
+    width: 518px;
+    margin-left: 5%;
+}
+
+.title{
+    display: flex;
+    flex-direction: column;
+    font-size: 36px;
+    min-width: 122px;
+    text-align: center;
+    margin-top: 4%;
+}
+
+.input{
+	height: 60px;
+	width: 370px;
+	background-color: #D9D9D9;
+	border-radius: 10px;
+	margin-top: 4%;
+	margin-bottom: 4%;
+	display: flex;
+    	flex-direction: column;
+	justify-content: center;
+	font-size: 36px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.error{
+	color: red;
+	margin-left: 25%;
+}
