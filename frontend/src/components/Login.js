@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { Link } from "react-router-dom";
 function Login()
 {
 
@@ -68,6 +68,7 @@ function Login()
           onClick={doLogin} />
         </form>
         <span id="loginResult">{message}</span>
+        <Link to="/register">Register</Link>
      </div>
     );
 };
