@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './login.css';
 
 function Login()
 {
@@ -56,19 +57,28 @@ function Login()
         }    
     };
 
+    const goRegister = async event=>
+    {
+        window.location.href = '/register';
+    }
+
     return(
-      <div id="loginDiv">
-        <form onSubmit={doLogin}>
-        <span id="inner-title" >Log In</span><br />
-        <input type="text" id="loginName" placeholder="Username" 
-  ref={(c) => loginName = c} /><br />
-<input type="password" id="loginPassword" placeholder="Password" 
-  ref={(c) => loginPassword = c} /><br />
-        <input type="submit" id="loginButton" class="buttons" value = "Log in"
-          onClick={doLogin} />
+      <div id="loginDiv" >
+        <form onSubmit={doLogin} className="loginBox">
+            <span id="inner-title" className="title">Log In</span><br />
+            <input type="text" id="loginName" placeholder="Username" className="input"
+                ref={(c) => loginName = c} /><br />
+            <input type="password" id="loginPassword" placeholder="Password" className="input"
+                ref={(c) => loginPassword = c} /><br />
+            <input type="submit" id="loginButton" className="loginbutton" value ="Log In"
+                onClick={doLogin} />
+            <span id="loginResult" className = "error">{message}</span>
+
         </form>
-        <span id="loginResult">{message}</span>
+        <input type="button" id="registerButton" className="registerbutton" value="Register" 
+                onClick={goRegister}/>
      </div>
+
     );
 };
 
