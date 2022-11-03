@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
@@ -159,80 +160,79 @@ app.post('/api/addcard', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.post('/api/login', async (req, res, next) => 
-{
-  // incoming: login, password
-  // outgoing: id, firstName, lastName, error
-	
-  var error = '';
-  var id = -1;
-  var fn = '';
-  var ln = '';
-
-  const { login, password } = req.body;
-  const connectionString = process.env.DATABASE_URL;
-
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: { rejectUnauthorized: false }
-  });
-
-  await client.connect();
-  const text = 'SELECT * FROM users WHERE username = $1 AND password = $2';
-  const values = [login, password];
-  const now = await client.query(text, values);
-  await client.end();
-
-  
-
-  if(now.rowCount > 0){
-    console.log(now.rows[0]["id"]);
-    id = now.rows[0]["id"];
-    fn = now.rows[0]["firstname"];
-    ln = now.rows[0]["lastname"];
-  }
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
-  res.status(200).json(ret);
-});
-
 app.post('/api/register', async (req, res, next) => 
 {
-  // incoming: login, password
-  // outgoing: id, firstName, lastName, error
-	
-  var error = '';
-  var id = -1;
-  var fn = '';
-  var ln = '';
+  const login = req.body.name;
+  const hashPass = await bcrypt.hash(req.body.password,10);
+  const email = req.body.email;
+  const firstname = req.body.fn;
+  const lastname = req.body.ln;
+  const securityquestion = req.body.sques;
+  const securityanswer = req.body.sans;
 
-  const { login, password, email, firstname, lastname, securityquestion, securityanswer } = req.body;
-  const connectionString = process.env.DATABASE_URL;
 
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: { rejectUnauthorized: false }
-  });
-  await client.connect();
-  const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
-  const valueslogincheck = [login];
-  const logincheck = await client.query(duplicatelogin, valueslogincheck);
-  
-  if(logincheck.rowCount == 0)
-  {
-    const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
-    const values = [login, password, email, firstname, lastname, securityquestion, securityanswer];
-    const now = await client.query(text, values);
-  }
-  await client.end();
+  db.getConnection (async (err, connection) => {
+    if (err) throw (err)
 
-  if(now.rowCount > 0){
-    console.log(now.rows[0]["id"]);
-    id = now.rows[0]["id"];
-    fn = now.rows[0]["firstname"];
-    ln = now.rows[0]["lastname"];
-  }
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
-  res.status(200).json(ret);
+    const sqlSearch = "SELECT * FROM users WHERE user = ?"
+    const search_query = mysql.format(sqlSearch, [login])
+
+    const sqlInsert = "INSERT INTO users VALUES (0,?,?,?,?,?)"
+    const insert_query = mysql.format(sqlInsert, [login, hashPass, email,securityquestion,securityanswer])
+    
+    await connection.query (search_query, async (err, result) => {
+      if (err) throw (err)
+        console.log("-------> Search Results")
+        console.log(result.length)
+      if (result.length != 0) {
+        connection.release()
+        console.log("-------> User already exists")
+        res.sendStatus(409) 
+      } 
+      else {
+        await connection.query (insert_query, (err, result)=> {
+          connection.release()
+          
+          if (err) throw (err)
+          console.log ("------->Created new User")
+          console.log(result.insertId)
+          res.sendStatus(201)
+        })
+      }
+    })
+  })
+});
+
+app.post('/api/login', async (req, res, next) => 
+{
+  const user = req.body.name
+  const password = req.body.password;
+  db.getConnection (async (err, connection)=> {
+    if (err) throw (err)
+    const sqlSearch = "SELECT * from users where username = ?"
+    const sql_query = mysql.format(sqlSearch, [user])
+
+    await connection.query (search_query, async (err, result)=> {
+      connection.release ()
+      if (err) throw (err)
+      if (result.length == 0) {
+        console.log("------->User does not exist")
+        res.sendStatus(404)
+      }
+      else {
+        const hashPass = result[0].password
+
+        if (await bcrypt.compare(password, hashPass)) {
+          console.log("------->Login Successful")
+          res.send('${username} is loggin in!')
+        }
+        else {
+          console.log ("-------> Password Incorrect")
+          res.send("Password incorrect!")
+        }
+      }
+    })
+  })
 });
 
 app.post('/api/searchcards', async (req, res, next) => 
