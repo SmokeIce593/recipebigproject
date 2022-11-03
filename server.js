@@ -208,6 +208,7 @@ app.post('/api/register', async (req, res, next) =>
   const { login, password, email, firstname, lastname, securityquestion, securityanswer } = req.body;
   const connectionString = process.env.DATABASE_URL;
 
+  //console.log(login + password + email + firstname + lastname + securityquestion + securityanswer);
   const client = new Client({
     connectionString: connectionString,
     ssl: { rejectUnauthorized: false }
@@ -222,15 +223,13 @@ app.post('/api/register', async (req, res, next) =>
     const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
     const values = [login, password, email, firstname, lastname, securityquestion, securityanswer];
     const now = await client.query(text, values);
+  
+    // Rather than this need to do error tracking with sql query
+    id = 100;
   }
   await client.end();
 
-  if(now.rowCount > 0){
-    console.log(now.rows[0]["id"]);
-    id = now.rows[0]["id"];
-    fn = now.rows[0]["firstname"];
-    ln = now.rows[0]["lastname"];
-  }
+  
   var ret = { id:id, firstName:fn, lastName:ln, error:''};
   res.status(200).json(ret);
 });
