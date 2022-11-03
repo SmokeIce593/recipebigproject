@@ -57,7 +57,7 @@ function Login()
         }    
     };
 
-    const goRegister = async event=>
+const goRegister = async event=>
     {
         window.location.href = '/register';
     }

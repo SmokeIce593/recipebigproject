@@ -24,14 +24,16 @@ img{
 }
 
 .registerbutton{
-	position: inline-block;
+	position: right;
     height: 60px;
     width: 370px;
     background-color: #F87227;
     border-radius: 10px;
     font-size: 36px;
     margin-top: 4%;
-    margin-left: 11%;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 
@@ -43,7 +45,9 @@ img{
     border-radius: 21px;
     height: 466px;
     width: 518px;
-    margin-left: 5%;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .title{
@@ -72,5 +76,7 @@ img{
 
 .error{
 	color: red;
-	margin-left: 25%;
+	justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
 }
