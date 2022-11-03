@@ -1,9 +1,10 @@
 import React from 'react';
+const logo = new URL("/public/logo.png",import.meta.url);
 
 function PageTitle()
 {
    return(
-     <h1 id="title">COP 4331 MERN Stack Demo</h1>
+     <img src = {logo} alt="background"/> 
    );
 };
 
