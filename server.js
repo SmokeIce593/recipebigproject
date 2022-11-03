@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 const cors = require('cors');
 const path = require('path');
 const { Client } = require('pg')
@@ -178,14 +179,14 @@ app.post('/api/login', async (req, res, next) =>
   });
 
   await client.connect();
-  const text = 'SELECT * FROM users WHERE username = $1 AND password = $2';
-  const values = [login, password];
+  const text = 'SELECT * FROM users WHERE username = $1';
+  const values = [login];
   const now = await client.query(text, values);
   await client.end();
 
   
 
-  if(now.rowCount > 0){
+  if(now.rowCount > 0 && await bcrypt.compare(password, now.rows[0]["password"])){
     console.log(now.rows[0]["id"]);
     id = now.rows[0]["id"];
     fn = now.rows[0]["firstname"];
@@ -208,6 +209,7 @@ app.post('/api/register', async (req, res, next) =>
   const { login, password, email, firstname, lastname, securityquestion, securityanswer } = req.body;
   const connectionString = process.env.DATABASE_URL;
 
+  const hashed = await bcrypt.hash(password, 10);
   //console.log(login + password + email + firstname + lastname + securityquestion + securityanswer);
   const client = new Client({
     connectionString: connectionString,
@@ -221,7 +223,7 @@ app.post('/api/register', async (req, res, next) =>
   if(logincheck.rowCount == 0)
   {
     const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
-    const values = [login, password, email, firstname, lastname, securityquestion, securityanswer];
+    const values = [login, hashed, email, firstname, lastname, securityquestion, securityanswer];
     const now = await client.query(text, values);
   
     // Rather than this need to do error tracking with sql query
