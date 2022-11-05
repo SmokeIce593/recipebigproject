@@ -271,7 +271,7 @@ app.post('/api/savetags', async (req, res, next) =>
   }
   await client.end();
   
-  var ret = { id:id, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
+  var ret = { id:fkrecipeid, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
   res.status(200).json(ret);
 });
 
@@ -309,7 +309,7 @@ app.post('/api/savecategory', async (req, res, next) =>
   }
   await client.end();
   
-  var ret = { id:id, cn:categoryname, cc:categorycolor, error:'' };
+  var ret = { id:fkrecipeid, cn:categoryname, cc:categorycolor, error:'' };
   res.status(200).json(ret);
 });
 
@@ -340,7 +340,7 @@ app.delete('/api/deletetags', async (req, res, next) =>
   id = 100;
   await client.end();
   
-  var ret = { id:id, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
+  var ret = { id:fkrecipeid, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
   res.status(200).json(ret);
 });
 
@@ -370,7 +370,43 @@ app.delete('/api/deletecategory', async (req, res, next) =>
   id = 100;
   await client.end();
   
-  var ret = { id:id, cn:categoryname, cc:categorycolor, error:'' };
+  var ret = { id:fkrecipeid, cn:categoryname, cc:categorycolor, error:'' };
+  res.status(200).json(ret);
+});
+
+app.delete('/api/deleterecipe', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+  var id = -1;
+  var cn = '';
+  var cc = '';
+
+  const { id, recipe } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await client.connect();
+  const text = 'DELETE FROM recipe WHERE id = $1';
+  const value = [id];
+  const now = await client.query(text, value);
+  
+  const tagtext = 'DELETE FROM tags WHERE fkrecipeid = $1';
+  const tagvalue = [id];
+  const tagnow = await client.query(tagtext, tagvalue);
+
+  const cattext = 'DELETE FROM category WHERE fkrecipeid = $1';
+  const catvalue = [id];
+  const catnow = await client.query(cattext, catvalue);
+  await client.end();
+  
+  var ret = { id:fkrecipeid, cn:categoryname, cc:categorycolor, error:'' };
   res.status(200).json(ret);
 });
 
