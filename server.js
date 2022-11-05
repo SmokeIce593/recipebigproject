@@ -236,6 +236,144 @@ app.post('/api/register', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/savetags', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, tagname, tagcolor, tagtype
+  // outgoing: id, fkrecipeid, tagname, tagcolor, tagtype, error
+	
+  var error = '';
+  var id = -1;
+  var tn = '';
+  var tc = '';
+  var tt = '';
+
+  const { fkrecipeid, tagname, tagcolor, tagtype } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await client.connect();
+  const duplicatetag = 'SELECT * FROM tags WHERE tagname = $1';
+  const valuestagcheck = [tagname];
+  const tagcheck = await client.query(duplicatetag, valuestagcheck);
+  
+  if(tagcheck.rowCount == 0)
+  {
+    const text = 'Insert into tags (fkrecipeid, tagname, tagcolor, tagtype) values ($1, $2, $3, $4)';
+    const values = [fkrecipeid, tagname, tagcolor, tagtype];
+    const now = await client.query(text, values);
+  
+    // Rather than this need to do error tracking with sql query
+    id = 100;
+  }
+  await client.end();
+  
+  var ret = { id:id, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
+  res.status(200).json(ret);
+});
+
+app.post('/api/savecategory', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+  var id = -1;
+  var cn = '';
+  var cc = '';
+
+  const { fkrecipeid, categoryname, categorycolor } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await client.connect();
+  const duplicatecat = 'SELECT * FROM category WHERE categoryname = $1';
+  const valuescatcheck = [categoryname];
+  const catcheck = await client.query(duplicatecat, valuescatcheck);
+  
+  if(catcheck.rowCount == 0)
+  {
+    const text = 'Insert into category (fkrecipeid, categoryname, categorycolor) values ($1, $2, $3)';
+    const values = [fkrecipeid, categoryname, categorycolor];
+    const now = await client.query(text, values);
+  
+    // Rather than this need to do error tracking with sql query
+    id = 100;
+  }
+  await client.end();
+  
+  var ret = { id:id, cn:categoryname, cc:categorycolor, error:'' };
+  res.status(200).json(ret);
+});
+
+app.delete('/api/deletetags', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, tagname, tagcolor, tagtype
+  // outgoing: id, fkrecipeid, tagname, tagcolor, tagtype, error
+	
+  var error = '';
+  var id = -1;
+  var tn = '';
+  var tc = '';
+  var tt = '';
+
+  const { fkrecipeid, tagname, tagcolor, tagtype } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await client.connect();
+  const text = 'DELETE FROM tags WHERE tagname = $1';
+  const values = [tagname];
+  const now = await client.query(text, values);
+  // Rather than this need to do error tracking with sql query
+  id = 100;
+  await client.end();
+  
+  var ret = { id:id, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
+  res.status(200).json(ret);
+});
+
+app.delete('/api/deletecategory', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+  var id = -1;
+  var cn = '';
+  var cc = '';
+
+  const { fkrecipeid, categoryname, categorycolor } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await client.connect();
+  const text = 'DELETE FROM category WHERE categoryname = $1';
+  const value = [categoryname];
+  const now = await client.query(text, value);
+  // Rather than this need to do error tracking with sql query
+  id = 100;
+  await client.end();
+  
+  var ret = { id:id, cn:categoryname, cc:categorycolor, error:'' };
+  res.status(200).json(ret);
+});
+
 app.post('/api/searchcards', async (req, res, next) => 
 {
   // incoming: userId, search
