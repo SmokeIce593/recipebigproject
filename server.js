@@ -380,9 +380,8 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   // outgoing: id, fkrecipeid, categoryname, categorycolor
 	
   var error = '';
-  var id = -1;
-  var cn = '';
-  var cc = '';
+  var rid = -1;
+  var rn = '';
 
   const { id, recipe } = req.body;
   const connectionString = process.env.DATABASE_URL;
@@ -406,7 +405,7 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   const catnow = await client.query(cattext, catvalue);
   await client.end();
   
-  var ret = { id:fkrecipeid, cn:categoryname, cc:categorycolor, error:'' };
+  var ret = { rid:id, rn:recipename, error:'' };
   res.status(200).json(ret);
 });
 
