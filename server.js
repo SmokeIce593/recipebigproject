@@ -459,6 +459,95 @@ app.delete('/api/editrecipe', async (req, res, next) =>
   var ret = {error: error};
   res.status(200).json(ret);
 });
+app.delete('/api/search', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+
+  const {search} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON Cast(r.id as int) = Cast(c.fkrecipeid as int) left JOIN tags as t ON Cast(r.id as int) = Cast(t.fkrecipeid as int) left join users as u ON Cast(r.userid as int) = Cast(u.id as int) Where (r.recipe like '%$1%' OR t.tagname like '%$1%' OR c.categoryname like '%$1%' OR u.firstname like '%$1%' or u.lastname like '%$1%') GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname";
+  const value = [search];
+  const now = await client.query(text, value);
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  
+  var ret = {filter: now, error: error};
+  res.status(200).json(ret);
+});
+
+app.delete('/api/filtertag', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+
+  const {tagid} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = 'Select r.* from recipes as r Inner JOIN tags as t ON Cast(r.id as int) = Cast(t.fkrecipeid as int) where t.id = $1';
+  const value = [tagid];
+  const now = await client.query(text, value);
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  
+  var ret = {filter: now, error: error};
+  res.status(200).json(ret);
+});
+
+app.delete('/api/filtercategory', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+
+  const {categoryid} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = 'Select r.* from recipes as r Inner JOIN categories as c ON Cast(r.id as int) = Cast(c.fkrecipeid as int) where c.id = $1';
+  const value = [categoryid];
+  const now = await client.query(text, value);
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  
+  var ret = {filter: now, error: error};
+  res.status(200).json(ret);
+});
 
 app.delete('/api/badwords', async (req, res, next) => 
 {
