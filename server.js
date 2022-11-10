@@ -399,6 +399,78 @@ app.delete('/api/deletecategory', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+
+app.delete('/api/saverecipe', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+
+  const {recipename, recipetext, fkuser } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = 'Insert into recipe (recipe text_recipe, userid) values ($1, $2, $3)';
+  const value = [recipename, recipetext, fkuser];
+  const now = await client.query(text, value);
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  
+  var ret = {error: error};
+  res.status(200).json(ret);
+});
+
+app.delete('/api/editrecipe', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+
+  const {recipeID, recipename, recipetext, fkuser } = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = 'Update recipes set recipe = $1, text_recipe = $2, userid = $3 where id = $4';
+  const value = [recipename, recipetext, fkuser, recipeID];
+  const now = await client.query(text, value);
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  
+  var ret = {error: error};
+  res.status(200).json(ret);
+});
+
+app.delete('/api/badwords', async (req, res, next) => 
+{
+  const { text } = req.body;
+
+  var Filter = require('bad-words');
+  var filter = new Filter();
+  
+  var ret = { text: filter.clean(text)};
+  res.status(200).json(ret);
+});
+
 app.delete('/api/deleterecipe', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
@@ -434,7 +506,7 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   catch{
     error = "Server related issues, please try again.";
   }
-  
+
   var ret = { rid:id, rn:recipename, error:'' };
   res.status(200).json(ret);
 });
