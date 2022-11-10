@@ -34,6 +34,19 @@ function Register()
                 lastname:lastName.value,securityquestion:securityQuestion.value,securityanswer:securityAnswer.value};
         var js = JSON.stringify(obj);
 
+        var passwordcode = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+        var emailcode = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+        if(!obj.password.match(passwordcode)){
+            setMessage("Your password does not meet requirements: Between 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character.")
+            return;
+        }
+
+        if(!obj.email.match(emailcode)){
+            setMessage("Please enter a valid email.")
+            return;
+        }
+
         try
         {    
 //            const response = await fetch('http://localhost:5000/api/login',

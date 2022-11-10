@@ -192,7 +192,10 @@ app.post('/api/login', async (req, res, next) =>
     fn = now.rows[0]["firstname"];
     ln = now.rows[0]["lastname"];
   }
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
+  else{
+    error = "Invalid Username/Password"
+  }
+  var ret = { id:id, firstName:fn, lastName:ln, error:error};
   res.status(200).json(ret);
 });
 
