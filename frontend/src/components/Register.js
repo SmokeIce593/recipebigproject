@@ -55,9 +55,9 @@ function Register()
 
             var res = JSON.parse(await response.text());
 
-            if( res.id <= 0 )
+            if( res.error !== "")
             {
-                setMessage('Register failed');
+                setMessage(res.error);
             }
             else
             {

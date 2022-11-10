@@ -38,7 +38,7 @@ function Login()
 
             var res = JSON.parse(await response.text());
 
-            if( res.error != "")
+            if( res.error !== "")
             {
                 setMessage(res.error);
             }

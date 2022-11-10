@@ -178,23 +178,27 @@ app.post('/api/login', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
-  await client.connect();
-  const text = 'SELECT * FROM users WHERE username = $1';
-  const values = [login];
-  const now = await client.query(text, values);
-  await client.end();
+  try{
+    await client.connect();
+    const text = 'SELECT * FROM users WHERE username = $1';
+    const values = [login];
+    const now = await client.query(text, values);
+    await client.end();
 
-  
+    if(now.rowCount > 0 && await bcrypt.compare(password, now.rows[0]["password"])){
+      console.log(now.rows[0]["id"]);
+      id = now.rows[0]["id"];
+      fn = now.rows[0]["firstname"];
+      ln = now.rows[0]["lastname"];
+    }
+    else{
+      error = "Invalid Username/Password"
+    }
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
 
-  if(now.rowCount > 0 && await bcrypt.compare(password, now.rows[0]["password"])){
-    console.log(now.rows[0]["id"]);
-    id = now.rows[0]["id"];
-    fn = now.rows[0]["firstname"];
-    ln = now.rows[0]["lastname"];
-  }
-  else{
-    error = "Invalid Username/Password"
-  }
   var ret = { id:id, firstName:fn, lastName:ln, error:error};
   res.status(200).json(ret);
 });
@@ -218,6 +222,10 @@ app.post('/api/register', async (req, res, next) =>
     connectionString: connectionString,
     ssl: { rejectUnauthorized: false }
   });
+
+  try{
+
+  
   await client.connect();
   const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
   const valueslogincheck = [login];
@@ -228,12 +236,12 @@ app.post('/api/register', async (req, res, next) =>
     const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
     const values = [login, hashed, email, firstname, lastname, securityquestion, securityanswer];
     const now = await client.query(text, values);
-  
-    // Rather than this need to do error tracking with sql query
-    id = 100;
   }
   await client.end();
-
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
   
   var ret = { id:id, firstName:fn, lastName:ln, error:''};
   res.status(200).json(ret);
@@ -258,6 +266,9 @@ app.post('/api/savetags', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
+  try{
+
+  
   await client.connect();
   const duplicatetag = 'SELECT * FROM tags WHERE tagname = $1';
   const valuestagcheck = [tagname];
@@ -268,11 +279,12 @@ app.post('/api/savetags', async (req, res, next) =>
     const text = 'Insert into tags (fkrecipeid, tagname, tagcolor, tagtype) values ($1, $2, $3, $4)';
     const values = [fkrecipeid, tagname, tagcolor, tagtype];
     const now = await client.query(text, values);
-  
-    // Rather than this need to do error tracking with sql query
-    id = 100;
   }
   await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
   
   var ret = { id:fkrecipeid, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
   res.status(200).json(ret);
@@ -296,6 +308,8 @@ app.post('/api/savecategory', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
+  try{
+
   await client.connect();
   const duplicatecat = 'SELECT * FROM category WHERE categoryname = $1';
   const valuescatcheck = [categoryname];
@@ -306,12 +320,12 @@ app.post('/api/savecategory', async (req, res, next) =>
     const text = 'Insert into category (fkrecipeid, categoryname, categorycolor) values ($1, $2, $3)';
     const values = [fkrecipeid, categoryname, categorycolor];
     const now = await client.query(text, values);
-  
-    // Rather than this need to do error tracking with sql query
-    id = 100;
   }
   await client.end();
-  
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
   var ret = { id:fkrecipeid, cn:categoryname, cc:categorycolor, error:'' };
   res.status(200).json(ret);
 });
@@ -335,13 +349,18 @@ app.delete('/api/deletetags', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
+  try{
+
   await client.connect();
   const text = 'DELETE FROM tags WHERE tagname = $1';
   const values = [tagname];
   const now = await client.query(text, values);
-  // Rather than this need to do error tracking with sql query
-  id = 100;
+
   await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
   
   var ret = { id:fkrecipeid, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
   res.status(200).json(ret);
@@ -365,13 +384,16 @@ app.delete('/api/deletecategory', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
+  try{
   await client.connect();
   const text = 'DELETE FROM category WHERE categoryname = $1';
   const value = [categoryname];
   const now = await client.query(text, value);
-  // Rather than this need to do error tracking with sql query
-  id = 100;
   await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
   
   var ret = { id:fkrecipeid, cn:categoryname, cc:categorycolor, error:'' };
   res.status(200).json(ret);
@@ -394,6 +416,7 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
+  try {
   await client.connect();
   const text = 'DELETE FROM recipe WHERE id = $1';
   const value = [id];
@@ -407,6 +430,10 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   const catvalue = [id];
   const catnow = await client.query(cattext, catvalue);
   await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
   
   var ret = { rid:id, rn:recipename, error:'' };
   res.status(200).json(ret);
