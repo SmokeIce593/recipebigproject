@@ -7,6 +7,7 @@ const { Client } = require('pg')
 const PORT = process.env.PORT || 5000;
 const app = express();
 const { Console } = require('console');
+const {v1: uuidv1, v4: uuidv4} = require('uuid');
 
 app.set( 'port', (process.env.PORT || 5000 ));
 app.use(cors());
@@ -530,6 +531,38 @@ app.delete('/api/codeverification', async (req, res, next) =>
   }
   
   
+  res.status(200).json(ret);
+});
+
+app.delete('/api/codecreation', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+  var code = uuid4();
+
+  const {userID} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = "Insert into emailvericodes (generatedcode, login_fkid_1) values ($1, $2)";
+  const value = [code, userID];
+  const now = await client.query(text, value);
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+    
+  }
+  
+  var ret = {error: error};
   res.status(200).json(ret);
 });
 
