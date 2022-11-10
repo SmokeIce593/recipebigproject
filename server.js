@@ -489,6 +489,50 @@ app.delete('/api/search', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.delete('/api/codeverification', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+  var code = '';
+
+  const {userID} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = "select * from emailvericodes where login_fkid_1 = '$1' AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
+  const value = [userID];
+  const now = await client.query(text, value);
+  await client.end();
+
+  if(now.rowCount == 0)
+  {
+    error = "No code found";
+    var ret = {code: '', userid: userID, error: error};
+  }
+  else{
+    code = now.rows[0]["generatedcode"];
+    var ret = {code: code, userid: userID, error: error};
+  }
+
+
+  }
+  catch{
+    error = "Server related issues, please try again.";
+    var ret = {code: '', userid: userID, error: error};
+  }
+  
+  
+  res.status(200).json(ret);
+});
+
 app.delete('/api/filtertag', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
