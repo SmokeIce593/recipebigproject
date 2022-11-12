@@ -64,19 +64,21 @@ const goRegister = async event=>
     }
 
     return(
-      <div id="loginDiv" >
-        <form onSubmit={doLogin} className="loginBox">
-            <span id="inner-title" className="title">Log In</span><br />
-            <input type="text" id="loginName" placeholder="Username" className="input"
+        <div id="loginDiv" >
+        <form onSubmit={doLogin} className="loginBoxfield">
+            <span id="inner-title" className="titlefield">Log In</span><br />
+            <input type="text" id="loginName" placeholder="Username" className="inputfield"
                 ref={(c) => loginName = c} /><br />
-            <input type="password" id="loginPassword" placeholder="Password" className="input"
+            <input type="password" id="loginPassword" placeholder="Password" className="inputfield"
                 ref={(c) => loginPassword = c} /><br />
-            <input type="submit" id="loginButton" className="loginbutton" value ="Log In"
+            <input type="submit" id="loginButton" className="loginbuttonfield" value ="Log In"
                 onClick={doLogin} />
             <span id="loginResult" className = "error">{message}</span>
         </form>
-        <input type="button" id="registerButton" className="registerbutton" value="Register" 
+        <input type="button" id="registerButton" className="registerbuttonfield" value="Register" 
                 onClick={goRegister}/>
+                <br />
+        <span id="background-support" className="drop-backgroundimg">⠀</span>
      </div>
 
     );

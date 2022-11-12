@@ -13,15 +13,14 @@ code {
 }
 
 .main-container {
-  background-image: url("/public/bg-mobile.png");
+  background-image: url("/public/backgroundimage.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
-  width: '88%';
-  height: '100%';
-  text-align: center;
-  vertical-align: center;
-  align-self: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0px;
+  top: 0px;
 
 }
 

@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:400");
+
+img{
+	max-width: 100%;
+	height:auto;
+}
+
+.searchBar {
+    position: center;
+    width: calc(100%-20px);
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    background: #93B7BE;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
