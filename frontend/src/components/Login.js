@@ -1,21 +1,11 @@
 import React, { useState } from 'react';
 import './login.css';
+import { useJwt } from "react-jwt";
 
 function Login()
 {
-
-    const app_name = 'recipeprojectlarge'
-    function buildPath(route)
-    {
-        if (process.env.NODE_ENV === 'production') 
-        {
-            return 'https://' + app_name +  '.herokuapp.com/' + route;
-        }
-        else
-        {        
-            return 'http://localhost:5000/' + route;
-        }
-    }
+    let bp = require('./Path.js');
+    var storage = require('../tokenStorage.js');
 
     var loginName;
     var loginPassword;
@@ -29,11 +19,10 @@ function Login()
         var obj = {login:loginName.value,password:loginPassword.value};
         var js = JSON.stringify(obj);
         
-
         try
         {    
 //            const response = await fetch('http://localhost:5000/api/login',
-            const response = await fetch(buildPath('api/login'),
+            const response = await fetch(bp.buildPath('api/login'),
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
@@ -44,6 +33,12 @@ function Login()
             }
             else
             {
+                storage.storeToken(res);
+
+                let userId = res.id;
+                let firstName = res.fn;
+                let lastName = res.ln;
+                
                 var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
