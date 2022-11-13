@@ -1,17 +1,17 @@
 import React from 'react';
 
-import Home from '../components/Home';
+import Recipes from '../components/Recipes';
 import Searchbar from '../components/Searchbar';
 
-const Homepage = () =>
+const Recipespage = () =>
 {
     return(
       <div className='main-container'>
         <Searchbar />
-        <Home />
+        <Recipes />
       </div>
     );
 };
 
 
-export default Homepage;
+export default Recipespage;

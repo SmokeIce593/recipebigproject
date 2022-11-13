@@ -1,0 +1,12 @@
+.displayregion{
+	position: relative;
+    background-color: #EAFCFF;
+    width: calc(100%-200px);
+    height: 100%;
+    margin-top: 10px;
+    margin-left: 100px;
+    margin-right: 100px;
+    justify-content: center;
+    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5)
+}
+
