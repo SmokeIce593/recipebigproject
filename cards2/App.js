@@ -4,6 +4,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import LoginScreen from './screens/LoginScreen';
 import CardScreen from './screens/CardScreen';
+import RegisterScreen from './screens/RegisterScreen';
 export default class App extends React.Component {
   render() {
     return <AppContainer />;
@@ -21,7 +22,13 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
       header: null // Will hide header for HomePage
     }
-  }
+  },
+  Register: {
+    screen: RegisterScreen,
+    navigationOptions: {
+      header: null // Will hide header for HomePage
+    }
+  },
 },{
   initialRouteName: "Login"
 });
