@@ -33,7 +33,7 @@ img{
     background-color: #FF7A70;
     border-radius: 10px;
     font-size: 36px;
-    margin-top: 4%;
+    margin-top: 15px;
     justify-content: center;
     margin-right: auto;
     margin-left: auto;
@@ -48,7 +48,7 @@ img{
     border: 1px solid;
     border-color: black;
     border-radius: 21px;
-    height: 615px;
+    height: 566px;
     width: 518px;
     justify-content: center;
     margin-right: auto;
@@ -63,6 +63,7 @@ img{
     min-width: 122px;
     text-align: center;
     margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .sub-title{
@@ -72,6 +73,7 @@ img{
     min-width: 122px;
     text-align: center;
     margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .input{
@@ -80,7 +82,7 @@ img{
 	background-color: #F7F7F7;
 	border-radius: 5px;
 	margin-top: 0px;
-	margin-bottom: 0px;
+	margin-bottom: 10px;
 	display: flex;
     flex-direction: column;
 	justify-content: center;
@@ -97,6 +99,4 @@ img{
 .buffer{
     margin-left: 10px;
     margin-right: 10px;
-    margin-bottom: 15px;
-    text-align: center;
 }
