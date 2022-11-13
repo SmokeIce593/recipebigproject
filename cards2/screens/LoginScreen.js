@@ -32,7 +32,6 @@ export default class Homescreen extends Component {
           <View style={styles.container}>
           <View style={styles.loginboxfield}>
             <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize:10}}> </Text>
             <Text style={styles.titlefield}>Log In</Text>
             <Text style={{fontSize:20}}> </Text>
               <TextInput
@@ -57,13 +56,17 @@ export default class Homescreen extends Component {
             </View>
 
             <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-              <Text style={styles.buttontext}>Log In</Text>
+              <View style={{alignItems: 'center'}}>
+                <Text style={styles.buttontext}>Log In</Text>
+              </View>
             </Pressable>
           </View>
           <Text style={{fontSize:40}}> </Text>
           <Pressable style={styles.loginbuttonfield} onPress={this.handleClick2}>
+            <View style={{alignItems: 'center'}}>
               <Text style={styles.buttontext}>Register</Text>
-            </Pressable>
+            </View>
+          </Pressable>
         </View>
       </View>
     </ImageBackground>
@@ -129,15 +132,15 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#000000',
     borderRadius: 21,
-    height: 370,
-    width: 418,
+    height: 330,
+    width: 370,
     justifyContent: "center",
     marginRight: "auto",
     marginReft: "auto",
   },
   logo: {
-    width: 800,
-    height: 200,
+    width: 400,
+    height: 100,
     justifyContent: "center",
   },
   titlefield: {
@@ -149,8 +152,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   inputfield: {
-    height: 60,
-	  width: 370,
+    height: 50,
+	  width: 300,
 	  backgroundColor: '#F7F7F7',
 	  borderRadius: 10,
     borderWidth: 1, //this is the border for input fields since react native shadow is weird
@@ -164,8 +167,8 @@ const styles = StyleSheet.create({
 	  marginLeft: "auto",
   },
   loginbuttonfield: {
-    height: 60,
-    width: 370,
+    height: 50,
+	  width: 300,
     marginLeft: "auto",
 	  marginRight: "auto",
     backgroundColor: '#FF7A70',
