@@ -24,7 +24,7 @@ export default class Homescreen extends Component {
 
   render(){
     return(
-      <ImageBackground source={require('../assets/backgroundimage.jpg')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
+      <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <View style={styles.container}>
           <View style={styles.container}>
             <Image style={styles.logo} source={require('../assets/logo.png')}/>
