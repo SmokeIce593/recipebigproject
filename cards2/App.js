@@ -14,19 +14,19 @@ const AppNavigator = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      header: null // Will hide header for HomePage
+      headerShown: false // Will hide header for HomePage
     }
   },
   Card: {
     screen: CardScreen,
     navigationOptions: {
-      header: null // Will hide header for HomePage
+      headerShown: false  // Will hide header for HomePage
     }
   },
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
-      header: null // Will hide header for HomePage
+      headerShown: false  // Will hide header for HomePage
     }
   },
 },{
