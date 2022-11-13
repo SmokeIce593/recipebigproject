@@ -231,12 +231,15 @@ app.post('/api/register', async (req, res, next) =>
   const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
   const valueslogincheck = [login];
   const logincheck = await client.query(duplicatelogin, valueslogincheck);
-  
+  alert(logincheck.rowCount);
   if(logincheck.rowCount == 0)
   {
     const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
     const values = [login, hashed, email, firstname, lastname, securityquestion, securityanswer];
     const now = await client.query(text, values);
+  }
+  else{
+    error = "Duplicate Login already exists.";
   }
   await client.end();
   }
