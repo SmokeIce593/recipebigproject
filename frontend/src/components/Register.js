@@ -108,11 +108,10 @@ function Register()
             <br />
             <input type="text" id="securityAnswer" placeholder="Answer" className="input"
                 ref={(c) => securityAnswer = c} /><br />
+            <div id="bump" className="buffer"><span id="registerResult" className = "error">{message}</span></div> 
             <input type="submit" id="registerButton" value = "Register" className="registerbutton"
             onClick={doRegister} />
         </form>
-
-        <span id="registerResult">{message}</span>
 
         <input type="button" id="loginButton" className="loginbutton" value="Login" 
                 onClick={goLogin}/>

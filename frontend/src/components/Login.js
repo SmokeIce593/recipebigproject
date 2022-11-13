@@ -71,9 +71,9 @@ const goRegister = async event=>
                 ref={(c) => loginName = c} /><br />
             <input type="password" id="loginPassword" placeholder="Password" className="inputfield"
                 ref={(c) => loginPassword = c} /><br />
+            <div id="bumper" className="buffer"><span id="loginResult" className = "error">{message}</span></div> 
             <input type="submit" id="loginButton" className="loginbuttonfield" value ="Log In"
                 onClick={doLogin} />
-            <span id="loginResult" className = "error">{message}</span>
         </form>
         <input type="button" id="registerButton" className="registerbuttonfield" value="Register" 
                 onClick={goRegister}/>

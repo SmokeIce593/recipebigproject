@@ -48,7 +48,7 @@ img{
     border: 1px solid;
     border-color: black;
     border-radius: 21px;
-    height: 566px;
+    height: 615px;
     width: 518px;
     justify-content: center;
     margin-right: auto;
@@ -92,10 +92,11 @@ img{
 .error{
 	color: red;
 	justify-content: center;
-    margin-right: auto;
-    margin-left: auto;
 }
 
 .buffer{
-    margin-left: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    text-align: center;
 }
