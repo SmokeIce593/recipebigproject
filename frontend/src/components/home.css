@@ -7,10 +7,85 @@ img{
 
 .searchBar {
     position: center;
+    display: flex;
     width: calc(100%-20px);
+    height: 33px;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 10px;
     background: #93B7BE;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    justify-content: space-between;
+}
+
+.barButton {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    position: center;
+    font-size: 24px;
+    height: 30px;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.barButton div{
+    display: table-cell;
+}
+
+.barButton:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    display: flex;
+    position: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+}
+
+.Search {
+    display: flex;
+    position: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    border-radius: 40px;
+    width: 637px;
+    height: 64px;
+    background: #EDF2EF;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5)
+}
+
+.searchBox {
+    margin-left: 20px;
+    font-size: 36px;
+    background-color: transparent;
+    border-color: transparent;
+    outline: none;
+}
+
+.searchButton {
+    display: flex;
+    position: relative;
+    float: right;
+    margin-left: 30px;
+    width: 121px;
+    height: 64px;
+    background: #FF7A70;
+    border-radius: 40px;
+}
+
+.glassimg {
+    display: flex;
+    position: center;
+    margin: auto;
+}
+
+.user {
+    margin-left: 20px;
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: 500;
 }
