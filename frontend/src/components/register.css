@@ -7,16 +7,16 @@ img{
 	height:auto;
 }
 
-.loginbuttonfield{
-    display: block;
-    margin-left: auto;
+.registerbutton{
+	display: block;
+	margin-left: auto;
 	margin-right: auto;
     height: 60px;
     width: 370px;
     background-color: #FF7A70;
     border-radius: 10px;
     font-size: 36px;
-    margin-top: 4%;
+    margin-top: 0px;
     margin-bottom: 2%;
     justify-content: center;
     margin-right: auto;
@@ -24,8 +24,8 @@ img{
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
-.registerbuttonfield{
-    display: block;
+.loginbutton{
+	display: block;
 	margin-left: auto;
 	margin-right: auto;
     height: 60px;
@@ -33,7 +33,7 @@ img{
     background-color: #FF7A70;
     border-radius: 10px;
     font-size: 36px;
-    margin-top: 20px;
+    margin-top: 15px;
     justify-content: center;
     margin-right: auto;
     margin-left: auto;
@@ -41,13 +41,14 @@ img{
 }
 
 
-.loginBoxfield{
+.registerBox{
 	position: relative;
+    padding: 10px 0px;
     background-color: #EAFCFF;
     border: 1px solid;
     border-color: black;
     border-radius: 21px;
-    height: 466px;
+    height: 566px;
     width: 518px;
     justify-content: center;
     margin-right: auto;
@@ -55,42 +56,44 @@ img{
     box-shadow: 5px 5px 5px rgba(0, 0, 0, .5);
 }
 
-.titlefield{
+.title{
     display: flex;
     flex-direction: column;
     font-size: 36px;
     min-width: 122px;
     text-align: center;
-    margin-top: 4%;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
-.inputfield{
-	height: 60px;
+.sub-title{
+    display: flex;
+    flex-direction: column;
+    font-size: 24px;
+    min-width: 122px;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.input{
+	height: 30px;
 	width: 370px;
 	background-color: #F7F7F7;
 	border-radius: 5px;
 	margin-top: 0px;
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 	display: flex;
-    	flex-direction: column;
+    flex-direction: column;
 	justify-content: center;
-	font-size: 36px;
+	font-size: 18px;
 	margin-right: auto;
 	margin-left: auto;
-}
-
-.drop-backgroundimg{
-    position: relative;
-    bottom: 0px;
-    margin-right: auto;
-    margin-left: auto;
 }
 
 .error{
 	color: red;
 	justify-content: center;
-    margin-right: auto;
-    margin-left: auto;
 }
 
 .buffer{

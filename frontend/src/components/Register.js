@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
+import './register.css'
 function Register()
 {
 
@@ -75,37 +76,46 @@ function Register()
         }    
     };
 
+    const goLogin = async event=>
+    {
+        window.location.href = '/login';
+    }
+
     return(
-      <div id="registerDiv">
-        <form onSubmit={doRegister}>
-        <span id="inner-title">Create an account</span><br />
-        <input type="text" id="firstName" placeholder="First Name" 
-            ref={(c) => firstName = c} /><br />
-        <input type="text" id="lastName" placeholder="Last Name" 
-            ref={(c) => lastName = c} /><br />
-        <input type="text" id="email" placeholder="Email" 
-            ref={(c) => email = c} /><br />
-        <input type="text" id="loginName" placeholder="Username" 
-            ref={(c) => loginName = c} /><br />
-        <input type="password" id="loginPassword" placeholder="Password" 
-            ref={(c) => loginPassword = c} /><br />
-        <label>
-            Security question:
-            <select id="securityQuestion" name="securityQuestion"
-            ref={(c) => securityQuestion = c}>
-                <option value="1">What is your father's middle name?</option>
-                <option value="2">What was the name of your high school?</option>
-                <option value="3">What is the name of your first pet?</option>
-            </select>
-        </label>
-        
-        <input type="text" id="securityAnswer" placeholder="Answer" 
-            ref={(c) => securityAnswer = c} /><br />
-        <input type="submit" id="registerButton" value = "Register"
-          onClick={doRegister} />
+        <div id="registerDiv">
+        <form onSubmit={doRegister} className="registerBox">
+            <span id="inner-title" className="title">Create an account</span>
+            <input type="text" id="firstName" placeholder="First Name" className="input"
+                ref={(c) => firstName = c} />
+            <input type="text" id="lastName" placeholder="Last Name" className="input"
+                ref={(c) => lastName = c} />
+            <input type="text" id="email" placeholder="Email" className="input"
+                ref={(c) => email = c} />
+            <input type="text" id="loginName" placeholder="Username" className="input"
+                ref={(c) => loginName = c} />
+            <input type="password" id="loginPassword" placeholder="Password" className="input"
+                ref={(c) => loginPassword = c} />
+            <label>
+                <span id="security-title" className="sub-title">Security question:</span>
+                
+                <select id="securityQuestion" name="securityQuestion" className="input"
+                ref={(c) => securityQuestion = c}>
+                    <option value="1">What is your father's middle name?</option>
+                    <option value="2">What was the name of your high school?</option>
+                    <option value="3">What is the name of your first pet?</option>
+                </select>
+            </label>
+            
+            <input type="text" id="securityAnswer" placeholder="Answer" className="input"
+                ref={(c) => securityAnswer = c} />
+            <div id="bump" className="buffer"><span id="registerResult" className = "error">{message}</span></div> 
+            <input type="submit" id="registerButton" value = "Register" className="registerbutton"
+            onClick={doRegister} />
         </form>
-        <span id="registerResult">{message}</span>
-        <Link to="/login">Log in</Link>
+
+        <input type="button" id="loginButton" className="loginbutton" value="Login" 
+                onClick={goLogin}/>
+
      </div>
     );
 };

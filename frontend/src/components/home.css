@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:400");
+
+img{
+	max-width: 100%;
+	height:auto;
+}
+
+.logo {
+    display: flex;
+    position: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+}
+
+.Search {
+    display: flex;
+    position: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    border-radius: 40px;
+    width: 637px;
+    height: 64px;
+    background: #EDF2EF;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5)
+}
+
+.searchBox {
+    margin-left: 20px;
+    font-size: 36px;
+    width: 480px;
+    background-color: transparent;
+    border-color: transparent;
+    outline: none;
+}
+
+.searchButton {
+    display: flex;
+    position: relative;
+    margin-left: 36px;
+    width: 121px;
+    height: 64px;
+    background: #FF7A70;
+    border-radius: 40px;
+}
+
+.glassimg {
+    display: flex;
+    position: center;
+    margin: auto;
+}
+
+.user {
+    margin-left: 20px;
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: 500;
+}
