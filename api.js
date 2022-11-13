@@ -151,7 +151,8 @@ exports.setApp = function ( app, client)
             ssl: { rejectUnauthorized: false }
         });
 
-        try{
+        try
+        {
             await client.connect();
             const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
             const valueslogincheck = [login];
@@ -161,11 +162,23 @@ exports.setApp = function ( app, client)
             const valuesemailcheck = [email];
             const emailcheck = await client.query(duplicateemail, valuesemailcheck);
             
-            if(logincheck.rowCount == 0)
+            if(logincheck.rowCount == 0 && emailcheck.rowCount == 0)
             {
                 const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
                 const values = [login, hashed, email, firstname, lastname, securityquestion, securityanswer];
                 const now = await client.query(text, values);
+            }
+            else if (logincheck.rowCount != 0 && emailcheck.rowCount == 0)
+            {
+                error = "Duplicate login already exists.";
+            }
+            else if (logincheck.rowCount == 0 && emailcheck.rowCount != 0)
+            {
+                error = "Duplicate email already exists.";
+            }
+            else
+            {
+                error = "Duplicate login and duplicate email already exist.";
             }
             await client.end();
         }
