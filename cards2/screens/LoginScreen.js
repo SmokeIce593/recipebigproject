@@ -1,5 +1,6 @@
 import React, { Component, useState } from 'react';
 import { ActivityIndicator, Button, View, Text, TextInput } from 'react-native';
+
 global.localName = '';
 global.password = '';
 global.userId = -1;
@@ -7,7 +8,9 @@ global.firstName = '';
 global.lastName = '';
 global.search = '';
 global.card = '';
+
 export default class Homescreen extends Component {
+
   constructor() 
   {
     super()
@@ -16,10 +19,11 @@ export default class Homescreen extends Component {
        message: ' '
     }
   }
+
   render(){
     return(
-      <View style={{ backgroundColor:'#0000ff', flex: 1, alignItems: 'center', justifyContent: 
-'center' }}>
+      <View style={{ backgroundColor:'#0000ff', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+
       <View style={{alignItems: 'flex-end'}}>
       <View style={{ flexDirection:'row' }}>
         <Text style={{fontSize:20}}>Login Screen: </Text>
@@ -30,6 +34,7 @@ export default class Homescreen extends Component {
         />        
       </View>
       <Text style={{fontSize:20}}> </Text>
+
       <View style={{ flexDirection:'row' }}>
         <Text style={{fontSize:20}}>Password: </Text>
         <TextInput
@@ -41,6 +46,7 @@ export default class Homescreen extends Component {
       </View>
       <Text style={{fontSize:20}}>{this.state.message} </Text>
       </View>
+
       <Button
         title="Do Login"
         onPress={this.handleClick}
@@ -48,15 +54,19 @@ export default class Homescreen extends Component {
     </View>
     );
   }
+
   handleClick = async () =>
   {
     try
     {
       var obj = {login:global.loginName.trim(),password:global.password.trim()};
       var js = JSON.stringify(obj);
+
       const response = await fetch('https://cop4331-10.herokuapp.com/api/login',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
       var res = JSON.parse(await response.text());
+
       if( res.id <= 0 )
       {
         this.setState({message: "Usere/Password combination incorrect" });
@@ -74,12 +84,15 @@ export default class Homescreen extends Component {
       this.setState({message: e.message });
     }
   }  
+
   changeLoginNameHandler = async (val) =>
   {
     global.loginName = val;
   }  
+
   changePasswordHandler = async (val) =>
   {
     global.password = val;
   }  
+
 }
