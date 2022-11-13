@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
 	  width: 370,
 	  backgroundColor: '#F7F7F7',
 	  borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
 	  marginTop: 4,
 	  marginBottom: 4,
 	  display: "flex",
