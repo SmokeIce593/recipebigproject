@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const { Console } = require('console');
 const {v1: uuidv1, v4: uuidv4} = require('uuid');
+//import { useJwt } from "react-jwt";
 
 app.set( 'port', (process.env.PORT || 5000 ));
 app.use(cors());
@@ -19,8 +20,24 @@ exports.setApp = function ( app, client)
     {
         // incoming: userId, color
         // outgoing: error
-            
-        const { userId, card } = req.body;
+        
+        //const { userId, card } = req.body;
+        let token = require('./createJWT.js/');
+        const { userId, card, jwtToken } = req.body;
+
+        try
+        {
+            if(token.isExpired(jwtToken))
+            {
+                var r = {error:'The JWT is no longer valid', jwtToken: ''};
+                res.status(200).json(r);
+                return;
+            }
+        }
+        catch(e)
+        {
+            console.log(e.message);
+        }
 
         const newCard = {Card:card,UserId:userId};
         var error = '';
@@ -37,7 +54,18 @@ exports.setApp = function ( app, client)
 
         cardList.push( card );
 
-        var ret = { error: error };
+        // Refresh the JWT
+        var refreshedToken = null;
+        try
+        {
+            refreshedToken = token.refresh(jwtToken);
+        }
+        catch(e)
+        {
+            console.log(e.message);
+        }
+
+        var ret = {error: error, jwtToken: refreshedToken };
         res.status(200).json(ret);
     });
 
@@ -52,6 +80,8 @@ exports.setApp = function ( app, client)
         var fn = '';
         var ln = '';
 
+        var ret ;
+
         const { login, password } = req.body;
         const connectionString = process.env.DATABASE_URL;
 
@@ -60,7 +90,8 @@ exports.setApp = function ( app, client)
             ssl: { rejectUnauthorized: false }
         });
 
-        try{
+        try
+        {
             await client.connect();
             const text = 'SELECT * FROM users WHERE username = $1';
             const values = [login];
@@ -73,10 +104,21 @@ exports.setApp = function ( app, client)
                 id = now.rows[0]["id"];
                 fn = now.rows[0]["firstname"];
                 ln = now.rows[0]["lastname"];
+
+                try
+                {
+                    const token = require("./createJWT.js");
+                    ret = token.createToken( fn, ln, id );
+                }
+                catch(e)
+                {
+                    ret = {error:e.message};
+                }
             }
             else
             {
                 error = "Invalid Username/Password"
+                ret = {error:"Login/Password incorrect"};
             }
         }
         catch
@@ -84,14 +126,14 @@ exports.setApp = function ( app, client)
             error = "Server related issues, please try again.";
         }
 
-        var ret = { id:id, firstName:fn, lastName:ln, error:error};
+        var ret = { id:id, firstName:fn, lastName:ln, error:error };
         res.status(200).json(ret);
     });
 
 
     app.post('/api/register', async (req, res, next) => 
     {
-        // incoming: login, password
+        // incoming: login, password, email, firstname, lastname, securityquestion, securityanswer
         // outgoing: id, firstName, lastName, error
             
         var error = '';
@@ -114,6 +156,10 @@ exports.setApp = function ( app, client)
             const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
             const valueslogincheck = [login];
             const logincheck = await client.query(duplicatelogin, valueslogincheck);
+
+            const duplicateemail = 'SELECT * FROM users WHERE email = $1';
+            const valuesemailcheck = [email];
+            const emailcheck = await client.query(duplicateemail, valuesemailcheck);
             
             if(logincheck.rowCount == 0)
             {
@@ -293,7 +339,7 @@ exports.setApp = function ( app, client)
     });
 
 
-    app.delete('/api/saverecipe', async (req, res, next) => 
+    app.post('/api/saverecipe', async (req, res, next) => 
     {
         // incoming: fkrecipeid, categoryname, categorycolor
         // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -326,7 +372,7 @@ exports.setApp = function ( app, client)
     });
 
 
-    app.delete('/api/editrecipe', async (req, res, next) => 
+    app.put('/api/editrecipe', async (req, res, next) => 
     {
         // incoming: fkrecipeid, categoryname, categorycolor
         // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -359,7 +405,7 @@ exports.setApp = function ( app, client)
     });
 
 
-    app.delete('/api/search', async (req, res, next) => 
+    app.get('/api/search', async (req, res, next) => 
     {
         // incoming: fkrecipeid, categoryname, categorycolor
         // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -437,7 +483,7 @@ exports.setApp = function ( app, client)
     });
 
 
-    app.delete('/api/codecreation', async (req, res, next) => 
+    app.post('/api/codecreation', async (req, res, next) => 
     {
         // incoming: fkrecipeid, categoryname, categorycolor
         // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -470,7 +516,7 @@ exports.setApp = function ( app, client)
         res.status(200).json(ret);
     });
 
-    app.delete('/api/filtertag', async (req, res, next) => 
+    app.get('/api/filtertag', async (req, res, next) => 
     {
         // incoming: fkrecipeid, categoryname, categorycolor
         // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -503,7 +549,7 @@ exports.setApp = function ( app, client)
     });
 
 
-    app.delete('/api/filtercategory', async (req, res, next) => 
+    app.get('/api/filtercategory', async (req, res, next) => 
     {
         // incoming: fkrecipeid, categoryname, categorycolor
         // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -536,7 +582,7 @@ exports.setApp = function ( app, client)
     });
 
 
-    app.delete('/api/badwords', async (req, res, next) => 
+    app.get('/api/badwords', async (req, res, next) => 
     {
         const { text } = req.body;
 
@@ -598,7 +644,21 @@ exports.setApp = function ( app, client)
 
         var error = '';
 
-        const { userId, search } = req.body;
+        const { userId, search, jwtToken } = req.body;
+
+        try
+        {
+            if( token.isExpired(jwtToken))
+            {
+                var r = {error:'The JWT is no longer valid', jwtToken: ''};
+                res.status(200).json(r);
+                return;
+            }
+        }
+        catch(e)
+        {
+            console.log(e.message);
+        }
 
         var _search = search.trim();
         
@@ -611,7 +671,17 @@ exports.setApp = function ( app, client)
             _ret.push( results[i].Card );
         }
         
-        var ret = {results:_ret, error:error};
+        var refreshedToken = null;
+        try
+        {
+            refreshedToken = token.refresh(jwtToken);
+        }
+        catch(e)
+        {
+            console.log(e.message);
+        }
+
+        var ret = { results:_ret, error: error, jwtToken: refreshedToken };
         res.status(200).json(ret);
     })
 }
