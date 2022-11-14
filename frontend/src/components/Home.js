@@ -21,8 +21,8 @@ function Home()
    return(
         <div id="homeDiv">
             <div id="userName" className="user">Hi {firstName} {lastName}</div>
-            <img src={logo} alt="logo" className="logo"></img>
-            
+            <img src={logo} alt="logo" className="logohome"></img>
+
             <div id="search" className="Search">
                 <input type="text" id="search" placeholder="Search" className="searchBox"></input>
                 <button type="submit" id="searchBut" class="searchButton" onClick={doSearch}>
