@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
 import { StyleSheet, Pressable } from 'react-native';
-import SelectDropdown from 'react-native-select-dropdown';
+import {Picker} from '@react-native-picker/picker';
 
 global.localName = '';
 global.loginName = '';
@@ -23,9 +23,10 @@ export default class Homescreen extends Component {
     super()
     this.state = 
     {
-       message: ' '
+       message: ' ',
     }
   }
+
 
   render(){
     return(
@@ -86,19 +87,18 @@ export default class Homescreen extends Component {
               />
             </View>
 
-
-            <SelectDropdown
-              buttonStyle = {styles.dropdown}
-              buttonTextStyle = {styles.dropdowntext}
-              rowStyle = {styles.dropdownrow}
-              rowTextStyle = {styles.dropdownrowtext}
-              defaultButtonText="Select Security Question:"
-              dropdownIconPosition="right"
-              data={questions}
-              onSelect={(val) => { this.changeQuestionHandler(val) }}
-              buttonTextAfterSelection={(selectedItem, index) => {return selectedItem}}
-              rowTextForSelection={(item, index) => {return item}}
-            />
+            <Picker
+              onValueChange={(itemValue, itemIndex) =>
+                {
+                  this.selectedValue = itemValue;
+                  global.question = itemIndex;
+                }
+              }>
+              <Picker.Item label="What is your father's middle name?" value="0" />
+              <Picker.Item label="What was the name of your high school?" value="1" />
+              <Picker.Item label="What is the name of your first pet?" value="2" />
+            </Picker>
+            
 
 
             <Text style={{fontSize:20}}> </Text>
@@ -203,13 +203,16 @@ export default class Homescreen extends Component {
 
   changeQuestionHandler = async (val) =>
   {
-    global.question = questions.indexOf(val);
+    global.question = questions.findIndex(q => q.value == val)
   } 
 
 }
 
-const questions = ["What is your father's middle name?", "What was the name of your high school?", 
-                   "What is the name of your first pet?"];
+const questions = [
+  "What is your father's middle name?", 
+  "What was the name of your high school?", 
+  "What is the name of your first pet?"
+];
 
 const styles = StyleSheet.create({
   container: {
