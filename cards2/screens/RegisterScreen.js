@@ -30,7 +30,7 @@ export default class Homescreen extends Component {
 
   render(){
     return(
-      <ImageBackground source={require('../assets/backgroundimage.jpg')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
+      <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <View style={styles.container}>
           <View style={styles.container}>
             <Image style={styles.logo} source={require('../assets/logo.png')}/>
@@ -38,9 +38,8 @@ export default class Homescreen extends Component {
           <View style={styles.container}>
           <View style={styles.loginboxfield}>
             <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize:10}}> </Text>
             <Text style={styles.titlefield}>Create an account</Text>
-            <Text style={{fontSize:20}}> </Text>
+            <Text style={{fontSize:10}}> </Text>
 
             <TextInput
                 style={styles.inputfield}
@@ -49,7 +48,7 @@ export default class Homescreen extends Component {
                 onChangeText={(val) => { this.changeFirstNameHandler(val) }}
                 />        
            
-            <Text style={{fontSize:20}}> </Text>
+            <Text style={{fontSize:10}}> </Text>
 
             <TextInput
                 style={styles.inputfield}
@@ -58,7 +57,7 @@ export default class Homescreen extends Component {
                 onChangeText={(val) => { this.changeLastNameHandler(val) }}
                 />   
 
-            <Text style={{fontSize:20}}> </Text>
+            <Text style={{fontSize:10}}> </Text>
 
             <TextInput
                 style={styles.inputfield}
@@ -67,7 +66,7 @@ export default class Homescreen extends Component {
                 onChangeText={(val) => { this.changeEmailHandler(val) }}
                 />        
            
-            <Text style={{fontSize:20}}> </Text>
+            <Text style={{fontSize:10}}> </Text>
               <TextInput
                 style={styles.inputfield}
                 placeholder="Username"
@@ -75,7 +74,7 @@ export default class Homescreen extends Component {
                 onChangeText={(val) => { this.changeLoginNameHandler(val) }}
                 />        
            
-            <Text style={{fontSize:20}}> </Text>
+            <Text style={{fontSize:10}}> </Text>
 
             <View style={{ flexDirection:'center' }}>
               <TextInput
@@ -103,7 +102,7 @@ export default class Homescreen extends Component {
             
 
 
-            <Text style={{fontSize:20}}> </Text>
+            <Text style={{fontSize:10}}> </Text>
 
             <View style={{ flexDirection:'center' }}>
               <TextInput
@@ -119,14 +118,18 @@ export default class Homescreen extends Component {
             </View>
 
             <Pressable style={styles.loginbuttonfield} onPress={this.handleClickRegister}>
-              <Text style={styles.buttontext}>Register</Text>
+              <View style={{alignItems: 'center'}}>
+                <Text style={styles.buttontext}>Register</Text>
+              </View>
             </Pressable>
 
           </View>
           <Text style={{fontSize:40}}> </Text>
           
             <Pressable style={styles.loginbuttonfield} onPress={this.handleClickLogin}>
-              <Text style={styles.buttontext}>Log In</Text>
+              <View style={{alignItems: 'center'}}>
+                <Text style={styles.buttontext}>Log In</Text>
+              </View>
             </Pressable>
         </View>
       </View>
@@ -228,14 +231,15 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#000000',
     borderRadius: 21,
-    width: 418,
+    height: 600,
+    width: 370,
     justifyContent: "center",
     marginRight: "auto",
     marginReft: "auto",
   },
   logo: {
-    width: 800,
-    height: 200,
+    width: 400,
+    height: 100,
     justifyContent: "center",
   },
   titlefield: {
@@ -247,31 +251,34 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   inputfield: {
-    height: 60,
-	  width: 370,
+    height: 35,
+	  width: 300,
 	  backgroundColor: '#F7F7F7',
 	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
 	  marginTop: 4,
 	  marginBottom: 4,
 	  display: "flex",
     	flexDirection: "column",
 	  justifyContent: "center",
-	  fontSize: 36,
+	  fontSize: 25,
 	  marginRight: "auto",
 	  marginLeft: "auto",
   },
   loginbuttonfield: {
-    height: 60,
-    width: 370,
+    height: 50,
+	  width: 300,
     marginLeft: "auto",
 	  marginRight: "auto",
     backgroundColor: '#FF7A70',
     borderRadius: 10,
     fontSize: 36,
     marginTop: 4,
-    marginBottom: 20,
+    marginBottom: 2,
     justifyContent: "center",
     alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
   },
   buttontext: {
     fontSize: 36,
