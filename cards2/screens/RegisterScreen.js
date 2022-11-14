@@ -1,100 +1,298 @@
 import React, { Component, useState } from 'react';
-import { TextInput, Button, View, Text } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-export default class Cardscreen extends Component {
+import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
+import { StyleSheet, Pressable } from 'react-native';
+import SelectDropdown from 'react-native-select-dropdown';
+
+global.localName = '';
+global.loginName = '';
+global.password = '';
+global.userId = -1;
+global.firstName = '';
+global.lastName = '';
+global.question = '';
+global.answer = '';
+global.search = '';
+global.card = '';
+global.email = '';
+
+
+export default class Homescreen extends Component {
+
   constructor() 
   {
     super()
     this.state = 
     {
-       searchCriteria: '\n ',
-       newCard: '\n '
+       message: ' '
     }
   }
-  render() {
-    return (
-      <View style={{ backgroundColor:'#ff0000', flex: 1, alignItems: 'center', justifyContent: 
-'center' }}>
-        <View style={{alignItems: 'flex-end'}}>
-          <View style={{ flexDirection:'row' }}>
-            <Text style={{fontSize:20}}>Search Criteria: </Text>
-            <TextInput
-              style={{height: 30,fontSize:20, backgroundColor:'#ffffff'}}
-              placeholder="Search"
-              onChangeText={(val) => { this.changeSearchHandler(val) }}
-            />        
-            <Button
-              title="Search"
-              onPress={this.handleSearchClick}
-            />            
+
+  render(){
+    return(
+      <ImageBackground source={require('../assets/backgroundimage.jpg')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
+        <View style={styles.container}>
+          <View style={styles.container}>
+            <Image style={styles.logo} source={require('../assets/logo.png')}/>
           </View>
-        <Text style={{fontSize:20}}>{this.state.searchCriteria} </Text>
-        <View style={{ flexDirection:'row' }}>
-            <Text style={{fontSize:20}}>Card to Add: </Text>
+          <View style={styles.container}>
+          <View style={styles.loginboxfield}>
+            <View style={{alignItems: 'center'}}>
+            <Text style={{fontSize:10}}> </Text>
+            <Text style={styles.titlefield}>Create an account</Text>
+            <Text style={{fontSize:20}}> </Text>
+
             <TextInput
-              style={{height: 30,fontSize:20, backgroundColor:'#ffffff'}}
-              placeholder="Card"
-              onChangeText={(val) => { this.changeCardHandler(val) }}
+                style={styles.inputfield}
+                placeholder="First name"
+                placeholderTextColor= "#808080"
+                onChangeText={(val) => { this.changeFirstNameHandler(val) }}
+                />        
+           
+            <Text style={{fontSize:20}}> </Text>
+
+            <TextInput
+                style={styles.inputfield}
+                placeholder="Last name"
+                placeholderTextColor= "#808080"
+                onChangeText={(val) => { this.changeLastNameHandler(val) }}
+                />   
+
+            <Text style={{fontSize:20}}> </Text>
+
+            <TextInput
+                style={styles.inputfield}
+                placeholder="Email"
+                placeholderTextColor= "#808080"
+                onChangeText={(val) => { this.changeEmailHandler(val) }}
+                />        
+           
+            <Text style={{fontSize:20}}> </Text>
+              <TextInput
+                style={styles.inputfield}
+                placeholder="Username"
+                placeholderTextColor= "#808080"
+                onChangeText={(val) => { this.changeLoginNameHandler(val) }}
+                />        
+           
+            <Text style={{fontSize:20}}> </Text>
+
+            <View style={{ flexDirection:'center' }}>
+              <TextInput
+                style={styles.inputfield}
+                placeholder="Password"
+                placeholderTextColor= "#808080"
+                secureTextEntry={true}
+                onChangeText={(val) => { this.changePasswordHandler(val) }}
+              />
+            </View>
+
+
+            <SelectDropdown
+              buttonStyle = {styles.dropdown}
+              buttonTextStyle = {styles.dropdowntext}
+              rowStyle = {styles.dropdownrow}
+              rowTextStyle = {styles.dropdownrowtext}
+              defaultButtonText="Select Security Question:"
+              dropdownIconPosition="right"
+              data={questions}
+              onSelect={(val) => { this.changeQuestionHandler(val) }}
+              buttonTextAfterSelection={(selectedItem, index) => {return selectedItem}}
+              rowTextForSelection={(item, index) => {return item}}
             />
-            <Button
-              title=" Add "
-              onPress={this.handleCardClick}
-            />            
-        </View>
-        <Text style={{fontSize:20}}>{this.state.newCard}  </Text>
+
+
+            <Text style={{fontSize:20}}> </Text>
+
+            <View style={{ flexDirection:'center' }}>
+              <TextInput
+                style={styles.inputfield}
+                placeholder="Answer"
+                placeholderTextColor= "#808080"
+                secureTextEntry={true}
+                onChangeText={(val) => { this.changeAnswerHandler(val) }}
+              />
+            </View>
+            
+            <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
+            </View>
+
+            <Pressable style={styles.loginbuttonfield} onPress={this.handleClickRegister}>
+              <Text style={styles.buttontext}>Register</Text>
+            </Pressable>
+
+          </View>
+          <Text style={{fontSize:40}}> </Text>
+          
+            <Pressable style={styles.loginbuttonfield} onPress={this.handleClickLogin}>
+              <Text style={styles.buttontext}>Log In</Text>
+            </Pressable>
         </View>
       </View>
-    )
+    </ImageBackground>
+  );
   }
-  handleCardClick = async () => 
+
+  handleClickLogin = async () =>
   {
-    var obj = {userId:global.userId,card:global.card};
-    var js = JSON.stringify(obj);
-    try
-    {
-      const response = await fetch('https://cop4331-10.herokuapp.com/api/addcard',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-      var res = JSON.parse(await response.text());
-      this.setState({newCard: "Your card has been added" });
-   }
-    catch(e)
-    {
-      this.setState({newCard: e.message });
-    }
+    this.props.navigation.navigate('Login');
   }  
-  handleSearchClick = async () => 
+
+  handleClickRegister = async () =>
   {
-    var obj = {userId:global.userId,search:global.search};
-    var js = JSON.stringify(obj);
+
     try
     {
-      const response = await fetch('https://cop4331-10.herokuapp.com/api/searchcards',
+      var obj = {login:global.loginName.trim(), password:global.password.trim(), email:global.email.trim(),
+                 firstname:global.firstName.trim(), lastname:global.lastName.trim(),
+                 securityquestion:global.question, securityanswer:global.answer.trim()};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/register',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
       var res = JSON.parse(await response.text());
-      var _results = res.results;
-      var resultText = '';
-      for( var i=0; i<_results.length; i++ )
+
+      if( res.error !== "" )
       {
-          resultText += _results[i];
-          if( i < _results.length - 1 )
-          {
-              resultText += '\n';
-          }
+        console.log(res.error)
+        this.setState({message: "Register failed. Fuck you"});
       }
-      resultText += '\n';
-      this.setState({searchCriteria: resultText });
+      else
+      {
+        global.firstName = res.firstName;
+        global.lastName = res.lastName;
+        global.userId = res.id;
+        this.props.navigation.navigate('Card');
+      }
     }
     catch(e)
     {
-      this.setState({searchCriteria: e.message });
+      this.setState({message: e.message});
     }
-   }  
-  changeSearchHandler = async (val) =>
-  {
-    global.search = val;
   }  
-  changeCardHandler = async (val) =>
+
+  changeLoginNameHandler = async (val) =>
   {
-    global.card = val;
+    global.loginName = val;
   }  
+
+  changePasswordHandler = async (val) =>
+  {
+    global.password = val;
+  }  
+
+  changeFirstNameHandler = async (val) =>
+  {
+    global.firstName = val;
+  } 
+
+  changeLastNameHandler = async (val) =>
+  {
+    global.lastName = val;
+  } 
+
+  changeEmailHandler = async (val) =>
+  {
+    global.email = val;
+  } 
+
+  changeAnswerHandler = async (val) =>
+  {
+    global.answer = val;
+  } 
+
+  changeQuestionHandler = async (val) =>
+  {
+    global.question = questions.indexOf(val);
+  } 
+
 }
+
+const questions = ["What is your father's middle name?", "What was the name of your high school?", 
+                   "What is the name of your first pet?"];
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginboxfield: {
+    alignItems: "center",
+    position: "center",
+    backgroundColor: '#EAFCFF',
+    borderWidth: 3,
+    borderColor: '#000000',
+    borderRadius: 21,
+    width: 418,
+    justifyContent: "center",
+    marginRight: "auto",
+    marginReft: "auto",
+  },
+  logo: {
+    width: 800,
+    height: 200,
+    justifyContent: "center",
+  },
+  titlefield: {
+    display: "flex",
+    flexDirection: "column",
+    fontSize: 36,
+    minWidth: 122,
+    textAlign: "center",
+    marginTop: 4,
+  },
+  inputfield: {
+    height: 60,
+	  width: 370,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+	  marginTop: 4,
+	  marginBottom: 4,
+	  display: "flex",
+    	flexDirection: "column",
+	  justifyContent: "center",
+	  fontSize: 36,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
+  loginbuttonfield: {
+    height: 60,
+    width: 370,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    backgroundColor: '#FF7A70',
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  buttontext: {
+    fontSize: 36,
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "auto"
+  },
+  dropdown: {
+    height: 60,
+    width: 370,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  dropdowntext: {
+    fontSize: 24,
+  },
+  dropdownrow: {
+    height: 0,
+  },
+  dropdownrowtext: {
+    fontSize: 18,
+  }
+});
+

@@ -100,9 +100,9 @@ function Register()
                 
                 <select id="securityQuestion" name="securityQuestion" className="input"
                 ref={(c) => securityQuestion = c}>
-                    <option value="1">What is your father's middle name?</option>
-                    <option value="2">What was the name of your high school?</option>
-                    <option value="3">What is the name of your first pet?</option>
+                    <option value="0">What is your father's middle name?</option>
+                    <option value="1">What was the name of your high school?</option>
+                    <option value="2">What is the name of your first pet?</option>
                 </select>
             </label>
             
