@@ -88,6 +88,8 @@ export default class Homescreen extends Component {
             </View>
 
             <Picker
+              style={styles.picker}
+              itemStyle={styles.item}
               onValueChange={(itemValue, itemIndex) =>
                 {
                   this.selectedValue = itemValue;
@@ -277,14 +279,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: "auto"
   },
-  dropdown: {
+  picker: {
     height: 60,
     width: 370,
     marginLeft: "auto",
 	  marginRight: "auto",
-    fontSize: 36,
-    marginTop: 4,
-    marginBottom: 20,
+    fontSize: 20,
+    marginTop: 20,
+    marginBottom: 0,
     justifyContent: "center",
     alignContent: "center",
   },
