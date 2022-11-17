@@ -6,115 +6,13 @@ const path = require('path');
 const { Client } = require('pg')
 const PORT = process.env.PORT || 5000;
 const app = express();
+const Filter = require('bad-words');
 const { Console } = require('console');
 const {v1: uuidv1, v4: uuidv4} = require('uuid');
 
 app.set( 'port', (process.env.PORT || 5000 ));
 app.use(cors());
 app.use(bodyParser.json());
-
-var cardList = 
-[
-  'Roy Campanella',
-  'Paul Molitor',
-  'Tony Gwynn',
-  'Dennis Eckersley',
-  'Reggie Jackson',
-  'Gaylord Perry',
-  'Buck Leonard',
-  'Rollie Fingers',
-  'Charlie Gehringer',
-  'Wade Boggs',
-  'Carl Hubbell',
-  'Dave Winfield',
-  'Jackie Robinson',
-  'Ken Griffey, Jr.',
-  'Al Simmons',
-  'Chuck Klein',
-  'Mel Ott',
-  'Mark McGwire',
-  'Nolan Ryan',
-  'Ralph Kiner',
-  'Yogi Berra',
-  'Goose Goslin',
-  'Greg Maddux',
-  'Frankie Frisch',
-  'Ernie Banks',
-  'Ozzie Smith',
-  'Hank Greenberg',
-  'Kirby Puckett',
-  'Bob Feller',
-  'Dizzy Dean',
-  'Joe Jackson',
-  'Sam Crawford',
-  'Barry Bonds',
-  'Duke Snider',
-  'George Sisler',
-  'Ed Walsh',
-  'Tom Seaver',
-  'Willie Stargell',
-  'Bob Gibson',
-  'Brooks Robinson',
-  'Steve Carlton',
-  'Joe Medwick',
-  'Nap Lajoie',
-  'Cal Ripken, Jr.',
-  'Mike Schmidt',
-  'Eddie Murray',
-  'Tris Speaker',
-  'Al Kaline',
-  'Sandy Koufax',
-  'Willie Keeler',
-  'Pete Rose',
-  'Robin Roberts',
-  'Eddie Collins',
-  'Lefty Gomez',
-  'Lefty Grove',
-  'Carl Yastrzemski',
-  'Frank Robinson',
-  'Juan Marichal',
-  'Warren Spahn',
-  'Pie Traynor',
-  'Roberto Clemente',
-  'Harmon Killebrew',
-  'Satchel Paige',
-  'Eddie Plank',
-  'Josh Gibson',
-  'Oscar Charleston',
-  'Mickey Mantle',
-  'Cool Papa Bell',
-  'Johnny Bench',
-  'Mickey Cochrane',
-  'Jimmie Foxx',
-  'Jim Palmer',
-  'Cy Young',
-  'Eddie Mathews',
-  'Honus Wagner',
-  'Paul Waner',
-  'Grover Alexander',
-  'Rod Carew',
-  'Joe DiMaggio',
-  'Joe Morgan',
-  'Stan Musial',
-  'Bill Terry',
-  'Rogers Hornsby',
-  'Lou Brock',
-  'Ted Williams',
-  'Bill Dickey',
-  'Christy Mathewson',
-  'Willie McCovey',
-  'Lou Gehrig',
-  'George Brett',
-  'Hank Aaron',
-  'Harry Heilmann',
-  'Walter Johnson',
-  'Roger Clemens',
-  'Ty Cobb',
-  'Whitey Ford',
-  'Willie Mays',
-  'Rickey Henderson',
-  'Babe Ruth'
-];
 
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production') 
@@ -128,38 +26,7 @@ if (process.env.NODE_ENV === 'production')
   });
 }
 
-const MongoClient = require('mongodb').MongoClient;
 require('dotenv').config();
-//const url = 'mongodb+srv://RickLeinecker:WeLoveCOP4331@cluster0.ehunp00.mongodb.net/?retryWrites=true&w=majority';
-const url = process.env.MONGODB_URI;
-const client = new MongoClient(url);
-client.connect();
-
-app.post('/api/addcard', async (req, res, next) =>
-{
-  // incoming: userId, color
-  // outgoing: error
-	
-  const { userId, card } = req.body;
-
-  const newCard = {Card:card,UserId:userId};
-  var error = '';
-
-  try
-  {
-    const db = client.db("COP4331Cards");
-    const result = db.collection('Cards').insertOne(newCard);
-  }
-  catch(e)
-  {
-    error = e.toString();
-  }
-
-  cardList.push( card );
-
-  var ret = { error: error };
-  res.status(200).json(ret);
-});
 
 app.post('/api/login', async (req, res, next) => 
 {
@@ -487,8 +354,14 @@ app.delete('/api/search', async (req, res, next) =>
   catch{
     error = "Server related issues, please try again.";
   }
+
+  var _ret = [];
+  for( var i=0; i<now.length; i++ )
+  {
+    _ret.push(now[i]);
+  }
   
-  var ret = {filter: now, error: error};
+  var ret = {filter: _ret, error: error};
   res.status(200).json(ret);
 });
 
@@ -594,7 +467,13 @@ app.delete('/api/filtertag', async (req, res, next) =>
     error = "Server related issues, please try again.";
   }
   
-  var ret = {filter: now, error: error};
+  var _ret = [];
+  for( var i=0; i<now.length; i++ )
+  {
+    _ret.push(now[i]);
+  }
+
+  var ret = {filter: _ret, error: error};
   res.status(200).json(ret);
 });
 
@@ -623,12 +502,36 @@ app.delete('/api/filtercategory', async (req, res, next) =>
   catch{
     error = "Server related issues, please try again.";
   }
+
+  var _ret = [];
+  for( var i=0; i<now.length; i++ )
+  {
+    _ret.push(now[i]);
+  }
   
-  var ret = {filter: now, error: error};
+  
+  var ret = {filter: _ret, error: error};
   res.status(200).json(ret);
 });
 
 app.delete('/api/badwords', async (req, res, next) => 
+{
+  const { text } = req.body;
+
+  var filter = new Filter();
+  filter.addWords('Noah');
+  
+  var badword = filter.clean(text);
+
+  if(text !== badword){
+    var ret = { wordfound: true };
+  }
+  var ret = { wordfound: false };
+
+  res.status(200).json(ret);
+});
+
+app.delete('/api/badwordscheck', async (req, res, next) => 
 {
   const { text } = req.body;
 
@@ -638,6 +541,7 @@ app.delete('/api/badwords', async (req, res, next) =>
   var ret = { text: filter.clean(text)};
   res.status(200).json(ret);
 });
+
 
 app.delete('/api/deleterecipe', async (req, res, next) => 
 {
