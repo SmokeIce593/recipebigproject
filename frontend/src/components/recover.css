@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:400");
+img{
+	max-width: 100%;
+	height:auto;
+}
+
+.drop-backgroundimg{
+    position: relative;
+    bottom: 0px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.recoverField{
+    position: relative;
+    background-color: #EAFCFF;
+    border: 1px solid;
+    border-color: black;
+    border-radius: 21px;
+    height: 666px;
+    width: 75%;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, .5);
+}
+
+.submitButton{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 60px;
+    width: 370px;
+    background-color: #FF7A70;
+    border-radius: 10px;
+    font-size: 36px;
+    margin-bottom: 6%;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.returnButton{
+    display: block;
+    margin-left: 5%;
+    margin-bottom: 2%; 
+    height: 60px;
+    width: 370px;
+    background-color: #FF7A70;
+    border-radius: 10px;
+    font-size: 36px;
+    justify-content: center;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.innerText{
+	font-size: 20px;
+	margin-left: 5%;
+	margin-right: 5%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+}
+
+

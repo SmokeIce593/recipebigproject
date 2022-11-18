@@ -32,7 +32,6 @@ function Login()
 
         try
         {    
-//            const response = await fetch('http://localhost:5000/api/login',
             const response = await fetch(buildPath('api/login'),
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
@@ -62,6 +61,12 @@ const goRegister = async event=>
     {
         window.location.href = '/register';
     }
+    
+    const goRecover = async event=>
+    {
+    	window.location.href = '/recover';
+    }
+
 
     return(
         <div id="loginDiv" >
@@ -74,6 +79,7 @@ const goRegister = async event=>
             <div id="bumper" className="buffer"><span id="loginResult" className = "error">{message}</span></div> 
             <input type="submit" id="loginButton" className="loginbuttonfield" value ="Log In"
                 onClick={doLogin} />
+            <div id="bumper" className="buffer"><input type="button" id="recoverLink" className = "recoverLink" value="Forgot password" onClick={goRecover} /></div>
         </form>
         <input type="button" id="registerButton" className="registerbuttonfield" value="Register" 
                 onClick={goRegister}/>

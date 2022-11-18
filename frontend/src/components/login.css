@@ -17,7 +17,7 @@ img{
     border-radius: 10px;
     font-size: 36px;
     margin-top: 4%;
-    margin-bottom: 2%;
+    margin-bottom: 6%;
     justify-content: center;
     margin-right: auto;
     margin-left: auto;
@@ -94,8 +94,19 @@ img{
 }
 
 .buffer{
+	position: block;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 15px;
     text-align: center;
+}
+
+.recoverLink{
+	color: blue;
+		justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    border: none;
+  background-color: inherit;
+  font-size: 16px;
 }

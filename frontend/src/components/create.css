@@ -1,3 +1,31 @@
+@import url("https://fonts.googleapis.com/css?family=Inter:400");
+
+li{
+	margin-bottom: 1%;
+}
+
+table{
+	width: 100%;
+	}
+
+td{
+    padding: 2%;
+}
+
+textarea {
+    box-sizing: border-box;
+    resize: none;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+}
+
+.col1{
+	width:50%;
+}
+
+.col2{
+	width:50%;
+}
+
 .displayregion{
 	position: relative;
     background-color: #EAFCFF;
@@ -7,6 +35,92 @@
     margin-left: 100px;
     margin-right: 100px;
     justify-content: center;
-    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5)
+    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5);
+    overflow:auto;
 }
 
+.titlefield{
+	width: 100%;
+	background-color: #EAFCFF;
+	border-right: none;
+	border-left: none;
+	border-top: none;
+	border-color: black;
+}
+
+.descfield{
+	height: 350px;
+	width: 100%;
+	text-align: top;
+	resize: none;
+	padding: 5px;
+}
+
+.addButton{
+	border-radius: 25px;
+	padding-bottom: 1%;
+	padding-top: 1%;
+	padding-right: 2%;
+	padding-left: 2%;
+	background-color: #FF7A70;
+}
+
+.indent{
+	width: 1%;
+	vertical-align:top;
+}
+
+.info{
+	width: 100%;
+}
+
+.label{
+	margin-top: 2%;
+}
+
+.deleteIcons{
+	vertical-align: top;
+	width: 1%;
+}
+
+.ingField{
+	margin-bottom: 2%;
+	width:60%;
+	text-align: top;
+	resize: none;
+	padding:3px;
+}
+
+.dirField{
+	margin-bottom: 2%;
+	width:100%;
+	text-align: top;
+	resize: none;
+	padding:3px;
+}
+
+.tagField{
+	width:100%;
+}
+
+.privateBox{
+	margin-top:2%;
+	margin-left: 2%;
+}
+
+.numbered {
+  counter-reset: rowNumber;
+}
+
+.numbered tr::before {
+  display: table-cell;
+  counter-increment: rowNumber;
+  content: counter(rowNumber) ".";
+  padding-top: 2.5%;
+}
+
+.imgUpload{
+	width:80%;
+	height:20%;
+	color:blue;
+}
