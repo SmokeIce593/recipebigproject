@@ -50,6 +50,10 @@ app.post('/api/login', async (req, res, next) =>
   var id = -1;
   var fn = '';
   var ln = '';
+  var email = '';
+  var username = '';
+  var securityquestion = '';
+  var securityanswer = '';
 
   const { login, password } = req.body;
   const connectionString = process.env.DATABASE_URL;
@@ -71,6 +75,10 @@ app.post('/api/login', async (req, res, next) =>
       id = now.rows[0]["id"];
       fn = now.rows[0]["firstname"];
       ln = now.rows[0]["lastname"];
+      email = now.rows[0]["email"];
+      username = now.rows[0]["username"];
+      securityquestion = now.rows[0]["securityquestion"];
+      securityanswer = now.rows[0]["securityanswer"];
     }
     else{
       error = "Invalid Username/Password"
@@ -80,7 +88,7 @@ app.post('/api/login', async (req, res, next) =>
     error = "Server related issues, please try again.";
   }
 
-  var ret = { id:id, firstName:fn, lastName:ln, error:error};
+  var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, error:error};
   res.status(200).json(ret);
 });
 
