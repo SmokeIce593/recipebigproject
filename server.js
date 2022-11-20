@@ -88,6 +88,7 @@ app.post('/api/login', async (req, res, next) =>
     error = "Server related issues, please try again.";
   }
 
+  
   var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, error:error};
   res.status(200).json(ret);
 });
@@ -104,9 +105,9 @@ app.post('/api/register', async (req, res, next) =>
 
   const { login, password, email, firstname, lastname, securityquestion, securityanswer } = req.body;
   const connectionString = process.env.DATABASE_URL;
-
+  var newid = uuidv4();
   const hashed = await bcrypt.hash(password, 10);
-  //console.log(login + password + email + firstname + lastname + securityquestion + securityanswer);
+
   const client = new Client({
     connectionString: connectionString,
     ssl: { rejectUnauthorized: false }
@@ -121,9 +122,10 @@ app.post('/api/register', async (req, res, next) =>
   const logincheck = await client.query(duplicatelogin, valueslogincheck);
   if(logincheck.rowCount == 0)
   {
-    const text = 'Insert into users (username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7)';
-    const values = [login, hashed, email, firstname, lastname, securityquestion, securityanswer];
+    const text = 'Insert into users (id, username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7, $8)';
+    const values = [newid, login, hashed, email, firstname, lastname, securityquestion, securityanswer];
     const now = await client.query(text, values);
+    codecreation(newid);
   }
   else{
     error = "Duplicate Login already exists.";
@@ -133,7 +135,7 @@ app.post('/api/register', async (req, res, next) =>
   catch{
     error = "Server related issues, please try again.";
   }
-  
+
   var ret = { id:id, firstName:fn, lastName:ln, error:error};
   res.status(200).json(ret);
 });
@@ -166,22 +168,6 @@ async function savetags(fkrecipeid, tags, tagcolor, tagtype){
   return error;
 }
 
-app.post('/api/savetags', async (req, res, next) => 
-{
-  var error = '';
-  var id = -1;
-  var tn = '';
-  var tc = '';
-  var tt = '';
-
-  const { fkrecipeid, tagname, tagcolor, tagtype } = req.body;
-  const connectionString = process.env.DATABASE_URL;
-
-  // Need to connect here
-  //var error = savetags();
-  var ret = {error:''};
-  res.status(200).json(ret);
-});
 
 app.post('/api/savecategory', async (req, res, next) => 
 {
@@ -338,13 +324,10 @@ async function saveingredients(ingredients, fkrecipeid){
     ssl: { rejectUnauthorized: false }
   });
 
-  console.log("Made it to ingredients");
   await client.connect();
   for(const ingredient of ingredients){
-    console.log(ingredient);
   try{
     var newid = uuidv4();
-    console.log("Important: " + newid + " " + ingredient + " " + fkrecipeid);
     const text = 'Insert into ingredients (id, ingredient, recipefk) values ($1, $2, $3)';
     const value = [newid, ingredient, fkrecipeid];
     const now = await client.query(text, value);
@@ -369,7 +352,6 @@ async function savedirections(directions, fkrecipeid){
   for(const direction of directions){
   try{
     var newid = uuidv4();
-    console.log("Important: " + newid + " " + direction + " " + fkrecipeid);
     const text = 'Insert into directions (id, directions, fkrecipe) values ($1, $2, $3)';
     const value = [newid, direction, fkrecipeid];
     const now = await client.query(text, value);
@@ -381,38 +363,6 @@ async function savedirections(directions, fkrecipeid){
   await client.end();
   return error;
 }
-
-
-app.post('/api/saveingredients', async (req, res, next) => 
-{
-  var error = '';
-  console.log("Made to ingredients");
-  const {fkrecipeid, ingredient} = req.body;
-  const connectionString = process.env.DATABASE_URL;
-
-
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: { rejectUnauthorized: false }
-  });
-
-  for(const ingredient of ingredients){
-    console.log(ingredient);
-  }
-  /*
-  try{
-    var newid = uuidv4();
-    await client.connect();
-    const text = 'Insert into ingredients (id, ingredient, recipefk) values ($1, $2, $3)';
-    const value = [newid, test, fkrecipeid];
-    const now = await client.query(text, value);
-    await client.end();
-    }
-    catch{
-      error = "Server related issues, please try again.";
-    }
-*/
-});
 
 
 app.delete('/api/editrecipe', async (req, res, next) => 
@@ -524,15 +474,10 @@ app.delete('/api/codeverification', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.delete('/api/codecreation', async (req, res, next) => 
-{
-  // incoming: fkrecipeid, categoryname, categorycolor
-  // outgoing: id, fkrecipeid, categoryname, categorycolor
-	
+async function codecreation(userID){
   var error = '';
-  var code = uuid4();
+  var code = uuidv4();
 
-  const {userID} = req.body;
   const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
@@ -551,6 +496,18 @@ app.delete('/api/codecreation', async (req, res, next) =>
     error = "Server related issues, please try again.";
     
   }
+  return error;
+}
+
+app.delete('/api/codecreation', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+
+  const {userID} = req.body;
+  codecreation(userID);
   
   var ret = {error: error};
   res.status(200).json(ret);
