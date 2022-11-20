@@ -316,6 +316,65 @@ app.post('/api/saverecipe', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+
+app.post('/api/getsinglerecipe', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+
+  var error = '';
+
+  const {recipeID} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const recipequery = 'Select * from recipes where id = $1';
+  const recipevalue = [userID];
+  const recipe = await client.query(text, value);
+  
+  const ingredientquery = 'Select * from ingredients where recipefk = $1';
+  const ingredientvalue = [userID];
+  const ingredient = await client.query(text, value);
+
+  const directionquery = 'Select * from ingredients where recipefk = $1';
+  const directionvalue = [userID];
+  const direction = await client.query(text, value);
+
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+
+
+  var _recipe = [];
+  for( var i=0; i<recipe.length; i++ )
+  {
+    _recipe.push(recipe[i]);
+  }
+
+  var _ingredient = [];
+  for( var i=0; i<ingredient.length; i++ )
+  {
+    _ingredient.push(ingredient[i]);
+  }
+
+  var _direction = [];
+  for( var i=0; i<direction.length; i++ )
+  {
+    _direction.push(direction[i]);
+  }
+
+  var ret = {recipe:_recipe, ingredients:_ingredient,directions:_direction, error: error};
+  res.status(200).json(ret);
+});
+
 async function saveingredients(ingredients, fkrecipeid){
   const connectionString = process.env.DATABASE_URL;
   var error = '';
