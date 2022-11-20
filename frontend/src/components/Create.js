@@ -3,10 +3,9 @@ import './create.css'
 
 var title;
 var description;
-var ingredient;
-var direction;
+var ingredient = [];
+var direction = [];
 var tag;
-
 
 
 function Create()
@@ -34,9 +33,9 @@ function Create()
 		var _ud = localStorage.getItem('user_data');
 		var ud = JSON.parse(_ud);
 		var userId = ud.id;
-        var obj = {recipename:title.value,recipetext:description.value,fkuser:userId,privaterecipe:checkedRecipe};
+        var obj = {recipename:title.value,recipetext:description.value,fkuser:userId,privaterecipe:checkedRecipe,tags:tag.value,ingredients:ingredient,directions:direction};
         var js = JSON.stringify(obj);
-
+		alert(ingredient[0]);
         try
         {    
             const response = await fetch(buildPath('api/saverecipe'),
@@ -66,6 +65,7 @@ function Create()
 	if(document.getElementById('ingredient').value != ""){
 		var table = document.getElementById('ingredientTable');
 		var info = document.getElementById('ingredient').value;
+		ingredient.push(info);
 		let deleteIcon = document.createElement("button");
 			deleteIcon.type = "button";
 			deleteIcon.innerHTML = "X";
@@ -87,6 +87,7 @@ function Create()
 	function deleteIng(table, row){
 		var index = row.parentNode.parentNode.rowIndex;
 		table.deleteRow(index);
+		ingredient.splice(index, 1);
 		ingNum--;
 	}
 	
@@ -95,6 +96,7 @@ function Create()
 	if(document.getElementById('direction').value != ""){
 		var table = document.getElementById('directionTable');
 		var info = document.getElementById('direction').value;
+		direction.push(info);
 		let deleteIcon = document.createElement("button");
 			deleteIcon.type = "button";
 			deleteIcon.innerHTML = "X";
@@ -113,6 +115,7 @@ function Create()
 	function deleteDir(table, row){
 		var index = row.parentNode.parentNode.rowIndex;
 		table.deleteRow(index);
+		direction.splice(index, 1);
 		dirNum--; 
 	}
 

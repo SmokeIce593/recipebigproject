@@ -290,7 +290,7 @@ app.post('/api/saverecipe', async (req, res, next) =>
 
   var error = '';
 
-  const {recipename, recipetext, fkuser, privaterecipe} = req.body;
+  const {recipename, recipetext, fkuser, privaterecipe, tags, ingredients, directions} = req.body;
   const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
@@ -298,10 +298,9 @@ app.post('/api/saverecipe', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
-  console.log("Made it here");
+  console.log("Made it here " + tags);
   var newid = uuidv4();
 
-  console.log(recipename + " " + recipetext + " " + fkuser + " " + newid);
   try{
   await client.connect();
   const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
@@ -312,27 +311,97 @@ app.post('/api/saverecipe', async (req, res, next) =>
   catch{
     error = "Server related issues, please try again.";
   }
-  /*
-  var obj = {recipename:title.value,recipetext:description.value,fkuser:userId,tag:tag};
-  var js = JSON.stringify(obj);
 
-  // Save tags
-  try
-  {    
-      const response = await fetch(buildPath('api/savetags'),
-          {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-  }
-  catch{
-    error = "Server related issues, please try again.";
-  }
-  */
-  
-
+  saveingredients(ingredients, newid);
+  savedirections(directions, newid);
   var ret = {error: error};
   res.status(200).json(ret);
 });
+
+async function saveingredients(ingredients, fkrecipeid){
+  const connectionString = process.env.DATABASE_URL;
+  var error = '';
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  console.log("Made it to ingredients");
+  await client.connect();
+  for(const ingredient of ingredients){
+    console.log(ingredient);
+  try{
+    var newid = uuidv4();
+    console.log("Important: " + newid + " " + ingredient + " " + fkrecipeid);
+    const text = 'Insert into ingredients (id, ingredient, recipefk) values ($1, $2, $3)';
+    const value = [newid, ingredient, fkrecipeid];
+    const now = await client.query(text, value);
+  }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+  }
+  await client.end();
+  return error;
+}
+
+async function savedirections(directions, fkrecipeid){
+  const connectionString = process.env.DATABASE_URL;
+  var error = '';
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await client.connect();
+  for(const direction of directions){
+  try{
+    var newid = uuidv4();
+    console.log("Important: " + newid + " " + direction + " " + fkrecipeid);
+    const text = 'Insert into directions (id, directions, fkrecipe) values ($1, $2, $3)';
+    const value = [newid, direction, fkrecipeid];
+    const now = await client.query(text, value);
+  }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+  }
+  await client.end();
+  return error;
+}
+
+
+app.post('/api/saveingredients', async (req, res, next) => 
+{
+  var error = '';
+  console.log("Made to ingredients");
+  const {fkrecipeid, ingredient} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  for(const ingredient of ingredients){
+    console.log(ingredient);
+  }
+  /*
+  try{
+    var newid = uuidv4();
+    await client.connect();
+    const text = 'Insert into ingredients (id, ingredient, recipefk) values ($1, $2, $3)';
+    const value = [newid, test, fkrecipeid];
+    const now = await client.query(text, value);
+    await client.end();
+    }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+*/
+});
+
 
 app.delete('/api/editrecipe', async (req, res, next) => 
 {
