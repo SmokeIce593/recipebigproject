@@ -28,6 +28,19 @@ if (process.env.NODE_ENV === 'production')
 
 require('dotenv').config();
 
+const app_name = 'recipeprojectlarge'
+function buildPath(route)
+{
+    if (process.env.NODE_ENV === 'production') 
+    {
+        return 'https://' + app_name +  '.herokuapp.com/' + route;
+    }
+    else
+    {        
+        return 'http://localhost:5000/' + route;
+    }
+}
+
 app.post('/api/login', async (req, res, next) => 
 {
   // incoming: login, password
@@ -270,14 +283,14 @@ app.delete('/api/deletecategory', async (req, res, next) =>
 });
 
 
-app.delete('/api/saverecipe', async (req, res, next) => 
+app.post('/api/saverecipe', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
-	
+
   var error = '';
 
-  const {recipename, recipetext, fkuser } = req.body;
+  const {recipename, recipetext, fkuser} = req.body;
   const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
@@ -285,17 +298,38 @@ app.delete('/api/saverecipe', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
+  console.log("Made it here");
+  var newid = uuidv4();
+
+  console.log(recipename + " " + recipetext + " " + fkuser + " " + newid);
   try{
   await client.connect();
-  const text = 'Insert into recipe (recipe text_recipe, userid) values ($1, $2, $3)';
-  const value = [recipename, recipetext, fkuser];
+  const text = 'Insert into recipes (id, recipe, text_recipe, userid) values ($1, $2, $3, $4)';
+  const value = [newid, recipename, recipetext, fkuser];
   const now = await client.query(text, value);
   await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
   }
+  /*
+  var obj = {recipename:title.value,recipetext:description.value,fkuser:userId,tag:tag};
+  var js = JSON.stringify(obj);
+
+  // Save tags
+  try
+  {    
+      const response = await fetch(buildPath('api/savetags'),
+          {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  */
   
+
   var ret = {error: error};
   res.status(200).json(ret);
 });

@@ -9,8 +9,52 @@ var tag;
 
 function Create()
 {
+
+	const app_name = 'recipeprojectlarge'
+    function buildPath(route)
+    {
+        if (process.env.NODE_ENV === 'production') 
+        {
+            return 'https://' + app_name +  '.herokuapp.com/' + route;
+        }
+        else
+        {        
+            return 'http://localhost:5000/' + route;
+        }
+    }
+
 	const createRecipe = async event =>
 	{
+		event.preventDefault();
+		var _ud = localStorage.getItem('user_data');
+		var ud = JSON.parse(_ud);
+		var userId = ud.id;
+
+        var obj = {recipename:title.value,recipetext:description.value,fkuser:userId};
+        var js = JSON.stringify(obj);
+
+        try
+        {    
+            const response = await fetch(buildPath('api/saverecipe'),
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            if( res.error !== "")
+            {
+                alert(res.error);
+            }
+            else
+            {
+                //setMessage('');
+                window.location.href = '/home';
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }  
 	}
 
 	var ingNum = 0;
@@ -74,12 +118,12 @@ function Create()
         <table>
         <td className = "col1">
             <input type="text" id="title" placeholder="My New Recipe" className="titlefield" ref={(c) => title = c} /><br />
-            <textarea id="description" className="descfield" placeholder="Recipe Description..."/>
+            <textarea id="description" className="descfield" placeholder="Recipe Description..." ref={(c) => description = c}/>
             <div className="lists">
         	<div type="text" className = 'label'>Tags:</div>
         	<div id="tagList">
             </div>
-        	<textarea id="tags" className = "tagField" placeholder="Enter tags separated by a space..."/>
+        	<textarea id="tags" className = "tagField" placeholder="Enter tags separated by a space..." ref={(c) => tag = c}/>
         </div>
             <div className = "privateBox">Private: <input type="checkbox" id="privateCheck" /></div>
         </td>
