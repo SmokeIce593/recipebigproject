@@ -5,7 +5,7 @@ var title;
 var description;
 var ingredient = [];
 var direction = [];
-var tag;
+var tag = [];
 
 
 function Create()
@@ -33,7 +33,7 @@ function Create()
 		var _ud = localStorage.getItem('user_data');
 		var ud = JSON.parse(_ud);
 		var userId = ud.id;
-        var obj = {recipename:title.value,recipetext:description.value,fkuser:userId,privaterecipe:checkedRecipe,tags:tag.value,ingredients:ingredient,directions:direction};
+        var obj = {recipename:title.value,recipetext:description.value,fkuser:userId,privaterecipe:checkedRecipe,tags:tag,ingredients:ingredient,directions:direction};
         var js = JSON.stringify(obj);
 		alert(ingredient[0]);
         try
@@ -83,6 +83,37 @@ function Create()
 		ingNum++;
 		}
 	}
+
+	var tagNum = 0;
+	const addTag = async event => {
+	if(document.getElementById('tag').value != ""){
+		var table = document.getElementById('tagTable');
+		var info = document.getElementById('tag').value;
+		tag.push(info);
+		let deleteIcon = document.createElement("button");
+			deleteIcon.type = "button";
+			deleteIcon.innerHTML = "X";
+			deleteIcon.onclick = function(){deleteTag(table, this)};
+		var row = table.insertRow(tagNum);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		cell1.className = "indent"
+		cell3.className = "deleteIcons"
+		cell1.innerHTML = "&bull;";
+		cell2.innerHTML = info;
+		cell3.appendChild(deleteIcon);
+		document.getElementById('tag').value = '';
+		tagNum++;
+		}
+	}
+
+	function deleteTag(table, row){
+		var index = row.parentNode.parentNode.rowIndex;
+		table.deleteRow(index);
+		tag.splice(index, 1);
+		tagNum--;
+	}
 	
 	function deleteIng(table, row){
 		var index = row.parentNode.parentNode.rowIndex;
@@ -131,10 +162,6 @@ function Create()
             <input type="text" id="title" placeholder="My New Recipe" className="titlefield" ref={(c) => title = c} /><br />
             <textarea id="description" className="descfield" placeholder="Recipe Description..." ref={(c) => description = c}/>
             <div className="lists">
-        	<div type="text" className = 'label'>Tags:</div>
-        	<div id="tagList">
-            </div>
-        	<textarea id="tags" className = "tagField" placeholder="Enter tags separated by a space..." ref={(c) => tag = c}/>
         </div>
 		<div className="privateBox">Private: 
 			<input
@@ -168,8 +195,18 @@ function Create()
         	</tbody>
         	</table>
         </div>
+		<div className="lists">
+        	<div type='text' className = 'label'>Tags:</div>
+        	<input type="text" id="tag" placeholder="Tags..." className="tagField"/><br />
+        	<input type="button" className="addButton" onClick={addTag} value='+Add Tag' />
+        	<table>
+        	<tbody id="tagTable">
+        	</tbody>
+        	</table>
+        </div>
         </td>
         </table>
+		
 			<div id="bumper" className="buffer"><span id="loginResult" className = "error">{message}</span></div> 
             <input type="submit" id="submitButton" className="submitButton" value ="Save Recipe" onClick={createRecipe} />
         </form>

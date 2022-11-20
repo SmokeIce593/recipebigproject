@@ -130,11 +130,36 @@ app.post('/api/register', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.post('/api/savetags', async (req, res, next) => 
-{
+async function savetags(fkrecipeid, tags, tagcolor, tagtype){
+
   // incoming: fkrecipeid, tagname, tagcolor, tagtype
   // outgoing: id, fkrecipeid, tagname, tagcolor, tagtype, error
-	
+	var error = '';
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await client.connect();
+  for(const tag of tags){
+    var newid = uuidv4();
+    try{
+      const text = 'Insert into tags (id, fkrecipeid, tagname, tagcolor, tagtype) values ($1, $2, $3, $4, $5)';
+      const values = [newid, fkrecipeid, tag, tagcolor, tagtype];
+      const now = await client.query(text, values);
+    }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+  }
+  await client.end();
+  return error;
+}
+
+app.post('/api/savetags', async (req, res, next) => 
+{
   var error = '';
   var id = -1;
   var tn = '';
@@ -144,32 +169,9 @@ app.post('/api/savetags', async (req, res, next) =>
   const { fkrecipeid, tagname, tagcolor, tagtype } = req.body;
   const connectionString = process.env.DATABASE_URL;
 
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: { rejectUnauthorized: false }
-  });
-
-  try{
-
-  
-  await client.connect();
-  const duplicatetag = 'SELECT * FROM tags WHERE tagname = $1';
-  const valuestagcheck = [tagname];
-  const tagcheck = await client.query(duplicatetag, valuestagcheck);
-  
-  if(tagcheck.rowCount == 0)
-  {
-    const text = 'Insert into tags (fkrecipeid, tagname, tagcolor, tagtype) values ($1, $2, $3, $4)';
-    const values = [fkrecipeid, tagname, tagcolor, tagtype];
-    const now = await client.query(text, values);
-  }
-  await client.end();
-  }
-  catch{
-    error = "Server related issues, please try again.";
-  }
-  
-  var ret = { id:fkrecipeid, tn:tagname, tc:tagcolor, tt:tagtype, error:''};
+  // Need to connect here
+  //var error = savetags();
+  var ret = {error:''};
   res.status(200).json(ret);
 });
 
@@ -314,6 +316,8 @@ app.post('/api/saverecipe', async (req, res, next) =>
 
   saveingredients(ingredients, newid);
   savedirections(directions, newid);
+  savetags(newid, tags, "orange", "test");
+
   var ret = {error: error};
   res.status(200).json(ret);
 });
