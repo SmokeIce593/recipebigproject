@@ -7,8 +7,13 @@ var ingredient;
 var direction;
 var tag;
 
+
+
 function Create()
 {
+	const[checkedRecipe, setCheckedRecipe] = useState(false);
+
+	const [message,setMessage] = useState('');
 
 	const app_name = 'recipeprojectlarge'
     function buildPath(route)
@@ -29,8 +34,7 @@ function Create()
 		var _ud = localStorage.getItem('user_data');
 		var ud = JSON.parse(_ud);
 		var userId = ud.id;
-
-        var obj = {recipename:title.value,recipetext:description.value,fkuser:userId};
+        var obj = {recipename:title.value,recipetext:description.value,fkuser:userId,privaterecipe:checkedRecipe};
         var js = JSON.stringify(obj);
 
         try
@@ -42,11 +46,11 @@ function Create()
 
             if( res.error !== "")
             {
-                alert(res.error);
+                setMessage(res.error);
             }
             else
             {
-                //setMessage('');
+                setMessage('');
                 window.location.href = '/home';
             }
         }
@@ -111,7 +115,11 @@ function Create()
 		table.deleteRow(index);
 		dirNum--; 
 	}
-	    
+
+	const handleChange= () => {
+		setCheckedRecipe(!checkedRecipe);
+	  };
+
    return(
         <div id="createDiv" className="displayregion">
         <form>
@@ -125,7 +133,13 @@ function Create()
             </div>
         	<textarea id="tags" className = "tagField" placeholder="Enter tags separated by a space..." ref={(c) => tag = c}/>
         </div>
-            <div className = "privateBox">Private: <input type="checkbox" id="privateCheck" /></div>
+		<div className="privateBox">Private: 
+			<input
+				id="privaterecipe"
+				type="checkbox"
+				value={checkedRecipe}
+				onChange={handleChange}/>
+		</div>
         </td>
         <td className = "col2">
         <div className="imgUpload">
@@ -153,6 +167,7 @@ function Create()
         </div>
         </td>
         </table>
+			<div id="bumper" className="buffer"><span id="loginResult" className = "error">{message}</span></div> 
             <input type="submit" id="submitButton" className="submitButton" value ="Save Recipe" onClick={createRecipe} />
         </form>
         </div>

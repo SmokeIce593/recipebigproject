@@ -290,7 +290,7 @@ app.post('/api/saverecipe', async (req, res, next) =>
 
   var error = '';
 
-  const {recipename, recipetext, fkuser} = req.body;
+  const {recipename, recipetext, fkuser, privaterecipe} = req.body;
   const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
@@ -304,8 +304,8 @@ app.post('/api/saverecipe', async (req, res, next) =>
   console.log(recipename + " " + recipetext + " " + fkuser + " " + newid);
   try{
   await client.connect();
-  const text = 'Insert into recipes (id, recipe, text_recipe, userid) values ($1, $2, $3, $4)';
-  const value = [newid, recipename, recipetext, fkuser];
+  const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
+  const value = [newid, recipename, recipetext, fkuser, privaterecipe];
   const now = await client.query(text, value);
   await client.end();
   }
