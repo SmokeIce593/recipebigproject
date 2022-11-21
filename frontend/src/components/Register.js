@@ -66,7 +66,8 @@ function Register()
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
-                window.location.href = '/login';
+                //window.location.href = '/login';
+                window.location.href = '/verify';
             }
         }
         catch(e)
