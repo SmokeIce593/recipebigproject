@@ -1,13 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image  } from 'react-native';
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import LoginScreen from './screens/LoginScreen';
-import CardScreen from './screens/CardScreen';
+import SearchScreen from './screens/SearchScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import CreateScreen from './screens/CreateScreen';
+import RecipeScreen from './screens/RecipeScreen';
+import SettingScreen from './screens/SettingScreen';
 export default class App extends React.Component {
   render() {
-    return <AppContainer />;
+    return <AppContainer/>;
   }
 }
 const AppNavigator = createStackNavigator({
@@ -17,10 +20,19 @@ const AppNavigator = createStackNavigator({
       headerShown: false // Will hide header for HomePage
     }
   },
-  Card: {
-    screen: CardScreen,
+  Search: {
+    screen: SearchScreen,
     navigationOptions: {
-      headerShown: false  // Will hide header for HomePage
+      title: '',
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
     }
   },
   Register: {
@@ -29,8 +41,53 @@ const AppNavigator = createStackNavigator({
       headerShown: false  // Will hide header for HomePage
     }
   },
+  Recipe: {
+    screen: RecipeScreen,
+    navigationOptions: {
+      title: '',
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
+  Create: {
+    screen: CreateScreen,
+    navigationOptions: {
+      title: '',
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
+  Setting: {
+    screen: SettingScreen,
+    navigationOptions: {
+      title: '',
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
 },{
-  initialRouteName: "Login"
+  initialRouteName: "Search"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
@@ -39,6 +96,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  logo: {
+    width: 1,
+    height: 4,
+    justifyContent: "center",
+    alignItems: 'center',
   },
 });
 

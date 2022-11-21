@@ -35,46 +35,50 @@ export default class Homescreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.loginboxfield}>
                         <View style={{alignItems: 'center'}}>
-                        <Text style={styles.titlefield}>Log In</Text>
+                        <Text style={styles.titlefield}>Create Screen</Text>
                         <Text style={{fontSize:20}}> </Text>
-                        <TextInput
-                            style={styles.inputfield}
-                            placeholder="Username"
-                            placeholderTextColor= "#808080"
-                            onChangeText={(val) => { this.changeLoginNameHandler(val) }}
-                            />        
-                    
-                        <Text style={{fontSize:20}}> </Text>
-
-                        <View style={{ flexDirection:'center' }}>
-                        <TextInput
-                            style={styles.inputfield}
-                            placeholder="Password"
-                            placeholderTextColor= "#808080"
-                            secureTextEntry={true}
-                            onChangeText={(val) => { this.changePasswordHandler(val) }}
-                        />
-                        </View>
+                        
+                        
                         <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
                         </View>
 
-                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-                        <View style={{alignItems: 'center'}}>
-                            <Text style={styles.buttontext}>Log In</Text>
-                        </View>
-                        </Pressable>
+                       
                     </View>
                 </View>
             </View>
         </KeyboardAvoidingView>
-            <View>
-                <Text style={{fontSize:40}}> </Text>
-                <Pressable style={styles.loginbuttonfield} onPress={this.handleClick2}>
-                    <View style={{alignItems: 'center'}}>
-                        <Text style={styles.buttontext}>Register</Text>
-                        </View>
-                </Pressable>
-            </View>
+        <View style={styles.footer}>
+        <Pressable style={styles.footerButton} onPress={this.handleHomeClick}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/home.png')}/> 
+                <Text>Home</Text>    
+              </View>
+            </Pressable>
+            <Pressable style={styles.footerButton} onPress={this.handleRecipeClick}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon2} source={require('../assets/reciepe.png')}/> 
+                <Text>Recipe</Text>    
+              </View>
+            </Pressable>
+            <Pressable style={styles.footerButton} onPress={this.handleCreateClick}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/star.png')}/> 
+                <Text>Create</Text>      
+              </View>
+            </Pressable>
+            <Pressable style={styles.footerButton} onPress={this.handleSettingsClick}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/cog.png')}/>   
+                <Text>Settings</Text>    
+              </View>
+            </Pressable>
+            <Pressable style={styles.footerButton} onPress={this.handleLogoutClick}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/logout.png')}/> 
+                <Text>Logout</Text>      
+              </View>
+            </Pressable>
+          </View>
     </ImageBackground>
   );
   }
@@ -108,11 +112,27 @@ export default class Homescreen extends Component {
       this.setState({message: e.message});
     }
   }  
-
-  handleClick2 = async () =>
+  handleHomeClick = async () =>
   {
-    this.props.navigation.navigate('Register');
+    this.props.navigation.navigate('Search');
+  }
+  handleRecipeClick = async () =>
+  {
+    this.props.navigation.navigate('Recipe');
   }  
+  handleCreateClick = async () =>
+  {
+    this.props.navigation.navigate('Create');
+  }  
+  handleSettingsClick = async () =>
+  {
+    this.props.navigation.navigate('Setting');
+  }  
+  handleLogoutClick = async () =>
+  {
+    this.props.navigation.navigate('Login');
+  }      
+  
 
   changeLoginNameHandler = async (val) =>
   {
@@ -192,6 +212,31 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     margin: "auto"
-  }
+  },
+  footer: {
+    position: 'absolute', 
+    bottom: 0, 
+    height: 100, 
+    width: '100%',
+    alignSelf: 'center',
+    backgroundColor: '#93B7BE', 
+    alignContent: 'center', 
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  footerButton: {
+    height: 70,
+    width: 70,
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
 });
 
