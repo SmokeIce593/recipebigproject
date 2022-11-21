@@ -48,56 +48,34 @@ export default class Homescreen extends Component {
             </View>
         </KeyboardAvoidingView>
         <View style={styles.footer}>
-<<<<<<< Updated upstream
         <Pressable style={styles.footerButton} onPress={this.handleHomeClick}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/home.png')}/> 
                 <Text>Home</Text>    
-=======
-            <Pressable style={styles.footerButton} onPress={this.handleHomeClick}>
-              <View style={{alignItems: 'center'}}>
-                <Image style={styles.icon} source={require('../assets/home.png')}/>     
->>>>>>> Stashed changes
               </View>
             </Pressable>
             <Pressable style={styles.footerButton} onPress={this.handleRecipeClick}>
               <View style={{alignItems: 'center'}}>
-<<<<<<< Updated upstream
                 <Image style={styles.icon2} source={require('../assets/reciepe.png')}/> 
                 <Text>Recipe</Text>    
-=======
-                <Image style={styles.icon2} source={require('../assets/reciepe.png')}/>     
->>>>>>> Stashed changes
               </View>
             </Pressable>
             <Pressable style={styles.footerButton} onPress={this.handleCreateClick}>
               <View style={{alignItems: 'center'}}>
-<<<<<<< Updated upstream
                 <Image style={styles.icon} source={require('../assets/star.png')}/> 
                 <Text>Create</Text>      
-=======
-                <Image style={styles.icon} source={require('../assets/star.png')}/>     
->>>>>>> Stashed changes
               </View>
             </Pressable>
             <Pressable style={styles.footerButton} onPress={this.handleSettingsClick}>
               <View style={{alignItems: 'center'}}>
-<<<<<<< Updated upstream
                 <Image style={styles.icon} source={require('../assets/cog.png')}/>   
                 <Text>Settings</Text>    
-=======
-                <Image style={styles.icon} source={require('../assets/cog.png')}/>     
->>>>>>> Stashed changes
               </View>
             </Pressable>
             <Pressable style={styles.footerButton} onPress={this.handleLogoutClick}>
               <View style={{alignItems: 'center'}}>
-<<<<<<< Updated upstream
                 <Image style={styles.icon} source={require('../assets/logout.png')}/> 
                 <Text>Logout</Text>      
-=======
-                <Image style={styles.icon} source={require('../assets/logout.png')}/>     
->>>>>>> Stashed changes
               </View>
             </Pressable>
           </View>
