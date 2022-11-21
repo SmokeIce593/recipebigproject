@@ -1,3 +1,4 @@
+import "dotenv/config";
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
@@ -8,6 +9,16 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const { Console } = require('console');
 const {v1: uuidv1, v4: uuidv4} = require('uuid');
+
+app.get('/recipes/:query', async (req, res) =>
+{
+  const response = await axios.get(
+    `https://api.edamam.com/search?q=${req.params.query}$app_id=${process.env.APP_ID}$app_key=${process.env.APP_KEY}`
+  )
+
+  console.log(response.data.hits)
+  res.json(response.data.hits)
+});
 
 app.set( 'port', (process.env.PORT || 5000 ));
 app.use(cors());
