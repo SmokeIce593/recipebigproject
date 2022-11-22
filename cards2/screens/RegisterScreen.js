@@ -1,24 +1,31 @@
-import React, { Component, useState } from 'react';
+import { Component, createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
-import { 
-  ImageBackground, KeyboardAvoidingView, View, Text, 
-  TextInput, Image, StyleSheet, Pressable
-} from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, View, Text, 
+         TextInput, Image, StyleSheet, Pressable
+       } from 'react-native';
 
-global.localName = '';
-global.loginName = '';
-global.password = '';
 global.userId = -1;
 global.firstName = '';
 global.lastName = '';
+global.email = '';
+global.loginName = '';
+global.password = '';
 global.question = '';
 global.answer = '';
-global.search = '';
-global.card = '';
-global.email = '';
 
+const lastRef = createRef();
+const emailRef = createRef();
+const userRef = createRef();
+const passRef = createRef();
+const ansRef = createRef();
 
-export default class Homescreen extends Component {
+const questions = [
+  "What is your father's middle name?", 
+  "What was the name of your high school?", 
+  "What is the name of your first pet?"
+];
+
+export default class RegisterScreen extends Component {
 
   constructor() 
   {
@@ -29,128 +36,156 @@ export default class Homescreen extends Component {
     }
   }
 
-
   render(){
     return(
-      <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
-        <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}>
-        <View style={styles.container}>
-          <View style={styles.container}>
-            <Image style={styles.logo} source={require('../assets/logo.png')}/>
-          </View>
-          <View style={styles.container}>
-          <View style={styles.loginboxfield}>
-          <View style= {styles.zblock}>
-            <View style={{alignItems: 'center'}}>
-            <View style= {styles.zblock}>
-            <Text style={styles.titlefield}>Create an account</Text>
-            <Text style={{fontSize:10}}> </Text>
-
-            <TextInput
-                style={styles.inputfield}
-                placeholder="First name"
-                placeholderTextColor= "#808080"
-                onChangeText={(val) => { this.changeFirstNameHandler(val) }}
-                />        
-           
-            <Text style={{fontSize:10}}> </Text>
-
-            <TextInput
-                style={styles.inputfield}
-                placeholder="Last name"
-                placeholderTextColor= "#808080"
-                onChangeText={(val) => { this.changeLastNameHandler(val) }}
-                />   
-
-            <Text style={{fontSize:10}}> </Text>
-
-            <TextInput
-                style={styles.inputfield}
-                placeholder="Email"
-                placeholderTextColor= "#808080"
-                onChangeText={(val) => { this.changeEmailHandler(val) }}
-                />        
-           
-            <Text style={{fontSize:10}}> </Text>
-              <TextInput
-                style={styles.inputfield}
-                placeholder="Username"
-                placeholderTextColor= "#808080"
-                onChangeText={(val) => { this.changeLoginNameHandler(val) }}
-                />        
-           
-            <Text style={{fontSize:10}}> </Text>
-
-            <View style={{ flexDirection:'center', zIndex: 1, elevation: 1 }}>
-              <TextInput
-                style={styles.inputfield}
-                placeholder="Password"
-                placeholderTextColor= "#808080"
-                secureTextEntry={true}
-                onChangeText={(val) => { this.changePasswordHandler(val) }}
-              />
-            </View>
-            
-              <Text style={styles.explainText}>Security Question:</Text>
-            </View>
-            
-
-            <View style ={{ zIndex: 0, elevation: 0 }}>
-              <Picker
-                style={styles.picker}
-                itemStyle={styles.item}
-                selectedValue={this.state.question}
-                onValueChange={(itemValue, itemIndex) =>
-                  {        
-                    this.setState({question: itemValue})
-                    global.question = itemIndex;
-                  }
-
-                }>
-                <Picker.Item label="What is your father's middle name?" value="0" />
-                <Picker.Item label="What was the name of your high school?" value="1" />
-                <Picker.Item label="What is the name of your first pet?" value="2" />
-              </Picker>
-            </View>
-
-
-            <Text style={{fontSize:10}}> </Text>
-          <View style= {styles.zblock}>
-            <View style={{ flexDirection:'center' }}>
-              <TextInput
-                style={styles.inputfield}
-                placeholder="Answer"
-                placeholderTextColor= "#808080"
-                secureTextEntry={true}
-                onChangeText={(val) => { this.changeAnswerHandler(val) }}
-              />
-            </View>
-            
-            <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
-            </View>
-
-            <Pressable style={styles.loginbuttonfield} onPress={this.handleClickRegister}>
-              <View style={{alignItems: 'center'}}>
-                <Text style={styles.buttontext}>Register</Text>
-              </View>
-            </Pressable>
-
-          </View>
-          </View>
-          </View>
-          <Text style={{fontSize:40}}> </Text>
-          
-            <Pressable style={styles.loginbuttonfield} onPress={this.handleClickLogin}>
-              <View style={{alignItems: 'center'}}>
-                <Text style={styles.buttontext}>Log In</Text>
-              </View>
-            </Pressable>
-        </View>
+      <ImageBackground
+        source={ require('../assets/backgroundmobilefinal.png') }
+        resizeMode='cover'
+        style={ {alignItems: "center", flex: 1, justifyContent: "center"} }> 
         
-      </View>
+        <KeyboardAvoidingView 
+          behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
+          style={ styles.container }>
+          
+          <Image style={ styles.logo } source={ require('../assets/logo.png') }/>
+          
+          <View style={ styles.container }>
+            <View style={ styles.registerboxfield }>
+              <View style= { styles.zblock }>
+
+                <Text style={ styles.titlefield }>Create an account</Text>
+
+                <TextInput
+                  clearButtonMode="while-editing"
+                  returnKeyType='next'
+                  spellCheck = { false }
+                  textContentType='givenName'
+                  style={ styles.inputfield }
+                  placeholder="First name"
+                  placeholderTextColor= '#808080'
+                  onChangeText={ (val) => {this.changeFirstNameHandler(val)} }
+                  onSubmitEditing={ () => {lastRef.current.focus();} }
+                  blurOnSubmit={ false }
+                  /> 
+
+                <TextInput
+                  ref={ lastRef }
+                  clearButtonMode="while-editing"
+                  returnKeyType='next'
+                  spellCheck = { false }
+                  textContentType='familyName'
+                  style={ styles.inputfield }
+                  placeholder="Last name"
+                  placeholderTextColor= '#808080'
+                  onChangeText={ (val) => {this.changeLastNameHandler(val)} }
+                  onSubmitEditing={ () => {emailRef.current.focus();} }
+                  blurOnSubmit={ false }
+                  />   
+                
+                <TextInput
+                  ref={ emailRef }
+                  clearButtonMode="while-editing"
+                  returnKeyType='next'
+                  keyboardType='email-address'
+                  spellCheck={ false }
+                  textContentType='emailAddress'
+                  style={ styles.inputfield }
+                  placeholder="Email"
+                  placeholderTextColor= '#808080'
+                  onChangeText={ (val) => {this.changeEmailHandler(val)} }
+                  onSubmitEditing={ () => {userRef.current.focus();} }
+                  blurOnSubmit={ false }
+                  />        
+                
+                <TextInput
+                  ref={ userRef }
+                  clearButtonMode="while-editing"
+                  returnKeyType='next'
+                  spellCheck={ false }
+                  textContentType='username'
+                  style={ styles.inputfield }
+                  placeholder="Username"
+                  placeholderTextColor= '#808080'
+                  onChangeText={ (val) => {this.changeLoginNameHandler(val)} }
+                  onSubmitEditing={ () => {passRef.current.focus();} }
+                  blurOnSubmit={ false }
+                  />
+
+                <TextInput
+                  ref={ passRef }
+                  clearButtonMode="while-editing"
+                  returnKeyType='next'
+                  spellCheck={ false }
+                  autoCorrect={ false }
+                  textContentType='password'
+                  style={ styles.inputfield }
+                  placeholder="Password"
+                  placeholderTextColor= '#808080'
+                  secureTextEntry={ true }
+                  onChangeText={ (val) => {this.changePasswordHandler(val)} }
+                  onSubmitEditing={ () => {ansRef.current.focus();} }
+                  blurOnSubmit={ false }
+                />
+                
+                <Text style={ styles.explainText }>Security Question:</Text> 
+              </View>
+
+              <View style ={ {zIndex: 0, elevation: 0} }>
+                <Picker
+                  style={ styles.picker }
+                  itemStyle={ styles.question }
+                  selectedValue={ this.state.selectedQuestion }
+                  onValueChange=
+                  {
+                    (itemValue, itemIndex) =>
+                    {        
+                      this.setState({ selectedQuestion: itemValue })
+                      global.question = itemIndex;
+                    }
+                  }>
+                  <Picker.Item label="What is your father's middle name?" value='0' />
+                  <Picker.Item label="What was the name of your high school?" value='1' />
+                  <Picker.Item label="What is the name of your first pet?" value='2' />
+                </Picker>
+              </View>
+
+              <View style= { styles.zblock }>
+
+                  <TextInput
+                    ref={ ansRef }
+                    clearButtonMode="while-editing"
+                    returnKeyType='done'
+                    style={ styles.inputfield }
+                    placeholder="Answer"
+                    placeholderTextColor= '#808080'
+                    secureTextEntry={ true }
+                    onChangeText={ (val) => {this.changeAnswerHandler(val)} }
+                    blurOnSubmit={ false }
+                  />
+
+                <Text style={ styles.error }>
+                  { this.state.message }
+                </Text>
+              </View>
+
+              <Pressable 
+                style={ styles.registerbuttonfield }
+                onPress={ this.handleClickRegister }> 
+                <Text style={ styles.buttontext }>Register</Text> 
+              </Pressable>
+            </View>
+
+            
+
+          </View>
       </KeyboardAvoidingView>
+
+      <Pressable 
+        style={ styles.loginbuttonfield }
+        onPress={ this.handleClickLogin }>
+        <Text style={ styles.buttontext }>Log In</Text>
+      </Pressable>
+      
     </ImageBackground>
   );
   }
@@ -178,14 +213,14 @@ export default class Homescreen extends Component {
       if( res.error !== "" )
       {
         console.log(res.error)
-        this.setState({message: "Register failed. Fuck you"});
+        this.setState({message: res.error});
       }
       else
       {
         global.firstName = res.firstName;
         global.lastName = res.lastName;
         global.userId = res.id;
-        this.props.navigation.navigate('Card');
+        this.props.navigation.navigate('Search');
       }
     }
     catch(e)
@@ -231,45 +266,46 @@ export default class Homescreen extends Component {
 
 }
 
-const questions = [
-  "What is your father's middle name?", 
-  "What was the name of your high school?", 
-  "What is the name of your first pet?"
-];
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  loginboxfield: {
-    alignItems: "center",
-    position: "center",
+  registerboxfield: {
     backgroundColor: '#EAFCFF',
-    borderWidth: 3,
     borderColor: '#000000',
     borderRadius: 21,
-    height: 600,
-    width: 370,
-    justifyContent: "center",
+    borderWidth: 2,
+    alignItems: "center",
+    position: "center",
+    marginTop: 10,
+    marginLeft: "auto",
     marginRight: "auto",
-    marginReft: "auto",
+  },
+  zblock: {
+    width: 350,
+    backgroundColor: '#EAFCFF',
+    borderRadius: 21,
+    paddingTop: 8,
+    paddingBottom: 5,
+    zIndex: 1,
+    elevation: 1,
   },
   logo: {
     width: 400,
     height: 100,
     justifyContent: "center",
+    
   },
   titlefield: {
+    fontSize: 36,
     display: "flex",
     flexDirection: "column",
-    fontSize: 36,
-    minWidth: 122,
     textAlign: "center",
     marginTop: 4,
   },
   inputfield: {
-    height: 35,
+    height: 42,
 	  width: 300,
 	  backgroundColor: '#F7F7F7',
 	  borderRadius: 10,
@@ -277,7 +313,7 @@ const styles = StyleSheet.create({
 	  marginTop: 4,
 	  marginBottom: 4,
 	  display: "flex",
-    	flexDirection: "column",
+    flexDirection: "column",
 	  justifyContent: "center",
 	  fontSize: 22,
 	  marginRight: "auto",
@@ -285,25 +321,45 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
+  registerbuttonfield: {
+    height: 50,
+	  width: 300,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    backgroundColor: '#FF7A70',
+    borderRadius: 17,
+    fontSize: 36,
+    marginTop: 0,
+    marginBottom: 15,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+    borderWidth: 1,
+    borderColor: '#000000'
+  },
   loginbuttonfield: {
     height: 50,
 	  width: 300,
     marginLeft: "auto",
 	  marginRight: "auto",
     backgroundColor: '#FF7A70',
-    borderRadius: 10,
+    borderRadius: 17,
     fontSize: 36,
-    marginTop: 4,
-    marginBottom: 2,
+    marginTop: 10,
+    marginBottom: 15,
     justifyContent: "center",
     alignContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+    borderWidth: 1,
+    borderColor: '#000000'
   },
   buttontext: {
     fontSize: 36,
     alignContent: "center",
     justifyContent: "center",
+    textAlign: "center",
     margin: "auto"
   },
   picker: {
@@ -316,7 +372,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
   },
-  item: {
+  question: {
     fontSize: 17,
     marginTop: 0,
     marginBottom: 0,
@@ -335,14 +391,14 @@ const styles = StyleSheet.create({
   explainText: {
     fontSize: 20,
     textAlign: "center",
+    marginTop: 5,
   },
-  zblock: {
-    zIndex: 1,
-    elevation: 1,
-    backgroundColor: '#EAFCFF',
-    width: 350,
-    paddingTop: 10,
-    paddingBottom: 5,
+  
+  error: {
+    fontSize: 15,
+    color: '#ff0000',
+    justifyContent: "center",
+    textAlign: "center",
   },
 });
 
