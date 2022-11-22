@@ -2,13 +2,8 @@ import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
 import { StyleSheet, Pressable, KeyboardAvoidingView } from 'react-native';
 
-global.localName = '';
-global.password = '';
-global.userId = -1;
-global.firstName = '';
-global.lastName = '';
-global.search = '';
-global.card = '';
+global.email = '';
+global.verificationCode = '';
 
 
 export default class Homescreen extends Component {
@@ -35,40 +30,38 @@ export default class Homescreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.loginboxfield}>
                         <View style={{alignItems: 'center'}}>
-                        <Text style={styles.titlefield}>Log In</Text>
-                        <Text style={{fontSize:20}}> </Text>
+                        <Text style={styles.titlefield}>Account Recovery</Text>
+                        <Text style={{fontSize:10}}> </Text>
+                        <Text style={styles.recovText}>Enter the e-mail associated with your</Text>
+                        <Text style={styles.recovText}>account:</Text>
                         <TextInput
-                            style={styles.inputfield}
-                            placeholder="Username"
-                            placeholderTextColor= "#808080"
-                            onChangeText={(val) => { this.changeLoginNameHandler(val) }}
-                            />        
-                    
-                        <Text style={{fontSize:20}}> </Text>
-
-                        <View style={{ flexDirection:'center' }}>
-                        <TextInput
-                            style={styles.inputfield}
-                            placeholder="Password"
-                            placeholderTextColor= "#808080"
-                            secureTextEntry={true}
-                            onChangeText={(val) => { this.changePasswordHandler(val) }}
-                        />
-                        </View>
-                        <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
-                        </View>
-
+                          style={styles.inputfield}
+                          placeholder="Enter your e-mail"
+                          placeholderTextColor= "#808080"
+                          onChangeText={(val) => { this.changeEmailHandler(val) }}
+                        />   
                         <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
                         <View style={{alignItems: 'center'}}>
-                            <Text style={styles.buttontext}>Log In</Text>
+                            <Text style={styles.buttontext}>Submit</Text>
                         </View>
-                        </Pressable>
+                        </Pressable>     
+
                         <Text style={{fontSize:10}}> </Text>
-                        <Pressable onPress={this.RecoverClick}>
+
+                        <Text style={styles.recovText}>A verification code has been sent to your e-mail. Please enter the code to</Text>
+                        <Text style={styles.recovText}>verify your account:</Text>
+                        <TextInput
+                          style={styles.inputfield}
+                          placeholder="Verification Code"
+                          placeholderTextColor= "#808080"
+                          onChangeText={(val) => { this.changeVerificationCodeHandler(val) }}
+                        />   
+                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
                         <View style={{alignItems: 'center'}}>
-                            <Text style={styles.forgotText}>Forgot Password</Text>
+                            <Text style={styles.buttontext}>Submit</Text>
                         </View>
-                        </Pressable>
+                        </Pressable> 
+                      </View>
                     </View>
                 </View>
             </View>
@@ -77,7 +70,7 @@ export default class Homescreen extends Component {
                 <Text style={{fontSize:40}}> </Text>
                 <Pressable style={styles.loginbuttonfield} onPress={this.handleClick2}>
                     <View style={{alignItems: 'center'}}>
-                        <Text style={styles.buttontext}>Register</Text>
+                        <Text style={styles.buttontext}>Return to Login</Text>
                         </View>
                 </Pressable>
             </View>
@@ -117,22 +110,17 @@ export default class Homescreen extends Component {
 
   handleClick2 = async () =>
   {
-    this.props.navigation.navigate('Register');
+    this.props.navigation.navigate('Login');
   }  
 
-  RecoverClick = async () =>
+  changeEmailHandler = async (val) =>
   {
-    this.props.navigation.navigate('Recover');
+    global.email = val;
   }  
 
-  changeLoginNameHandler = async (val) =>
+  changeVerificationCodeHandler = async (val) =>
   {
-    global.loginName = val;
-  }  
-
-  changePasswordHandler = async (val) =>
-  {
-    global.password = val;
+    global.verificationCode = val;
   }  
 
 }
@@ -149,7 +137,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#000000',
     borderRadius: 21,
-    height: 360,
+    height: 470,
     width: 370,
     justifyContent: "center",
     marginRight: "auto",
@@ -204,14 +192,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: "auto"
   },
-  forgotText:{
-    color: '#0000ff',
-		justifyContent: 'center',
-    marginRight: 'auto',
-    marginLeft: 'auto',
-    border: 'none',
-    backgroundColor: 'inherit',
-    fontSize: 16,
+  recovText: {
+    fontSize: 20,
+    marginLeft: '5%',
+    marginRight: '5%',
+    alignContent: "center",
+    justifyContent: "center",
   }
 });
 
