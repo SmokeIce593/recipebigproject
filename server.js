@@ -71,7 +71,6 @@ app.post('/api/login', async (req, res, next) =>
     await client.end();
 
     if(now.rowCount > 0 && await bcrypt.compare(password, now.rows[0]["password"])){
-      console.log(now.rows[0]["id"]);
       id = now.rows[0]["id"];
       fn = now.rows[0]["firstname"];
       ln = now.rows[0]["lastname"];
@@ -294,7 +293,6 @@ app.post('/api/saverecipe', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
-  console.log("Made it here " + tags);
   var newid = uuidv4();
 
   try{
@@ -489,15 +487,57 @@ app.delete('/api/search', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.delete('/api/codeverification', async (req, res, next) => 
+app.post('/api/codeverification', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
 	
   var error = '';
-  var code = '';
+  var userID = '';
 
-  const {userID} = req.body;
+  const {code} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  console.log(code);
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = "select * from emailvericodes where generatedcode = $1 AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
+  const value = [code];
+  const now = await client.query(text, value);
+  await client.end();
+
+  if(now.rowCount == 0)
+  {
+    error = "No code found";
+    var ret = {error: error};
+  }
+  else{
+    userID = now.rows[0]["login_fkid_1"];
+  }
+  console.log("ID FOUND: " + userID);
+  
+}
+  catch{
+    error = "Server related issues, please try again.";
+    var ret = {error: error};
+  }
+
+  if(error === ''){
+    //error = updateverified(userID);
+  }
+  
+  var ret = {userID: userID, error: error};
+  res.status(200).json(ret);
+});
+
+async function updateverified(userID){
+  var error = '';
   const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
@@ -507,36 +547,23 @@ app.delete('/api/codeverification', async (req, res, next) =>
 
   try{
   await client.connect();
-  const text = "select * from emailvericodes where login_fkid_1 = '$1' AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
+  const text = "Update users set verifiedcode = 'true' where id = $1";
   const value = [userID];
   const now = await client.query(text, value);
   await client.end();
-
-  if(now.rowCount == 0)
-  {
-    error = "No code found";
-    var ret = {code: '', userid: userID, error: error};
-  }
-  else{
-    code = now.rows[0]["generatedcode"];
-    var ret = {code: code, userid: userID, error: error};
-  }
-
-
   }
   catch{
     error = "Server related issues, please try again.";
-    var ret = {code: '', userid: userID, error: error};
+    
   }
-  
-  
-  res.status(200).json(ret);
-});
+  return error;
+}
 
 async function codecreation(userID){
   var error = '';
   var code = uuidv4();
 
+  console.log(userID);
   const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
@@ -558,15 +585,37 @@ async function codecreation(userID){
   return error;
 }
 
-app.delete('/api/codecreation', async (req, res, next) => 
+app.post('/api/codecreation', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
 	
   var error = '';
 
-  const {userID} = req.body;
-  codecreation(userID);
+  const {email} = req.body;
+
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = "Select * from users where email = $1";
+  const value = [email];
+  const now = await client.query(text, value);
+  var id = now.rows[0]["id"];
+  error = codecreation(id);
+ 
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  
+  
   
   var ret = {error: error};
   res.status(200).json(ret);

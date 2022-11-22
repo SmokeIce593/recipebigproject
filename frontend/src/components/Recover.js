@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
 import './recover.css';
 
+const app_name = 'recipeprojectlarge'
+function buildPath(route)
+    {
+        if (process.env.NODE_ENV === 'production') 
+        {
+            return 'https://' + app_name +  '.herokuapp.com/' + route;
+        }
+        else
+        {        
+            return 'http://localhost:5000/' + route;
+        }
+    }
+
 function Recover(){
 
 var email;
 var code;
 var password;
 const [message,setMessage] = useState('');
+
 
 const findEmail = async event => 
     {
@@ -15,10 +29,25 @@ const findEmail = async event =>
     	var obj = {email:email.value};
         var js = JSON.stringify(obj);
         
-        try{
-        
+
+        try
+        {    
+            const response = await fetch(buildPath('api/codecreation'),
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            if( res.error !== "")
+            {
+                //setMessage(res.error);
+            }
+            else
+            {
+                //setMessage('');
+                //window.location.href = '/home';
+            }
         }
-    catch(e)
+        catch(e)
         {
             alert(e.toString());
             return;
@@ -27,6 +56,32 @@ const findEmail = async event =>
     
 const verifyCode = async event =>
 {
+    event.preventDefault();
+    	var obj = {code:code.value};
+        var js = JSON.stringify(obj);
+        alert(code.value);
+        try
+        {    
+            const response = await fetch(buildPath('api/codeverification'),
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            if( res.error !== "")
+            {
+                //setMessage(res.error);
+            }
+            else
+            {
+                //setMessage('');
+                //window.location.href = '/home';
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
 }
 
 const app_name = 'recipeprojectlarge'
