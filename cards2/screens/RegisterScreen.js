@@ -1,7 +1,9 @@
 import React, { Component, useState } from 'react';
-import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
+import { 
+  ImageBackground, KeyboardAvoidingView, View, Text, 
+  TextInput, Image, StyleSheet, Pressable
+} from 'react-native';
 
 global.localName = '';
 global.loginName = '';
@@ -31,13 +33,18 @@ export default class Homescreen extends Component {
   render(){
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
+        <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}>
         <View style={styles.container}>
           <View style={styles.container}>
             <Image style={styles.logo} source={require('../assets/logo.png')}/>
           </View>
           <View style={styles.container}>
           <View style={styles.loginboxfield}>
+          <View style= {styles.zblock}>
             <View style={{alignItems: 'center'}}>
+            <View style= {styles.zblock}>
             <Text style={styles.titlefield}>Create an account</Text>
             <Text style={{fontSize:10}}> </Text>
 
@@ -76,7 +83,7 @@ export default class Homescreen extends Component {
            
             <Text style={{fontSize:10}}> </Text>
 
-            <View style={{ flexDirection:'center' }}>
+            <View style={{ flexDirection:'center', zIndex: 1, elevation: 1 }}>
               <TextInput
                 style={styles.inputfield}
                 placeholder="Password"
@@ -85,25 +92,32 @@ export default class Homescreen extends Component {
                 onChangeText={(val) => { this.changePasswordHandler(val) }}
               />
             </View>
-
-            <Picker
-              style={styles.picker}
-              itemStyle={styles.item}
-              onValueChange={(itemValue, itemIndex) =>
-                {
-                  this.selectedValue = itemValue;
-                  global.question = itemIndex;
-                }
-              }>
-              <Picker.Item label="What is your father's middle name?" value="0" />
-              <Picker.Item label="What was the name of your high school?" value="1" />
-              <Picker.Item label="What is the name of your first pet?" value="2" />
-            </Picker>
             
+              <Text style={styles.explainText}>Security Question:</Text>
+            </View>
+            
+
+            <View style ={{ zIndex: 0, elevation: 0 }}>
+              <Picker
+                style={styles.picker}
+                itemStyle={styles.item}
+                selectedValue={this.state.question}
+                onValueChange={(itemValue, itemIndex) =>
+                  {        
+                    this.setState({question: itemValue})
+                    global.question = itemIndex;
+                  }
+
+                }>
+                <Picker.Item label="What is your father's middle name?" value="0" />
+                <Picker.Item label="What was the name of your high school?" value="1" />
+                <Picker.Item label="What is the name of your first pet?" value="2" />
+              </Picker>
+            </View>
 
 
             <Text style={{fontSize:10}}> </Text>
-
+          <View style= {styles.zblock}>
             <View style={{ flexDirection:'center' }}>
               <TextInput
                 style={styles.inputfield}
@@ -124,6 +138,8 @@ export default class Homescreen extends Component {
             </Pressable>
 
           </View>
+          </View>
+          </View>
           <Text style={{fontSize:40}}> </Text>
           
             <Pressable style={styles.loginbuttonfield} onPress={this.handleClickLogin}>
@@ -132,7 +148,9 @@ export default class Homescreen extends Component {
               </View>
             </Pressable>
         </View>
+        
       </View>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
   }
@@ -261,9 +279,11 @@ const styles = StyleSheet.create({
 	  display: "flex",
     	flexDirection: "column",
 	  justifyContent: "center",
-	  fontSize: 25,
+	  fontSize: 22,
 	  marginRight: "auto",
 	  marginLeft: "auto",
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   loginbuttonfield: {
     height: 50,
@@ -287,15 +307,21 @@ const styles = StyleSheet.create({
     margin: "auto"
   },
   picker: {
-    height: 60,
+    height: 50,
     width: 370,
     marginLeft: "auto",
 	  marginRight: "auto",
-    fontSize: 20,
-    marginTop: 20,
-    marginBottom: 0,
+    marginTop: 1,
+    marginBottom: 20,
     justifyContent: "center",
     alignContent: "center",
+  },
+  item: {
+    fontSize: 17,
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   dropdowntext: {
     fontSize: 24,
@@ -305,6 +331,18 @@ const styles = StyleSheet.create({
   },
   dropdownrowtext: {
     fontSize: 18,
-  }
+  },
+  explainText: {
+    fontSize: 20,
+    textAlign: "center",
+  },
+  zblock: {
+    zIndex: 1,
+    elevation: 1,
+    backgroundColor: '#EAFCFF',
+    width: 350,
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
 });
 
