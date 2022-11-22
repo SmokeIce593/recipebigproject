@@ -76,6 +76,7 @@ function Verify()
 
    return(
         <div id="verifyDiv" className='main-container'>
+        <form onSubmit={doVerify} className="verifyBoxfield">
             <img src={mailIcon} alt="mail icon" className="mailIcon"></img>
             <div id="header" className="header">Check your inbox</div>
 
@@ -85,13 +86,13 @@ function Verify()
             <div id="text2" className="smalltext">Please enter the secure verification code</div>
             <input type="text" id="verifCode" placeholder="Secure verification code" className="input"
                 ref={(c) => codeInput = c} />
-            <input type="button" id="verifyButton" className="verifybutton" value="Verify" 
+            <input type="submit" id="verifyButton" className="verifybutton" value="Verify" 
                 onClick={doVerify}/>
+        </form>
 
             <div id="text3" className="smalltext">Didn't receive the email?</div>
             <input type="button" id="resendButton" className="resendbutton" value="Click to resend" 
                 onClick={doResend}/>
-
         </div>
    );
 };
