@@ -8,6 +8,8 @@ import RegisterScreen from './screens/RegisterScreen';
 import CreateScreen from './screens/CreateScreen';
 import RecipeScreen from './screens/RecipeScreen';
 import SettingScreen from './screens/SettingScreen';
+import RecoverScreen from './screens/RecoverScreen';
+
 export default class App extends React.Component {
   render() {
     return <AppContainer/>;
@@ -16,6 +18,12 @@ export default class App extends React.Component {
 const AppNavigator = createStackNavigator({
   Login: {
     screen: LoginScreen,
+    navigationOptions: {
+      headerShown: false // Will hide header for HomePage
+    }
+  },
+  Recover: {
+    screen: RecoverScreen,
     navigationOptions: {
       headerShown: false // Will hide header for HomePage
     }
@@ -87,7 +95,7 @@ const AppNavigator = createStackNavigator({
     }
   },
 },{
-  initialRouteName: "Search"
+  initialRouteName: "Recover"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
