@@ -44,10 +44,17 @@ function Login()
             else
             {
                 var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username, securityquestion:res.securityquestion, securityanswer:res.securityanswer}
+                alert("Email: " + res.email);
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
-                window.location.href = '/home';
+                if(res.verified === false){
+                    window.location.href = '/verify';
+                }
+                else{
+                    window.location.href = '/home';
+                }
+                
             }
         }
         catch(e)

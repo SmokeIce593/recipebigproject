@@ -47,13 +47,14 @@ app.post('/api/login', async (req, res, next) =>
   // outgoing: id, firstName, lastName, error
 	
   var error = '';
-  var id = -1;
+  var id = '';
   var fn = '';
   var ln = '';
   var email = '';
   var username = '';
   var securityquestion = '';
   var securityanswer = '';
+  var verified = '';
 
   const { login, password } = req.body;
   const connectionString = process.env.DATABASE_URL;
@@ -88,7 +89,17 @@ app.post('/api/login', async (req, res, next) =>
   }
 
   
-  var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, error:error};
+  if(error === ''){
+    verified = await checkverified(id);
+    if(verified === ''){
+      error = 'Error checking verification';
+    }
+  }
+  
+  
+
+  console.log(verified);
+  var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, verified:verified, error:error};
   res.status(200).json(ret);
 });
 
@@ -557,6 +568,30 @@ async function updateverified(userID){
     
   }
   return error;
+}
+
+async function checkverified(userID){
+  var error = '';
+  var verified = '';
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+  await client.connect();
+  const text = "select * from users where id = $1";
+  const value = [userID];
+  const now = await client.query(text, value);
+  verified = now.rows[0]["verifiedcode"];
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  return verified;
 }
 
 async function codecreation(userID){

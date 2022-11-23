@@ -5,6 +5,12 @@ const mailIcon = new URL("/public/mail.png",import.meta.url);
 
 function Verify()
 {
+    var _ud = localStorage.getItem('user_data');
+    var ud = JSON.parse(_ud);
+    var email = ud.email;
+    //alert("Email   " + ud.email);
+    var codeInput;
+    //localStorage.removeItem('user_data'); // temporarily remove user info until they are verified
     const app_name = 'recipeprojectlarge'
     function buildPath(route)
     {
@@ -18,14 +24,6 @@ function Verify()
         }
     }
 
-    var _ud = localStorage.getItem('user_data');
-    localStorage.removeItem('user_data'); // temporarily remove user info until they are verified
-    var ud = JSON.parse(_ud);
-
-    //var email = ud.email; // won't work bc email not stored to user_data; need to figure out another way
-    var email = "placeholder@gmail.com";
-    var codeInput;
-
     const [message,setMessage] = useState('');
 
     const doResend = async event=>
@@ -35,43 +33,7 @@ function Verify()
 
     const doVerify = async event => 
     {
-        event.preventDefault();
 
-        var obj = {codeInput:verifcode.value};
-        var js = JSON.stringify(obj);
-
-        var verifcode = "placeholder";
-
-        if(!obj.email.match(verifcode))
-        {
-            setMessage("Invalid code.")
-            return;
-        }
-
-        try
-        {
-            const response = await fetch(buildPath('api/codeverification'),
-                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-            var res = JSON.parse(await response.text());
-
-            if( res.error !== "")
-            {
-                setMessage(res.error);
-            }
-            else
-            {
-                localStorage.setItem('user_data', _ud); // reinstate user data
-
-                setMessage('');
-                window.location.href = '/login';
-            }
-        }
-        catch(e)
-        {
-            alert(e.toString());
-            return;
-        }
     };
 
    return(
