@@ -2,9 +2,7 @@ import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
 import { StyleSheet, Pressable, KeyboardAvoidingView } from 'react-native';
 
-global.email = '';
 global.verificationCode = '';
-
 
 export default class Homescreen extends Component {
 
@@ -30,55 +28,40 @@ export default class Homescreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.loginboxfield}>
                         <View style={{alignItems: 'center'}}>
-                        <Text style={styles.titlefield}>Account Recovery</Text>
+                        <Text style={styles.titlefield}>Email Verification</Text>
                         <Text style={{fontSize:10}}> </Text>
-                        <Text style={styles.recovText}>Enter the e-mail associated with your</Text>
+                        <Text style={styles.recovText}>Enter the code sent to your email</Text>
                         <Text style={styles.recovText}>account:</Text>
                         <TextInput
                           style={styles.inputfield}
-                          placeholder="Enter your e-mail"
-                          placeholderTextColor= "#808080"
-                          onChangeText={(val) => { this.changeEmailHandler(val) }}
-                        />   
-                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick1}>
-                        <View style={{alignItems: 'center'}}>
-                            <Text style={styles.buttontext}>Submit</Text>
-                        </View>
-                        </Pressable>     
-
-                        <Text style={{fontSize:10}}> </Text>
-
-                        <Text style={styles.recovText}>A verification code has been sent to your e-mail. Please enter the code to</Text>
-                        <Text style={styles.recovText}>verify your account:</Text>
-                        <TextInput
-                          style={styles.inputfield}
-                          placeholder="Verification Code"
+                          placeholder="Enter code"
                           placeholderTextColor= "#808080"
                           onChangeText={(val) => { this.changeVerificationCodeHandler(val) }}
                         />   
-                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick2}>
+                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
                         <View style={{alignItems: 'center'}}>
                             <Text style={styles.buttontext}>Submit</Text>
                         </View>
+                        </Pressable>  
+                        <Text style={{fontSize:10}}> </Text>
+                        <Text style={styles.recovText}>Didn't receive a code?</Text>
+                        <Pressable onPress={this.handleResendClick}>
+                        <View style={{alignItems: 'center'}}>
+                            <Text style={styles.forgotText}>Click to resend</Text>
+                        </View>
                         </Pressable> 
+                        <Text style={{fontSize:10}}> </Text>
                       </View>
                     </View>
                 </View>
             </View>
         </KeyboardAvoidingView>
-            <View>
-                <Text style={{fontSize:40}}> </Text>
-                <Pressable style={styles.loginbuttonfield} onPress={this.handleClick3}>
-                    <View style={{alignItems: 'center'}}>
-                        <Text style={styles.buttontext}>Return to Login</Text>
-                        </View>
-                </Pressable>
-            </View>
+        <Text style={{fontSize:150}}> </Text>
     </ImageBackground>
   );
   }
 
-  handleClick1 = async () =>
+  handleClick = async () =>
   {
     try
     {
@@ -99,7 +82,7 @@ export default class Homescreen extends Component {
         global.firstName = res.firstName;
         global.lastName = res.lastName;
         global.userId = res.id;
-        this.props.navigation.navigate('Search');
+        this.props.navigation.navigate('Login');
       }
     }
     catch(e)
@@ -108,21 +91,10 @@ export default class Homescreen extends Component {
     }
   }  
 
-  handleClick2 = async () =>
+  handleResendClick = async () => 
   {
-    this.props.navigation.navigate('Reset');
-  }  
-  
-  handleClick3 = async () =>
-  {
-    this.props.navigation.navigate('Login');
-  }  
 
-
-  changeEmailHandler = async (val) =>
-  {
-    global.email = val;
-  }  
+  }
 
   changeVerificationCodeHandler = async (val) =>
   {
@@ -143,7 +115,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#000000',
     borderRadius: 21,
-    height: 470,
+    height: 300,
     width: 370,
     justifyContent: "center",
     marginRight: "auto",
@@ -204,6 +176,15 @@ const styles = StyleSheet.create({
     marginRight: '5%',
     alignContent: "center",
     justifyContent: "center",
+  },
+  forgotText:{
+    color: '#0000ff',
+		justifyContent: 'center',
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    border: 'none',
+    backgroundColor: 'inherit',
+    fontSize: 16,
   }
 });
 

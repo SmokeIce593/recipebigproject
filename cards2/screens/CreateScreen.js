@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 global.localName = '';
 global.password = '';
@@ -30,23 +30,41 @@ export default class Homescreen extends Component {
         style={styles.container}>
             <View style={styles.container}>
                 <View style={styles.container}>
-                    <Image style={styles.logo} source={require('../assets/logo.png')}/>
-                </View>
-                <View style={styles.container}>
-                    <View style={styles.loginboxfield}>
-                        <View style={{alignItems: 'center'}}>
-                        <Text style={styles.titlefield}>Create Screen</Text>
-                        <Text style={{fontSize:20}}> </Text>
-                        
-                        
-                        <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
-                        </View>
+                  <View style={styles.loginboxfield}>
+                    <ScrollView style={styles.scrollView}>
+                      <View style={{alignItems: 'center'}}>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <Text style={{fontSize:20}}> </Text>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <Text style={styles.titlefield}>Create Screen</Text>
+                      </View>
 
-                       
-                    </View>
+
+                      <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.buttontext}>Save Recipe</Text>
+          </View>
+        </Pressable>
+                    </ScrollView>
+                  </View>
                 </View>
             </View>
         </KeyboardAvoidingView>
+        {/* <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.buttontext}>Save Recipe</Text>
+          </View>
+        </Pressable> */}
+        
+        
+        <Text style={{fontSize:50}}> </Text>
+
+
         <View style={styles.footer}>
         <Pressable style={styles.footerButton} onPress={this.handleHomeClick}>
               <View style={{alignItems: 'center'}}>
@@ -158,7 +176,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#000000',
     borderRadius: 21,
-    height: 330,
+    height: 600,
     width: 370,
     justifyContent: "center",
     marginRight: "auto",

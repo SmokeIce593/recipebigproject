@@ -220,7 +220,7 @@ export default class RegisterScreen extends Component {
         global.firstName = res.firstName;
         global.lastName = res.lastName;
         global.userId = res.id;
-        this.props.navigation.navigate('Search');
+        this.props.navigation.navigate('Verify');
       }
     }
     catch(e)
