@@ -51,7 +51,7 @@ function Login()
                 setMessage('');
                 if(res.verified === false){
                     window.location.href = '/verify';
-                    localStorage.setItem('email_data', JSON.stringify(user));
+                    localStorage.setItem('email_data', JSON.stringify(email));
                 }
                 else{
                     window.location.href = '/home';

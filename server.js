@@ -9,6 +9,7 @@ const app = express();
 const Filter = require('bad-words');
 const { Console } = require('console');
 const {v1: uuidv1, v4: uuidv4} = require('uuid');
+const nodemailer = require('nodemailer');
 
 app.set( 'port', (process.env.PORT || 5000 ));
 app.use(cors());
@@ -88,7 +89,11 @@ app.post('/api/login', async (req, res, next) =>
   catch{
     error = "Server related issues, please try again.";
   }
-  
+  if(error === '' && verified === false){
+    var creation = await codecreation(id);
+    var errormail = sendemail(email, creation.code);
+  }
+
   var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, verified:verified, error:error};
   res.status(200).json(ret);
 });
@@ -120,12 +125,22 @@ app.post('/api/register', async (req, res, next) =>
   const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
   const valueslogincheck = [login];
   const logincheck = await client.query(duplicatelogin, valueslogincheck);
-  if(logincheck.rowCount == 0)
+  
+  const duplicateemail = 'SELECT * FROM users WHERE email = $1';
+  const valuesemailcheck = [email];
+  const emailcheck = await client.query(duplicateemail, valuesemailcheck);
+  
+  if(emailcheck.rowCount > 0)
+  {
+    error = "Duplicate Email already exists.";
+  }
+  else if(logincheck.rowCount == 0)
   {
     const text = 'Insert into users (id, username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7, $8)';
     const values = [newid, login, hashed, email, firstname, lastname, securityquestion, securityanswer];
     const now = await client.query(text, values);
-    codecreation(newid);
+    var creation = await codecreation(newid);
+    var errormail = sendemail(email, creation.code);
   }
   else{
     error = "Duplicate Login already exists.";
@@ -560,7 +575,6 @@ async function findcode(code){
   const text = "select * from emailvericodes where generatedcode = $1 AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
   const value = [code];
   const now = await client.query(text, value);
-  await client.end();
 
   if(now.rowCount == 0)
   {
@@ -570,8 +584,17 @@ async function findcode(code){
   else{
     userID = now.rows[0]["login_fkid_1"];
   }
-  console.log("ID FOUND: " + userID);
+  // Check for newer codes
+  if(userID !== ''){
+    const text = "select * from emailvericodes where login_fkid_1 = $1 AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
+    const value = [userID];
+    const newcode = await client.query(text, value);
+    if(code !== newcode.rows[0]["generatedcode"]){
+      error = 'This is not the newest code';
+    }
+  }
   
+  await client.end();
 }
   catch{
     error = "Server related issues, please try again.";
@@ -680,6 +703,33 @@ async function checkverified(userID){
   return verified;
 }
 
+async function sendemail(email, code){
+
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'recipeasy1234@gmail.com',
+      pass: 'yqgtnpywqmemiryt'
+    }
+  });
+  
+  var html = 'Code: '+ code;
+  var mailOptions = {
+    from: 'recipeasy1234@gmail.com',
+    to: email,
+    subject: 'Sending Email using Node.js',
+    text: html
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  }); 
+}
+
 async function codecreation(userID){
   var error = '';
   var code = uuidv4();
@@ -703,7 +753,8 @@ async function codecreation(userID){
     error = "Server related issues, please try again.";
     
   }
-  return error;
+  var ret = {code:code, error:error}
+  return ret;
 }
 
 app.post('/api/codecreation', async (req, res, next) => 
@@ -712,7 +763,7 @@ app.post('/api/codecreation', async (req, res, next) =>
   // outgoing: id, fkrecipeid, categoryname, categorycolor
 	
   var error = '';
-
+  var id = '';
   const {email} = req.body;
 
   const connectionString = process.env.DATABASE_URL;
@@ -727,20 +778,25 @@ app.post('/api/codecreation', async (req, res, next) =>
   const text = "Select * from users where email = $1";
   const value = [email];
   const now = await client.query(text, value);
-  var id = now.rows[0]["id"];
-  error = codecreation(id);
- 
+  id = now.rows[0]["id"];
+  var creation = await codecreation(id);
+  var errormail = await sendemail(email, creation.code);
+
+  
   await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
   }
   
+
   
   
   var ret = {error: error};
   res.status(200).json(ret);
 });
+
+
 
 app.delete('/api/filtertag', async (req, res, next) => 
 {

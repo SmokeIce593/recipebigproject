@@ -62,12 +62,12 @@ function Register()
             }
             else
             {
-                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username, securityquestion:res.securityquestion, securityanswer:res.securityanswer}
-                localStorage.setItem('user_data', JSON.stringify(user));
+                //alert("here");
+                //var email = {email: res.email}
+                //localStorage.setItem('email_data', JSON.stringify(email));
 
                 setMessage('');
-                //window.location.href = '/login';
-                window.location.href = '/verify';
+                window.location.href = '/login';
             }
         }
         catch(e)
