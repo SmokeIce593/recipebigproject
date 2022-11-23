@@ -26,7 +26,32 @@ function Verify()
 
     const doResend = async event=>
     {
-        // resend the verification code email
+        event.preventDefault();
+    	
+    	var obj = {email:email};
+        var js = JSON.stringify(obj);
+        try
+        {    
+            const response = await fetch(buildPath('api/codecreation'),
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            if( res.error !== "")
+            {
+                //setMessage(res.error);
+            }
+            else
+            {
+                //setMessage('');
+                //window.location.href = '/home';
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
     }
 
     const doVerify = async event => 

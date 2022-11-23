@@ -79,6 +79,7 @@ app.post('/api/login', async (req, res, next) =>
       username = now.rows[0]["username"];
       securityquestion = now.rows[0]["securityquestion"];
       securityanswer = now.rows[0]["securityanswer"];
+      verified = now.rows[0]["verifiedcode"];
     }
     else{
       error = "Invalid Username/Password"
@@ -87,18 +88,7 @@ app.post('/api/login', async (req, res, next) =>
   catch{
     error = "Server related issues, please try again.";
   }
-
   
-  if(error === ''){
-    verified = await checkverified(id);
-    if(verified === ''){
-      error = 'Error checking verification';
-    }
-  }
-  
-  
-
-  console.log(verified);
   var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, verified:verified, error:error};
   res.status(200).json(ret);
 });
@@ -629,6 +619,7 @@ async function getuserinfo(userID){
       username = now.rows[0]["username"];
       securityquestion = now.rows[0]["securityquestion"];
       securityanswer = now.rows[0]["securityanswer"];
+      verified = now.rows[0]["verifiedcode"];
     }
     else{
       error = "Invalid Username/Password"
@@ -638,17 +629,6 @@ async function getuserinfo(userID){
     error = "Server related issues, please try again.";
   }
 
-  
-  if(error === ''){
-    verified = await checkverified(id);
-    if(verified === ''){
-      error = 'Error checking verification';
-    }
-  }
-  
-  
-
-  console.log(verified);
   var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, verified:verified, error:error};
   return ret;
 }
