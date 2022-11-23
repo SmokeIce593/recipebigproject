@@ -507,7 +507,36 @@ app.post('/api/codeverification', async (req, res, next) =>
   var userID = '';
 
   const {code} = req.body;
+  var codefinder = await findcode(code);
+
+  if(codefinder.error === ''){
+    error = updateverified(codefinder.userID);
+  }
+
+  
+  var ret = {userID: userID, error: error};
+  res.status(200).json(ret);
+});
+
+app.post('/api/passwordverification', async (req, res, next) => 
+{
+  // incoming: fkrecipeid, categoryname, categorycolor
+  // outgoing: id, fkrecipeid, categoryname, categorycolor
+	
+  var error = '';
+  var userID = '';
+
+  const {code} = req.body;
+  var codefinder = await findcode(code);
+  
+  var ret = {userID: userID, error: error};
+  res.status(200).json(ret);
+});
+
+async function findcode(code){
   const connectionString = process.env.DATABASE_URL;
+  var error = '';
+  var userID = '';
 
   console.log(code);
 
@@ -539,13 +568,9 @@ app.post('/api/codeverification', async (req, res, next) =>
     var ret = {error: error};
   }
 
-  if(error === ''){
-    //error = updateverified(userID);
-  }
-  
   var ret = {userID: userID, error: error};
-  res.status(200).json(ret);
-});
+  return ret;
+}
 
 async function updateverified(userID){
   var error = '';

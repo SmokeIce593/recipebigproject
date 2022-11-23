@@ -33,7 +33,31 @@ function Verify()
 
     const doVerify = async event => 
     {
+        event.preventDefault();
+    	var obj = {code:codeInput.value};
+        var js = JSON.stringify(obj);
+        try
+        {    
+            const response = await fetch(buildPath('api/codeverification'),
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
+            var res = JSON.parse(await response.text());
+
+            if( res.error !== "")
+            {
+                //setMessage(res.error);
+            }
+            else
+            {
+                //setMessage('');
+                //window.location.href = '/home';
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
     };
 
    return(
