@@ -9,6 +9,8 @@ import CreateScreen from './screens/CreateScreen';
 import RecipeScreen from './screens/RecipeScreen';
 import SettingScreen from './screens/SettingScreen';
 import RecoverScreen from './screens/RecoverScreen';
+import VerifyScreen from './screens/VerifyScreen';
+import ResetScreen from './screens/ResetScreen';
 
 export default class App extends React.Component {
   render() {
@@ -18,6 +20,18 @@ export default class App extends React.Component {
 const AppNavigator = createStackNavigator({
   Login: {
     screen: LoginScreen,
+    navigationOptions: {
+      headerShown: false // Will hide header for HomePage
+    }
+  },
+  Verify: {
+    screen: VerifyScreen,
+    navigationOptions: {
+      headerShown: false // Will hide header for HomePage
+    }
+  },
+  Reset: {
+    screen: ResetScreen,
     navigationOptions: {
       headerShown: false // Will hide header for HomePage
     }
@@ -95,7 +109,7 @@ const AppNavigator = createStackNavigator({
     }
   },
 },{
-  initialRouteName: "Recover"
+  initialRouteName: "Login"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
