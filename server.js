@@ -98,6 +98,62 @@ app.post('/api/login', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/updateinformation', async (req, res, next) => 
+{
+  // incoming: login, password
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+
+  const {id, login, password, email, firstname, lastname} = req.body;
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  
+  const hashed = await bcrypt.hash(password, 10);
+  console.log("ID: " + id + " Login: " + login + " hashed: " + hashed + " firstname: " + firstname + " lastname: " + lastname);
+  
+  try{
+    await client.connect();
+    const duplicatelogin = 'SELECT * FROM users WHERE username = $1 AND id != $2';
+    const valueslogincheck = [login, id];
+    const logincheck = await client.query(duplicatelogin, valueslogincheck);
+    
+    /*
+    const duplicateemail = 'SELECT * FROM users WHERE email = $1 AND id != $2';
+    const valuesemailcheck = [email, id];
+    const emailcheck = await client.query(duplicateemail, valuesemailcheck);
+    
+    
+    if(emailcheck.rowCount > 0)
+    {
+      error = "Duplicate Email already exists.";
+    }
+    */
+    if(logincheck.rowCount == 0)
+    {
+      //console.log("ID: " + id + " Login: " + login + " hashed: " + hashed + " firstname: " + firstname + " lastname: " + lastname);
+      const text = 'Update users set username = $2, password = $3, firstname = $4, lastname = $5 WHERE id = $1';
+      const values = [id, login, hashed, firstname, lastname];
+      const now = await client.query(text, values);
+    }
+    else{
+      error = "Duplicate Login already exists.";
+    }
+    await client.end();
+    }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+
+  var ret = { id:id, firstName:firstname, lastName:lastname, email:email, username:login,error:error};
+  res.status(200).json(ret);
+});
+
 app.post('/api/register', async (req, res, next) => 
 {
   // incoming: login, password
@@ -666,16 +722,38 @@ async function updateverified(userID){
   });
 
   try{
-  await client.connect();
-  const text = "Update users set verifiedcode = 'true' where id = $1";
-  const value = [userID];
-  const now = await client.query(text, value);
-  await client.end();
-  }
-  catch{
-    error = "Server related issues, please try again.";
+
+  
+    await client.connect();
+    const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
+    const valueslogincheck = [login];
+    const logincheck = await client.query(duplicatelogin, valueslogincheck);
     
-  }
+    const duplicateemail = 'SELECT * FROM users WHERE email = $1';
+    const valuesemailcheck = [email];
+    const emailcheck = await client.query(duplicateemail, valuesemailcheck);
+    
+    if(emailcheck.rowCount > 0)
+    {
+      error = "Duplicate Email already exists.";
+    }
+    else if(logincheck.rowCount == 0)
+    {
+      const text = 'Update users where id = $1';
+      const values = [newid, login, hashed, email, firstname, lastname, securityquestion, securityanswer];
+      const now = await client.query(text, values);
+      var creation = await codecreation(newid);
+      var errormail = sendemail(email, creation.code);
+    }
+    else{
+      error = "Duplicate Login already exists.";
+    }
+    await client.end();
+    }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+
   return error;
 }
 

@@ -3,20 +3,78 @@ import './settings.css'
 
 function Settings()
 {
+
+    const app_name = 'recipeprojectlarge'
+    function buildPath(route)
+    {
+        if (process.env.NODE_ENV === 'production') 
+        {
+            return 'https://' + app_name +  '.herokuapp.com/' + route;
+        }
+        else
+        {        
+            return 'http://localhost:5000/' + route;
+        }
+    }
+
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
     var userId = ud.id;
     var firstName = ud.firstName;
     var lastName = ud.lastName;
-    var username = ud.login;
+    var username = ud.username;
     var password = ud.password;
-    var question = ud.securityQuestion;
-    var answer = ud.securityAnswer;
+    var question = ud.securityquestion;
+    var answer = ud.securityanswer;
     var email = ud.email;
+    const [message,setMessage] = useState('');
     
     const doSave = async event=>
     {
-        window.location.href = '/settings';
+        event.preventDefault();
+        alert(email);
+        var obj = {id: userId, login:username.value,password:password.value,email:email,firstname:firstName.value,lastname:lastName.value,securityquestion:question,securityanswer:answer};
+        var js = JSON.stringify(obj);
+
+        //alert("Made it here");
+        var passwordcode = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+        var emailcode = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+        if(!obj.password.match(passwordcode)){
+            setMessage("Your password does not meet requirements: Between 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character.")
+            return;
+        }
+
+        if(!obj.email.match(emailcode)){
+            setMessage("Please enter a valid email.")
+            return;
+        }
+
+        try
+        {    
+            const response = await fetch(buildPath('api/updateinformation'),
+                {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            if( res.error !== "")
+            {
+                setMessage(res.error);
+            }
+            else
+            {
+                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username};
+                localStorage.setItem('user_data', JSON.stringify(user));
+                setMessage('');
+                window.location.href = '/settings';
+            }
+        }
+        catch(e)
+        {
+            alert(e.toString());
+            return;
+        }    
+        
     }
 
    return(
@@ -30,56 +88,30 @@ function Settings()
                     <span id="info1" className="infotext">Current username: {username}</span>
                     <br></br>
                     <span id="info1new" className="infotext">New username: </span>
-                    <input type="text" id="newlogin" placeholder="Username" defaultValue={username} className="inputbox"></input>
+                    <input type="text" id="newlogin" placeholder="Username" defaultValue={username} ref={(c) => username = c} className="inputbox"></input>
                 </div>
 
                 <div id="passwordinfo" className="changeinfo">
-                    <span id="info2" className="infotext">Current password: {password}</span>
+                    <span id="info2" className="infotext">Current password: *********</span>
                     <br></br>
                     <span id="info2new" className="infotext">New password: </span>
-                    <input type="text" id="newpassword" placeholder="Password" defaultValue={password} className="inputbox"></input>
+                    <input type="text" id="newpassword" placeholder="Password" defaultValue={password} ref={(c) => password = c} className="inputbox"></input>
                 </div>
-
-                <div id="emailinfo" className="changeinfo">
-                    <span id="info5" className="infotext">Current email: {email}</span>
-                    <br></br>
-                    <span id="info5new" className="infotext">New email: </span>
-                    <input type="text" id="newemail" placeholder="Email" defaultValue={email} className="inputbox"></input>
-                </div>
-
+                
                 <div id="firstinfo" className="changeinfo">
                     <span id="info6" className="infotext">Current first name: {firstName}</span>
                     <br></br>
                     <span id="info6new" className="infotext">New first name: </span>
-                    <input type="text" id="newfirst" placeholder="First Name" defaultValue={firstName} className="inputbox"></input>
+                    <input type="text" id="newfirst" placeholder="First Name" defaultValue={firstName} ref={(c) => firstName = c} className="inputbox"></input>
                 </div>
 
                 <div id="lastinfo" className="changeinfo">
                     <span id="info7" className="infotext">Current last name: {lastName}</span>
                     <br></br>
                     <span id="info7new" className="infotext">New last name: </span>
-                    <input type="text" id="newlast" placeholder="Last Name" defaultValue={lastName} className="inputbox"></input>
+                    <input type="text" id="newlast" placeholder="Last Name" defaultValue={lastName} ref={(c) => lastName = c} className="inputbox"></input>
                 </div>
-
-                <div id="questioninfo" className="changeinfo">
-                    <span id="info3" className="infotext">Current security question: {question}</span>
-                    <br></br>
-                    <span id="info3new" className="infotext">New security question: </span>
-                    <select id="newquestion" name="securityQuestion" defaultValue={question} className="inputbox"
-                        ref={(c) => question = c}>
-                        <option value="0">What is your father's middle name?</option>
-                        <option value="1">What was the name of your high school?</option>
-                        <option value="2">What is the name of your first pet?</option>
-                    </select>
-                </div>
-
-                <div id="answerinfo" className="changeinfo">
-                    <span id="info4" className="infotext">Current answer: {answer}</span>
-                    <br></br>
-                    <span id="info4new" className="infotext">New answer: </span>
-                    <input type="text" id="newanswer" placeholder="Answer" defaultValue={answer} className="inputbox"></input>
-                </div>
-
+                <div id="bump" className="buffer"><span id="registerResult" className = "error">{message}</span></div> 
                 <input type="submit" id="savebuton" value = "Save Changes" className="savebutton"
                 onClick={doSave} />
             </form>
