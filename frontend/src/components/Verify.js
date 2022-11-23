@@ -5,12 +5,10 @@ const mailIcon = new URL("/public/mail.png",import.meta.url);
 
 function Verify()
 {
-    var _ud = localStorage.getItem('user_data');
+    var _ud = localStorage.getItem('email_data');
     var ud = JSON.parse(_ud);
     var email = ud.email;
-    //alert("Email   " + ud.email);
-    var codeInput;
-    //localStorage.removeItem('user_data'); // temporarily remove user info until they are verified
+    var codeInput; // temporarily remove user info until they are verified
     const app_name = 'recipeprojectlarge'
     function buildPath(route)
     {
@@ -42,15 +40,20 @@ function Verify()
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
-
             if( res.error !== "")
             {
-                //setMessage(res.error);
+                setMessage(res.error);
             }
             else
             {
-                //setMessage('');
-                //window.location.href = '/home';
+                setMessage('');
+                if(res.verified === true){
+                    var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username, securityquestion:res.securityquestion, securityanswer:res.securityanswer, verified: res.verified}
+                    localStorage.setItem('user_data', JSON.stringify(user));
+                    window.location.href = '/home';
+                }
+                
+                
             }
         }
         catch(e)
@@ -77,6 +80,7 @@ function Verify()
         </form>
 
             <div id="text3" className="smalltext">Didn't receive the email?</div>
+            <div id="bumper" className="buffer"><span id="loginResult" className = "error">{message}</span></div> 
             <input type="button" id="resendButton" className="resendbutton" value="Click to resend" 
                 onClick={doResend}/>
         </div>

@@ -504,17 +504,37 @@ app.post('/api/codeverification', async (req, res, next) =>
   // outgoing: id, fkrecipeid, categoryname, categorycolor
 	
   var error = '';
+  var codeerror = '';
   var userID = '';
+  var ret;
+  ret = {error: error}
 
   const {code} = req.body;
   var codefinder = await findcode(code);
+  userID = codefinder.userID;
+  error = codefinder.error
 
   if(codefinder.error === ''){
-    error = updateverified(codefinder.userID);
+    codeerror = await updateverified(userID);
   }
 
-  
-  var ret = {userID: userID, error: error};
+  if(userID != '' && codefinder.error === '' && error == ''){
+    ret = await getuserinfo(userID);
+    console.log("TESTING:" + ret.id + " " + ret.error);
+  }
+
+  // Error capturing
+  if(userID == ''){
+    error = "Invalid or Expired Code";
+  }
+  else if(error === '' && codeerror !== ''){
+    error = codeerror;
+  }
+  else if(error === '' && codeerror === ''){
+    error = ret.error;
+  }
+
+  ret.error = error;
   res.status(200).json(ret);
 });
 
@@ -569,6 +589,67 @@ async function findcode(code){
   }
 
   var ret = {userID: userID, error: error};
+  return ret;
+}
+
+async function getuserinfo(userID){
+  // incoming: login, password
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+  var id = '';
+  var fn = '';
+  var ln = '';
+  var email = '';
+  var username = '';
+  var securityquestion = '';
+  var securityanswer = '';
+  var verified = '';
+
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  console.log("Made it here!!!" + userID);
+  try{
+    await client.connect();
+    const text = 'SELECT * FROM users WHERE id = $1';
+    const values = [userID];
+    const now = await client.query(text, values);
+    await client.end();
+
+    if(now.rowCount > 0){
+      id = now.rows[0]["id"];
+      fn = now.rows[0]["firstname"];
+      ln = now.rows[0]["lastname"];
+      email = now.rows[0]["email"];
+      username = now.rows[0]["username"];
+      securityquestion = now.rows[0]["securityquestion"];
+      securityanswer = now.rows[0]["securityanswer"];
+    }
+    else{
+      error = "Invalid Username/Password"
+    }
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+
+  
+  if(error === ''){
+    verified = await checkverified(id);
+    if(verified === ''){
+      error = 'Error checking verification';
+    }
+  }
+  
+  
+
+  console.log(verified);
+  var ret = { id:id, firstName:fn, lastName:ln, email:email, username:username, securityquestion:securityquestion, securityanswer:securityanswer, verified:verified, error:error};
   return ret;
 }
 

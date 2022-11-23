@@ -43,16 +43,19 @@ function Login()
             }
             else
             {
-                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username, securityquestion:res.securityquestion, securityanswer:res.securityanswer}
+                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username, securityquestion:res.securityquestion, securityanswer:res.securityanswer, verified: res.verified};
+                var email = {email: res.email};
                 //alert("Email: " + res.email);
-                localStorage.setItem('user_data', JSON.stringify(user));
+                
 
                 setMessage('');
                 if(res.verified === false){
                     window.location.href = '/verify';
+                    localStorage.setItem('email_data', JSON.stringify(user));
                 }
                 else{
                     window.location.href = '/home';
+                    localStorage.setItem('user_data', JSON.stringify(user));
                 }
                 
             }
