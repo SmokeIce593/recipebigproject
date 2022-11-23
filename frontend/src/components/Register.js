@@ -62,7 +62,7 @@ function Register()
             }
             else
             {
-                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username, securityquestion:res.securityquestion, securityanswer:res.securityanswer}
                 localStorage.setItem('user_data', JSON.stringify(user));
 
                 setMessage('');
