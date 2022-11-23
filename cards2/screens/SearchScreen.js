@@ -18,11 +18,14 @@ export default class SearchScreen extends Component {
   render(){
 
     const { navigation } = this.props;
-    const id = navigation.getParam('id', -1);
-    const firstName = navigation.getParam('firstName', 'default');
-    const lastName = navigation.getParam('lastName', 'default');
-    const username = navigation.getParam('username', 'default');
-    const email = navigation.getParam('email', 'default');
+    const userInfo = 
+    {
+      id:navigation.getParam('id', -1),
+      firstName:navigation.getParam('firstName', 'default'),
+      lastName:navigation.getParam('lastName', 'default'),
+      username:navigation.getParam('username', 'default'),
+      email:navigation.getParam('email', 'default'),
+    }
 
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
@@ -62,7 +65,7 @@ export default class SearchScreen extends Component {
             </Pressable>
             <Pressable 
               style={styles.footerButton} 
-              onPress={() => this.handleSettingsClick(firstName, lastName, username, email, id) }>
+              onPress={() => this.handleSettingsClick(userInfo) }>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/cog.png')}/>   
                 <Text>Settings</Text>    
@@ -120,10 +123,9 @@ export default class SearchScreen extends Component {
   {
     this.props.navigation.navigate('Create');
   }  
-  handleSettingsClick = async (id, firstName, lastName, username,) =>
+  handleSettingsClick = async (userInfo) =>
   {
-    this.props.navigation.push('Setting', { id:id, firstName:firstName, 
-      lastName:lastName, username:username, email:email });
+    this.props.navigation.push('Setting', userInfo);
   }  
   handleLogoutClick = async () =>
   {

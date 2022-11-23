@@ -31,11 +31,14 @@ export default class SettingScreen extends Component {
   render(){
 
     const { navigation } = this.props;
-    const id = navigation.getParam('id', -1);
-    const firstName = navigation.getParam('firstName', 'default');
-    const lastName = navigation.getParam('lastName', 'default');
-    const username = navigation.getParam('username', 'default');
-    const email = navigation.getParam('email', 'default');
+    const userInfo = 
+    {
+      id:navigation.getParam('id', -1),
+      firstName:navigation.getParam('firstName', 'default'),
+      lastName:navigation.getParam('lastName', 'default'),
+      username:navigation.getParam('username', 'default'),
+      email:navigation.getParam('email', 'default'),
+    }
 
     return(
       <ImageBackground
@@ -61,7 +64,7 @@ export default class SettingScreen extends Component {
                   textContentType='givenName'
                   style={ styles.inputfield }
                   placeholder="First name"
-                  value={ firstName }
+                  value={ userInfo.firstName }
                   placeholderTextColor= '#808080'
                   onChangeText={ (val) => {this.changeFirstNameHandler(val)} }
                   onSubmitEditing={ () => {lastRef.current.focus();} }
@@ -77,7 +80,7 @@ export default class SettingScreen extends Component {
                   textContentType='familyName'
                   style={ styles.inputfield }
                   placeholder="Last name"
-                  value={ lastName }
+                  value={ userInfo.lastName }
                   placeholderTextColor= '#808080'
                   onChangeText={ (val) => {this.changeLastNameHandler(val)} }
                   onSubmitEditing={ () => {emailRef.current.focus();} }
@@ -93,7 +96,7 @@ export default class SettingScreen extends Component {
                   textContentType='username'
                   style={ styles.inputfield }
                   placeholder="Username"
-                  value={ username }
+                  value={ userInfo.username }
                   placeholderTextColor= '#808080'
                   onChangeText={ (val) => {this.changeLoginNameHandler(val)} }
                   onSubmitEditing={ () => {passRef.current.focus();} }
@@ -134,7 +137,7 @@ export default class SettingScreen extends Component {
 
       <Pressable 
         style={ styles.loginbuttonfield }
-        onPress={ this.handleClickLogin }>
+        onPress={ this.handleClickCancel }>
         <Text style={ styles.buttontext }>Cancel</Text>
       </Pressable>
       
@@ -142,9 +145,9 @@ export default class SettingScreen extends Component {
   );
   }
 
-  handleClickLogin = async () =>
+  handleClickCancel = async () =>
   {
-    this.props.navigation.navigate('Login');
+    this.props.navigation.navigate('Search');
   }  
 
   handleClickRegister = async () =>

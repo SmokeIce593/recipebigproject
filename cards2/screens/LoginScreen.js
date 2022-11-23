@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     border: 'none',
     backgroundColor: 'inherit',
-    fontSize: 16,
+    fontSize: 20,
   }
 });
 
