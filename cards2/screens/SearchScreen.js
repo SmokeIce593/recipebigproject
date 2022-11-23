@@ -4,18 +4,26 @@ import { StyleSheet, Pressable } from 'react-native';
 
 global.search = '';
 
-export default class Homescreen extends Component {
+export default class SearchScreen extends Component {
 
   constructor() 
   {
     super()
     this.state = 
     {
-       message: ' '
+       message: ' ',
     }
   }
 
   render(){
+
+    const { navigation } = this.props;
+    const id = navigation.getParam('id', -1);
+    const firstName = navigation.getParam('firstName', 'default');
+    const lastName = navigation.getParam('lastName', 'default');
+    const username = navigation.getParam('username', 'default');
+    const email = navigation.getParam('email', 'default');
+
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         
@@ -52,7 +60,9 @@ export default class Homescreen extends Component {
                 <Text>Create</Text>      
               </View>
             </Pressable>
-            <Pressable style={styles.footerButton} onPress={this.handleSettingsClick}>
+            <Pressable 
+              style={styles.footerButton} 
+              onPress={() => this.handleSettingsClick(firstName, lastName, username, email, id) }>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/cog.png')}/>   
                 <Text>Settings</Text>    
@@ -110,9 +120,10 @@ export default class Homescreen extends Component {
   {
     this.props.navigation.navigate('Create');
   }  
-  handleSettingsClick = async () =>
+  handleSettingsClick = async (id, firstName, lastName, username,) =>
   {
-    this.props.navigation.navigate('Setting');
+    this.props.navigation.push('Setting', { id:id, firstName:firstName, 
+      lastName:lastName, username:username, email:email });
   }  
   handleLogoutClick = async () =>
   {
