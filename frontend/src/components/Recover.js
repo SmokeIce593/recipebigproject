@@ -61,21 +61,21 @@ const verifyCode = async event =>
     event.preventDefault();
     	var obj = {code:code.value};
         var js = JSON.stringify(obj);
-        alert(code.value);
         try
         {    
             const response = await fetch(buildPath('api/passwordverification'),
                 {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
             var res = JSON.parse(await response.text());
-
-            if( res.error !== "")
+            if(res.userID != '')
             {
-                //setMessage(res.error);
+                var user = {firstName:res.firstName,lastName:res.lastName,id:res.id,email:res.email, username:res.username, securityquestion:res.securityquestion, securityanswer:res.securityanswer, verified: res.verified};
+                localStorage.setItem('user_data', JSON.stringify(user));
+                window.location.href = '/Reset';
             }
             else
             {
-                //setMessage('');
+                setMessage('Invalid Code.');
                 //window.location.href = '/home';
             }
         }
@@ -87,8 +87,6 @@ const verifyCode = async event =>
 }
 
 const app_name = 'recipeprojectlarge'
-	
-var email;
 
 const goLogin = async event=>
 {

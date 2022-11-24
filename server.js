@@ -123,21 +123,9 @@ app.post('/api/updateinformation', async (req, res, next) =>
     const duplicatelogin = 'SELECT * FROM users WHERE username = $1 AND id != $2';
     const valueslogincheck = [login, id];
     const logincheck = await client.query(duplicatelogin, valueslogincheck);
-    
-    /*
-    const duplicateemail = 'SELECT * FROM users WHERE email = $1 AND id != $2';
-    const valuesemailcheck = [email, id];
-    const emailcheck = await client.query(duplicateemail, valuesemailcheck);
-    
-    
-    if(emailcheck.rowCount > 0)
-    {
-      error = "Duplicate Email already exists.";
-    }
-    */
+
     if(logincheck.rowCount == 0)
     {
-      //console.log("ID: " + id + " Login: " + login + " hashed: " + hashed + " firstname: " + firstname + " lastname: " + lastname);
       const text = 'Update users set username = $2, password = $3, firstname = $4, lastname = $5 WHERE id = $1';
       const values = [id, login, hashed, firstname, lastname];
       const now = await client.query(text, values);
@@ -154,6 +142,39 @@ app.post('/api/updateinformation', async (req, res, next) =>
   var ret = { id:id, firstName:firstname, lastName:lastname, email:email, username:login,error:error};
   res.status(200).json(ret);
 });
+
+async function resetpassword(password, id){
+  var error = '';
+  console.log("Password: " + password + " ID:" + id);
+  const hashed = await bcrypt.hash(password, 10);
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+    await client.connect();
+    const text = 'Update users set password = $2 WHERE id = $1';
+    const values = [id, hashed];
+    const now = await client.query(text, values);
+    await client.end();
+    }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+    return error;
+}
+
+app.post('/api/changepassword', async (req, res, next) => 
+{
+  const {id, password} = req.body;
+  var error = await resetpassword(password, id);
+  var ret = {error: error};
+  res.status(200).json(ret);
+});
+
 
 app.post('/api/register', async (req, res, next) => 
 {
@@ -196,8 +217,6 @@ app.post('/api/register', async (req, res, next) =>
       const text = 'Insert into users (id, username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7, $8)';
       const values = [newid, login, hashed, email, firstname, lastname, securityquestion, securityanswer];
       const now = await client.query(text, values);
-      var creation = await codecreation(newid);
-      var errormail = sendemail(email, creation.code);
     }
     else{
       error = "Duplicate Login already exists.";
@@ -612,14 +631,12 @@ app.post('/api/passwordverification', async (req, res, next) =>
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
-	
-  var error = '';
-  var userID = '';
 
   const {code} = req.body;
   var codefinder = await findcode(code);
-  
-  var ret = {userID: userID, error: error};
+  console.log(codefinder.userID);
+
+  var ret = await getuserinfo(codefinder.userID);
   res.status(200).json(ret);
 });
 
