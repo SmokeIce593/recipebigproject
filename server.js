@@ -575,6 +575,7 @@ app.post('/api/codeverification', async (req, res, next) =>
   userID = codefinder.userID;
   error = codefinder.error
 
+  console.log("Test: " + userID);
   if(codefinder.error === ''){
     codeerror = await updateverified(userID);
   }
@@ -590,6 +591,7 @@ app.post('/api/codeverification', async (req, res, next) =>
   }
   else if(error === '' && codeerror !== ''){
     error = codeerror;
+    console.log("codeerror");
   }
   else if(error === '' && codeerror === ''){
     error = ret.error;
@@ -712,6 +714,7 @@ async function getuserinfo(userID){
   return ret;
 }
 
+
 async function updateverified(userID){
   var error = '';
   const connectionString = process.env.DATABASE_URL;
@@ -722,38 +725,16 @@ async function updateverified(userID){
   });
 
   try{
-
-  
-    await client.connect();
-    const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
-    const valueslogincheck = [login];
-    const logincheck = await client.query(duplicatelogin, valueslogincheck);
+  await client.connect();
+  const text = "Update users set verifiedcode = 'true' where id = $1";
+  const value = [userID];
+  const now = await client.query(text, value);
+  await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
     
-    const duplicateemail = 'SELECT * FROM users WHERE email = $1';
-    const valuesemailcheck = [email];
-    const emailcheck = await client.query(duplicateemail, valuesemailcheck);
-    
-    if(emailcheck.rowCount > 0)
-    {
-      error = "Duplicate Email already exists.";
-    }
-    else if(logincheck.rowCount == 0)
-    {
-      const text = 'Update users where id = $1';
-      const values = [newid, login, hashed, email, firstname, lastname, securityquestion, securityanswer];
-      const now = await client.query(text, values);
-      var creation = await codecreation(newid);
-      var errormail = sendemail(email, creation.code);
-    }
-    else{
-      error = "Duplicate Login already exists.";
-    }
-    await client.end();
-    }
-    catch{
-      error = "Server related issues, please try again.";
-    }
-
+  }
   return error;
 }
 
