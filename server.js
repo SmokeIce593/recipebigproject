@@ -98,6 +98,7 @@ app.post('/api/login', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+
 app.post('/api/updateinformation', async (req, res, next) => 
 {
   // incoming: login, password
@@ -177,31 +178,31 @@ app.post('/api/register', async (req, res, next) =>
   try{
 
   
-  await client.connect();
-  const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
-  const valueslogincheck = [login];
-  const logincheck = await client.query(duplicatelogin, valueslogincheck);
-  
-  const duplicateemail = 'SELECT * FROM users WHERE email = $1';
-  const valuesemailcheck = [email];
-  const emailcheck = await client.query(duplicateemail, valuesemailcheck);
-  
-  if(emailcheck.rowCount > 0)
-  {
-    error = "Duplicate Email already exists.";
-  }
-  else if(logincheck.rowCount == 0)
-  {
-    const text = 'Insert into users (id, username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7, $8)';
-    const values = [newid, login, hashed, email, firstname, lastname, securityquestion, securityanswer];
-    const now = await client.query(text, values);
-    var creation = await codecreation(newid);
-    var errormail = sendemail(email, creation.code);
-  }
-  else{
-    error = "Duplicate Login already exists.";
-  }
-  await client.end();
+    await client.connect();
+    const duplicatelogin = 'SELECT * FROM users WHERE username = $1';
+    const valueslogincheck = [login];
+    const logincheck = await client.query(duplicatelogin, valueslogincheck);
+    
+    const duplicateemail = 'SELECT * FROM users WHERE email = $1';
+    const valuesemailcheck = [email];
+    const emailcheck = await client.query(duplicateemail, valuesemailcheck);
+    
+    if(emailcheck.rowCount > 0)
+    {
+      error = "Duplicate Email already exists.";
+    }
+    else if(logincheck.rowCount == 0)
+    {
+      const text = 'Insert into users (id, username, password, email, firstname, lastname, securityquestion, securityanswer) values ($1, $2, $3, $4, $5, $6, $7, $8)';
+      const values = [newid, login, hashed, email, firstname, lastname, securityquestion, securityanswer];
+      const now = await client.query(text, values);
+      var creation = await codecreation(newid);
+      var errormail = sendemail(email, creation.code);
+    }
+    else{
+      error = "Duplicate Login already exists.";
+    }
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -260,18 +261,18 @@ app.post('/api/savecategory', async (req, res, next) =>
 
   try{
 
-  await client.connect();
-  const duplicatecat = 'SELECT * FROM category WHERE categoryname = $1';
-  const valuescatcheck = [categoryname];
-  const catcheck = await client.query(duplicatecat, valuescatcheck);
-  
-  if(catcheck.rowCount == 0)
-  {
-    const text = 'Insert into category (fkrecipeid, categoryname, categorycolor) values ($1, $2, $3)';
-    const values = [fkrecipeid, categoryname, categorycolor];
-    const now = await client.query(text, values);
-  }
-  await client.end();
+    await client.connect();
+    const duplicatecat = 'SELECT * FROM category WHERE categoryname = $1';
+    const valuescatcheck = [categoryname];
+    const catcheck = await client.query(duplicatecat, valuescatcheck);
+    
+    if(catcheck.rowCount == 0)
+    {
+      const text = 'Insert into category (fkrecipeid, categoryname, categorycolor) values ($1, $2, $3)';
+      const values = [fkrecipeid, categoryname, categorycolor];
+      const now = await client.query(text, values);
+    }
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -301,12 +302,12 @@ app.delete('/api/deletetags', async (req, res, next) =>
 
   try{
 
-  await client.connect();
-  const text = 'DELETE FROM tags WHERE tagname = $1';
-  const values = [tagname];
-  const now = await client.query(text, values);
+    await client.connect();
+    const text = 'DELETE FROM tags WHERE tagname = $1';
+    const values = [tagname];
+    const now = await client.query(text, values);
 
-  await client.end();
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -335,11 +336,11 @@ app.delete('/api/deletecategory', async (req, res, next) =>
   });
 
   try{
-  await client.connect();
-  const text = 'DELETE FROM category WHERE categoryname = $1';
-  const value = [categoryname];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = 'DELETE FROM category WHERE categoryname = $1';
+    const value = [categoryname];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -368,11 +369,11 @@ app.post('/api/saverecipe', async (req, res, next) =>
   var newid = uuidv4();
 
   try{
-  await client.connect();
-  const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
-  const value = [newid, recipename, recipetext, fkuser, privaterecipe];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
+    const value = [newid, recipename, recipetext, fkuser, privaterecipe];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -403,18 +404,18 @@ app.post('/api/getsinglerecipe', async (req, res, next) =>
   });
 
   try{
-  await client.connect();
-  const recipequery = 'Select * from recipes where id = $1';
-  const recipevalue = [userID];
-  const recipe = await client.query(text, value);
-  
-  const ingredientquery = 'Select * from ingredients where recipefk = $1';
-  const ingredientvalue = [userID];
-  const ingredient = await client.query(text, value);
+    await client.connect();
+    const recipequery = 'Select * from recipes where id = $1';
+    const recipevalue = [userID];
+    const recipe = await client.query(text, value);
+    
+    const ingredientquery = 'Select * from ingredients where recipefk = $1';
+    const ingredientvalue = [userID];
+    const ingredient = await client.query(text, value);
 
-  const directionquery = 'Select * from ingredients where recipefk = $1';
-  const directionvalue = [userID];
-  const direction = await client.query(text, value);
+    const directionquery = 'Select * from ingredients where recipefk = $1';
+    const directionvalue = [userID];
+    const direction = await client.query(text, value);
 
   await client.end();
   }
@@ -445,6 +446,7 @@ app.post('/api/getsinglerecipe', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+
 async function saveingredients(ingredients, fkrecipeid){
   const connectionString = process.env.DATABASE_URL;
   var error = '';
@@ -455,12 +457,12 @@ async function saveingredients(ingredients, fkrecipeid){
 
   await client.connect();
   for(const ingredient of ingredients){
-  try{
-    var newid = uuidv4();
-    const text = 'Insert into ingredients (id, ingredient, recipefk) values ($1, $2, $3)';
-    const value = [newid, ingredient, fkrecipeid];
-    const now = await client.query(text, value);
-  }
+    try{
+      var newid = uuidv4();
+      const text = 'Insert into ingredients (id, ingredient, recipefk) values ($1, $2, $3)';
+      const value = [newid, ingredient, fkrecipeid];
+      const now = await client.query(text, value);
+    }
     catch{
       error = "Server related issues, please try again.";
     }
@@ -468,6 +470,7 @@ async function saveingredients(ingredients, fkrecipeid){
   await client.end();
   return error;
 }
+
 
 async function savedirections(directions, fkrecipeid){
   const connectionString = process.env.DATABASE_URL;
@@ -479,12 +482,12 @@ async function savedirections(directions, fkrecipeid){
 
   await client.connect();
   for(const direction of directions){
-  try{
-    var newid = uuidv4();
-    const text = 'Insert into directions (id, directions, fkrecipe) values ($1, $2, $3)';
-    const value = [newid, direction, fkrecipeid];
-    const now = await client.query(text, value);
-  }
+    try{
+      var newid = uuidv4();
+      const text = 'Insert into directions (id, directions, fkrecipe) values ($1, $2, $3)';
+      const value = [newid, direction, fkrecipeid];
+      const now = await client.query(text, value);
+    }
     catch{
       error = "Server related issues, please try again.";
     }
@@ -494,7 +497,7 @@ async function savedirections(directions, fkrecipeid){
 }
 
 
-app.delete('/api/editrecipe', async (req, res, next) => 
+app.put('/api/editrecipe', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -510,11 +513,11 @@ app.delete('/api/editrecipe', async (req, res, next) =>
   });
 
   try{
-  await client.connect();
-  const text = 'Update recipes set recipe = $1, text_recipe = $2, userid = $3 where id = $4';
-  const value = [recipename, recipetext, fkuser, recipeID];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = 'Update recipes set recipe = $1, text_recipe = $2, userid = $3 where id = $4';
+    const value = [recipename, recipetext, fkuser, recipeID];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -523,7 +526,9 @@ app.delete('/api/editrecipe', async (req, res, next) =>
   var ret = {error: error};
   res.status(200).json(ret);
 });
-app.delete('/api/search', async (req, res, next) => 
+
+
+app.get('/api/search', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -539,11 +544,11 @@ app.delete('/api/search', async (req, res, next) =>
   });
 
   try{
-  await client.connect();
-  const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON Cast(r.id as int) = Cast(c.fkrecipeid as int) left JOIN tags as t ON Cast(r.id as int) = Cast(t.fkrecipeid as int) left join users as u ON Cast(r.userid as int) = Cast(u.id as int) Where (r.recipe like '%$1%' OR t.tagname like '%$1%' OR c.categoryname like '%$1%' OR u.firstname like '%$1%' or u.lastname like '%$1%') GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname";
-  const value = [search];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON Cast(r.id as int) = Cast(c.fkrecipeid as int) left JOIN tags as t ON Cast(r.id as int) = Cast(t.fkrecipeid as int) left join users as u ON Cast(r.userid as int) = Cast(u.id as int) Where (r.recipe like '%$1%' OR t.tagname like '%$1%' OR c.categoryname like '%$1%' OR u.firstname like '%$1%' or u.lastname like '%$1%') GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname";
+    const value = [search];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -558,6 +563,7 @@ app.delete('/api/search', async (req, res, next) =>
   var ret = {filter: _ret, error: error};
   res.status(200).json(ret);
 });
+
 
 app.post('/api/codeverification', async (req, res, next) => 
 {
@@ -601,6 +607,7 @@ app.post('/api/codeverification', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+
 app.post('/api/passwordverification', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
@@ -616,6 +623,7 @@ app.post('/api/passwordverification', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+
 async function findcode(code){
   const connectionString = process.env.DATABASE_URL;
   var error = '';
@@ -629,31 +637,31 @@ async function findcode(code){
   });
 
   try{
-  await client.connect();
-  const text = "select * from emailvericodes where generatedcode = $1 AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
-  const value = [code];
-  const now = await client.query(text, value);
+    await client.connect();
+    const text = "select * from emailvericodes where generatedcode = $1 AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
+    const value = [code];
+    const now = await client.query(text, value);
 
-  if(now.rowCount == 0)
-  {
-    error = "No code found";
-    var ret = {error: error};
-  }
-  else{
-    userID = now.rows[0]["login_fkid_1"];
-  }
-  // Check for newer codes
-  if(userID !== ''){
-    const text = "select * from emailvericodes where login_fkid_1 = $1 AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
-    const value = [userID];
-    const newcode = await client.query(text, value);
-    if(code !== newcode.rows[0]["generatedcode"]){
-      error = 'This is not the newest code';
+    if(now.rowCount == 0)
+    {
+      error = "No code found";
+      var ret = {error: error};
     }
+    else{
+      userID = now.rows[0]["login_fkid_1"];
+    }
+    // Check for newer codes
+    if(userID !== ''){
+      const text = "select * from emailvericodes where login_fkid_1 = $1 AND date < CURRENT_TIMESTAMP AND date > CURRENT_TIMESTAMP - interval '15 minutes' ORDER BY date DESC limit 1";
+      const value = [userID];
+      const newcode = await client.query(text, value);
+      if(code !== newcode.rows[0]["generatedcode"]){
+        error = 'This is not the newest code';
+      }
+    }
+    
+    await client.end();
   }
-  
-  await client.end();
-}
   catch{
     error = "Server related issues, please try again.";
     var ret = {error: error};
@@ -662,6 +670,7 @@ async function findcode(code){
   var ret = {userID: userID, error: error};
   return ret;
 }
+
 
 async function getuserinfo(userID){
   // incoming: login, password
@@ -725,11 +734,11 @@ async function updateverified(userID){
   });
 
   try{
-  await client.connect();
-  const text = "Update users set verifiedcode = 'true' where id = $1";
-  const value = [userID];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = "Update users set verifiedcode = 'true' where id = $1";
+    const value = [userID];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -737,6 +746,7 @@ async function updateverified(userID){
   }
   return error;
 }
+
 
 async function checkverified(userID){
   var error = '';
@@ -749,18 +759,19 @@ async function checkverified(userID){
   });
 
   try{
-  await client.connect();
-  const text = "select * from users where id = $1";
-  const value = [userID];
-  const now = await client.query(text, value);
-  verified = now.rows[0]["verifiedcode"];
-  await client.end();
+    await client.connect();
+    const text = "select * from users where id = $1";
+    const value = [userID];
+    const now = await client.query(text, value);
+    verified = now.rows[0]["verifiedcode"];
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
   }
   return verified;
 }
+
 
 async function sendemail(email, code){
 
@@ -789,6 +800,7 @@ async function sendemail(email, code){
   }); 
 }
 
+
 async function codecreation(userID){
   var error = '';
   var code = uuidv4();
@@ -802,11 +814,11 @@ async function codecreation(userID){
   });
 
   try{
-  await client.connect();
-  const text = "Insert into emailvericodes (generatedcode, login_fkid_1) values ($1, $2)";
-  const value = [code, userID];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = "Insert into emailvericodes (generatedcode, login_fkid_1) values ($1, $2)";
+    const value = [code, userID];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -815,6 +827,7 @@ async function codecreation(userID){
   var ret = {code:code, error:error}
   return ret;
 }
+
 
 app.post('/api/codecreation', async (req, res, next) => 
 {
@@ -833,16 +846,16 @@ app.post('/api/codecreation', async (req, res, next) =>
   });
 
   try{
-  await client.connect();
-  const text = "Select * from users where email = $1";
-  const value = [email];
-  const now = await client.query(text, value);
-  id = now.rows[0]["id"];
-  var creation = await codecreation(id);
-  var errormail = await sendemail(email, creation.code);
+    await client.connect();
+    const text = "Select * from users where email = $1";
+    const value = [email];
+    const now = await client.query(text, value);
+    id = now.rows[0]["id"];
+    var creation = await codecreation(id);
+    var errormail = await sendemail(email, creation.code);
 
-  
-  await client.end();
+    
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -857,7 +870,7 @@ app.post('/api/codecreation', async (req, res, next) =>
 
 
 
-app.delete('/api/filtertag', async (req, res, next) => 
+app.get('/api/filtertag', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -873,11 +886,11 @@ app.delete('/api/filtertag', async (req, res, next) =>
   });
 
   try{
-  await client.connect();
-  const text = 'Select r.* from recipes as r Inner JOIN tags as t ON Cast(r.id as int) = Cast(t.fkrecipeid as int) where t.id = $1';
-  const value = [tagid];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = 'Select r.* from recipes as r Inner JOIN tags as t ON Cast(r.id as int) = Cast(t.fkrecipeid as int) where t.id = $1';
+    const value = [tagid];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -893,7 +906,7 @@ app.delete('/api/filtertag', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.delete('/api/filtercategory', async (req, res, next) => 
+app.get('/api/filtercategory', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -909,11 +922,11 @@ app.delete('/api/filtercategory', async (req, res, next) =>
   });
 
   try{
-  await client.connect();
-  const text = 'Select r.* from recipes as r Inner JOIN categories as c ON Cast(r.id as int) = Cast(c.fkrecipeid as int) where c.id = $1';
-  const value = [categoryid];
-  const now = await client.query(text, value);
-  await client.end();
+    await client.connect();
+    const text = 'Select r.* from recipes as r Inner JOIN categories as c ON Cast(r.id as int) = Cast(c.fkrecipeid as int) where c.id = $1';
+    const value = [categoryid];
+    const now = await client.query(text, value);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -930,7 +943,8 @@ app.delete('/api/filtercategory', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.delete('/api/badwords', async (req, res, next) => 
+
+app.get('/api/badwords', async (req, res, next) => 
 {
   const { text } = req.body;
 
@@ -946,6 +960,7 @@ app.delete('/api/badwords', async (req, res, next) =>
 
   res.status(200).json(ret);
 });
+
 
 app.delete('/api/badwordscheck', async (req, res, next) => 
 {
@@ -977,19 +992,19 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   });
 
   try {
-  await client.connect();
-  const text = 'DELETE FROM recipe WHERE id = $1';
-  const value = [id];
-  const now = await client.query(text, value);
-  
-  const tagtext = 'DELETE FROM tags WHERE fkrecipeid = $1';
-  const tagvalue = [id];
-  const tagnow = await client.query(tagtext, tagvalue);
+    await client.connect();
+    const text = 'DELETE FROM recipe WHERE id = $1';
+    const value = [id];
+    const now = await client.query(text, value);
+    
+    const tagtext = 'DELETE FROM tags WHERE fkrecipeid = $1';
+    const tagvalue = [id];
+    const tagnow = await client.query(tagtext, tagvalue);
 
-  const cattext = 'DELETE FROM category WHERE fkrecipeid = $1';
-  const catvalue = [id];
-  const catnow = await client.query(cattext, catvalue);
-  await client.end();
+    const cattext = 'DELETE FROM category WHERE fkrecipeid = $1';
+    const catvalue = [id];
+    const catnow = await client.query(cattext, catvalue);
+    await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
@@ -998,6 +1013,7 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   var ret = { rid:id, rn:recipename, error:'' };
   res.status(200).json(ret);
 });
+
 
 app.post('/api/searchcards', async (req, res, next) => 
 {
@@ -1023,6 +1039,7 @@ app.post('/api/searchcards', async (req, res, next) =>
   res.status(200).json(ret);
 })
 
+
 app.use((req, res, next) => 
 {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -1036,6 +1053,7 @@ app.use((req, res, next) =>
   );
   next();
 });
+
 
 // app.listen(5000); // start Node + Express server on port 5000
 
