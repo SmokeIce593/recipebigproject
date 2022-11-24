@@ -11,7 +11,7 @@ global.search = '';
 global.card = '';
 
 
-export default class Homescreen extends Component {
+export default class LoginScreen extends Component {
 
   constructor() 
   {
@@ -23,6 +23,7 @@ export default class Homescreen extends Component {
   }
 
   render(){
+
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <KeyboardAvoidingView 
@@ -103,17 +104,16 @@ export default class Homescreen extends Component {
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        this.props.navigation.navigate('Search');
+        this.props.navigation.navigate('Search', { id:res.id, firstName: res.firstName, lastName: res.lastName,
+                                                  username: res.username, email: res.email, password: global.password });
       }
     }
     catch(e)
     {
       this.setState({message: e.message});
     }
-  }  
+  } 
+
 
   handleClick2 = async () =>
   {
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     border: 'none',
     backgroundColor: 'inherit',
-    fontSize: 16,
+    fontSize: 20,
   }
 });
 
