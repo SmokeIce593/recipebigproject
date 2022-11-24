@@ -4,12 +4,6 @@ import { ImageBackground, KeyboardAvoidingView, View, Text,
          TextInput, Image, StyleSheet, Pressable, Keyboard
        } from 'react-native';
 
-const lastRef = createRef();
-const emailRef = createRef();
-const userRef = createRef();
-const passRef = createRef();
-const ansRef = createRef();
-
 const questions = [
   "What is your father's middle name?", 
   "What was the name of your high school?", 
@@ -38,6 +32,7 @@ export default class SettingScreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
+      password:navigation.getParam('password', ''),
     }
 
     return(
@@ -59,64 +54,58 @@ export default class SettingScreen extends Component {
                 <Text style={ styles.explainText }>First name:</Text>
                 <TextInput
                   clearButtonMode="while-editing"
-                  returnKeyType='next'
+                  returnKeyType='done'
                   spellCheck = { false }
                   textContentType='givenName'
                   style={ styles.inputfield }
                   placeholder="First name"
-                  value={ userInfo.firstName }
+                  defaultValue={ userInfo.firstName }
                   placeholderTextColor= '#808080'
-                  onChangeText={ (val) => {this.changeFirstNameHandler(val)} }
-                  onSubmitEditing={ () => {lastRef.current.focus();} }
+                  onChangeText={ (val) => {this.changeFirstNameHandler(val, userInfo)} }
                   blurOnSubmit={ false }
                   /> 
 
                 <Text style={ styles.explainText }>Last name:</Text>
                 <TextInput
-                  ref={ lastRef }
                   clearButtonMode="while-editing"
-                  returnKeyType='next'
+                  returnKeyType='done'
                   spellCheck = { false }
                   textContentType='familyName'
                   style={ styles.inputfield }
                   placeholder="Last name"
-                  value={ userInfo.lastName }
+                  defaultValue={ userInfo.lastName }
                   placeholderTextColor= '#808080'
-                  onChangeText={ (val) => {this.changeLastNameHandler(val)} }
-                  onSubmitEditing={ () => {emailRef.current.focus();} }
+                  onChangeText={ (val) => {this.changeLastNameHandler(val, userInfo)} }
                   blurOnSubmit={ false }
                   />    
                 
                 <Text style={ styles.explainText }>Username:</Text>
                 <TextInput
-                  ref={ userRef }
                   clearButtonMode="while-editing"
-                  returnKeyType='next'
+                  returnKeyType='done'
                   spellCheck={ false }
                   textContentType='username'
                   style={ styles.inputfield }
                   placeholder="Username"
-                  value={ userInfo.username }
+                  defaultValue={ userInfo.username }
                   placeholderTextColor= '#808080'
-                  onChangeText={ (val) => {this.changeLoginNameHandler(val)} }
-                  onSubmitEditing={ () => {passRef.current.focus();} }
+                  onChangeText={ (val) => {this.changeLoginNameHandler(val, userInfo)} }
                   blurOnSubmit={ false }
                   />
 
-                <Text style={ styles.explainText }>Change password:</Text>
+                <Text style={ styles.explainText }>Password:</Text>
                 <TextInput
-                  ref={ passRef }
                   clearButtonMode="while-editing"
                   returnKeyType='done'
                   spellCheck={ false }
                   autoCorrect={ false }
                   textContentType='password'
                   style={ styles.inputfield }
+                  defaultValue={ userInfo.password }
                   placeholder="Password"
                   placeholderTextColor= '#808080'
                   secureTextEntry={ true }
-                  onChangeText={ (val) => {this.changePasswordHandler(val)} }
-                  onSubmitEditing={ Keyboard.dismiss() }
+                  onChangeText={ (val) => {this.changePasswordHandler(val, userInfo)} }
                   blurOnSubmit={ false }
                 />
 
@@ -128,7 +117,7 @@ export default class SettingScreen extends Component {
 
               <Pressable 
                 style={ styles.registerbuttonfield }
-                onPress={ this.handleClickRegister }> 
+                onPress={() => this.handleClickSave(userInfo) }> 
                 <Text style={ styles.buttontext }>Save changes</Text> 
               </Pressable>
             </View>
@@ -150,17 +139,16 @@ export default class SettingScreen extends Component {
     this.props.navigation.navigate('Search');
   }  
 
-  handleClickRegister = async () =>
+  handleClickSave = async (userInfo) =>
   {
 
     try
     {
-      var obj = {login:global.loginName.trim(), password:global.password.trim(), email:global.email.trim(),
-                 firstname:global.firstName.trim(), lastname:global.lastName.trim(),
-                 securityquestion:global.question, securityanswer:global.answer.trim()};
+      var obj = {login:userInfo.username.trim(), password:userInfo.password.trim(), email:userInfo.email.trim(),
+                 firstname:userInfo.firstName.trim(), lastname:userInfo.lastName.trim(), id:userInfo.id};
       var js = JSON.stringify(obj);
 
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/register',
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/updateinformation',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
       var res = JSON.parse(await response.text());
@@ -172,10 +160,10 @@ export default class SettingScreen extends Component {
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        this.props.navigation.navigate('Verify');
+        userInfo.firstName = res.firstName;
+        userInfo.lastName = res.lastName;
+        userInfo.username = res.username;
+        this.props.navigation.navigate('Search', userInfo);
       }
     }
     catch(e)
@@ -184,40 +172,31 @@ export default class SettingScreen extends Component {
     }
   }  
 
-  changeLoginNameHandler = async (val) =>
+  changeLoginNameHandler = async (val, userInfo) =>
   {
-    global.loginName = val;
+    userInfo.username = val;
   }  
 
-  changePasswordHandler = async (val) =>
+  changePasswordHandler = async (val, userInfo) =>
   {
-    global.password = val;
+    userInfo.password = val;
   }  
 
-  changeFirstNameHandler = async (val) =>
+  changeFirstNameHandler = async (val, userInfo) =>
   {
-    global.firstName = val;
+    userInfo.firstName = val;
   } 
 
-  changeLastNameHandler = async (val) =>
+  changeLastNameHandler = async (val, userInfo) =>
   {
-    global.lastName = val;
+    userInfo.lastName = val;
   } 
 
-  changeEmailHandler = async (val) =>
+  changeEmailHandler = async (val, userInfo) =>
   {
-    global.email = val;
+    userInfo.email = val;
   } 
 
-  changeAnswerHandler = async (val) =>
-  {
-    global.answer = val;
-  } 
-
-  changeQuestionHandler = async (val) =>
-  {
-    global.question = questions.findIndex(q => q.value == val)
-  } 
 
 }
 

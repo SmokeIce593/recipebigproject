@@ -105,7 +105,7 @@ export default class LoginScreen extends Component {
       else
       {
         this.props.navigation.navigate('Search', { id:res.id, firstName: res.firstName, lastName: res.lastName,
-                                                  username: res.username, email: res.email });
+                                                  username: res.username, email: res.email, password: global.password });
       }
     }
     catch(e)

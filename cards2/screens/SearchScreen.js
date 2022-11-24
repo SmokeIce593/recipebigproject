@@ -25,6 +25,7 @@ export default class SearchScreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
+      password:navigation.getParam('password', ''),
     }
 
     return(
