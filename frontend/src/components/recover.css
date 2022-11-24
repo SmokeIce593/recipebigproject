@@ -63,4 +63,7 @@ img{
 	flex-direction: column;
 }
 
-
+.codeDiv{
+	display: none;
+	visibility: hidden;
+}

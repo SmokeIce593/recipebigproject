@@ -94,15 +94,22 @@ function Create()
 			deleteIcon.type = "button";
 			deleteIcon.innerHTML = "X";
 			deleteIcon.onclick = function(){deleteTag(table, this)};
+		/*let colorpicker = document.createElement("input");
+			colorpicker.type = "color";
+			colorpicker.value = "#ff0000";
+			colorpicker.className = "colorpicker";
+			colorpicker.id = "chosenColor";*/
 		var row = table.insertRow(tagNum);
 		var cell1 = row.insertCell(0);
+		//var cell2 = row.insertCell(1);
 		var cell2 = row.insertCell(1);
-		var cell3 = row.insertCell(2);
-		cell1.className = "indent"
-		cell3.className = "deleteIcons"
-		cell1.innerHTML = "&bull;";
-		cell2.innerHTML = info;
-		cell3.appendChild(deleteIcon);
+		cell1.className = "tag"
+		cell2.className = "deleteIcons"
+		cell1.innerHTML = info;
+			var colors = ['FF6347','FFE4C4','7FFFD4','FF7F50','FF8C00','DA70D6','AFEEEE','FB98FB'];
+			cell1.style.backgroundColor = '#' + colors[Math.floor(Math.random() * colors.length)];
+		//cell2.appendChild(colorpicker);
+		cell2.appendChild(deleteIcon);
 		document.getElementById('tag').value = '';
 		tagNum++;
 		}
@@ -172,11 +179,6 @@ function Create()
 		</div>
         </td>
         <td className = "col2">
-        <div className="imgUpload">
-        	<img id="userUpload"/>
-        	<label for="userUpload">Upload an image of your recipe: </label>
- 		<input type="file" id="userUpload" accept="image/*" onchange="showPreview(event);"/>
-        </div>
         <div className="lists">
         	<div type='text' className = 'label'>Ingredients:</div>
         	<input type="text" id="ingredient" placeholder="Ingredients..." className="ingField"/><br />

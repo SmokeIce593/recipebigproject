@@ -45,6 +45,8 @@ const findEmail = async event =>
             {
                 //setMessage('');
                 //window.location.href = '/home';
+                document.getElementById("codeDiv").style.visibility = 'visible';
+                document.getElementById("codeDiv").style.display = 'block';
             }
         }
         catch(e)
@@ -104,11 +106,14 @@ return(
                 ref={(c) => email = c} /><br />
             <div id="bumper" className="buffer"><span id="emailResult" className = "error">{message}</span></div> 
             <input type="submit" id="submitButton" className="submitButton" value ="Submit" onClick={findEmail} />
-            <span className="innerText">A verification code has been sent to your e-mail. Please enter the code to verify your account:</span><br />
-            <input type="text" id="code" placeholder="Verification Code" className="inputfield"
-                ref={(c) => code = c} /><br />
-            <div id="bumper" className="buffer"><span id="verifyResult" className = "error">{message}</span></div> 
-            <input type="submit" id="submitButton" className="submitButton" value ="Submit" onClick={verifyCode} />
+            <div id="codeDiv" className="codeDiv">
+		    <span className="innerText">A verification code has been sent to your e-mail. Please enter the code to verify your account:</span><br />
+		    <div id="bumper" className="buffer"><input type="button" id="recoverLink" className = "recoverLink" value="Didn't get an e-mail? Click here to resend" onClick={findEmail} /></div>
+		    <input type="text" id="code" placeholder="Verification Code" className="inputfield"
+		        ref={(c) => code = c} /><br />
+		    <div id="bumper" className="buffer"><span id="verifyResult" className = "error">{message}</span></div> 
+		    <input type="submit" id="submitButton" className="submitButton" value ="Submit" onClick={verifyCode} />
+            </div>
         </form>
 
 	</div>
