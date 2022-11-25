@@ -21,8 +21,18 @@ export default class Homescreen extends Component {
        message: ' '
     }
   }
+  
 
   render(){
+    const { navigation } = this.props;
+    const userInfo = 
+    {
+      id:navigation.getParam('id', -1),
+      firstName:navigation.getParam('firstName', 'default'),
+      lastName:navigation.getParam('lastName', 'default'),
+      username:navigation.getParam('username', 'default'),
+      email:navigation.getParam('email', 'default'),
+    }
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <KeyboardAvoidingView 
@@ -66,25 +76,25 @@ export default class Homescreen extends Component {
 
 
         <View style={styles.footer}>
-        <Pressable style={styles.footerButton} onPress={this.handleHomeClick}>
+        <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/home.png')}/> 
                 <Text>Home</Text>    
               </View>
             </Pressable>
-            <Pressable style={styles.footerButton} onPress={this.handleRecipeClick}>
+            <Pressable style={styles.footerButton} onPress={() => this.handleRecipeClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon2} source={require('../assets/reciepe.png')}/> 
                 <Text>Recipe</Text>    
               </View>
             </Pressable>
-            <Pressable style={styles.footerButton} onPress={this.handleCreateClick}>
+            <Pressable style={styles.footerButton} onPress={() => this.handleCreateClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/star.png')}/> 
                 <Text>Create</Text>      
               </View>
             </Pressable>
-            <Pressable style={styles.footerButton} onPress={this.handleSettingsClick}>
+            <Pressable style={styles.footerButton} onPress={() => this.handleSettingsClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/cog.png')}/>   
                 <Text>Settings</Text>    
@@ -130,21 +140,21 @@ export default class Homescreen extends Component {
       this.setState({message: e.message});
     }
   }  
-  handleHomeClick = async () =>
+  handleHomeClick = async (userInfo) =>
   {
-    this.props.navigation.navigate('Search');
+    this.props.navigation.navigate('Search', userInfo);
   }
-  handleRecipeClick = async () =>
+  handleRecipeClick = async (userInfo) =>
   {
-    this.props.navigation.navigate('Recipe');
+    this.props.navigation.navigate('Recipe', userInfo);
   }  
-  handleCreateClick = async () =>
+  handleCreateClick = async (userInfo) =>
   {
-    this.props.navigation.navigate('Create');
+    this.props.navigation.navigate('Create', userInfo);
   }  
-  handleSettingsClick = async () =>
+  handleSettingsClick = async (userInfo) =>
   {
-    this.props.navigation.navigate('Setting');
+    this.props.navigation.navigate('Setting', userInfo);
   }  
   handleLogoutClick = async () =>
   {

@@ -16,6 +16,15 @@ export default class Homescreen extends Component {
   }
 
   render(){
+    const { navigation } = this.props;
+    const userInfo = 
+    {
+      id:navigation.getParam('id', -1),
+      firstName:navigation.getParam('firstName', 'default'),
+      lastName:navigation.getParam('lastName', 'default'),
+      username:navigation.getParam('username', 'default'),
+      email:navigation.getParam('email', 'default'),
+    }
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <KeyboardAvoidingView 
@@ -85,10 +94,7 @@ export default class Homescreen extends Component {
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        this.props.navigation.navigate('Login');
+        this.props.navigation.navigate('Search', userInfo);
       }
     }
     catch(e)
