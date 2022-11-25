@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 global.localName = '';
 global.password = '';
@@ -29,6 +29,11 @@ export default class LoginScreen extends Component {
         <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}>
+          <ScrollView 
+            showsVerticalScrollIndicator={ false } 
+            style={{ flex:1, paddingTop: 150 }} 
+            keyboardDismissMode="interactive"
+            contentContainerStyle={styles.container}>
             <View style={styles.container}>
                 <View style={styles.container}>
                     <Image style={styles.logo} source={require('../assets/logo.png')}/>
@@ -73,15 +78,17 @@ export default class LoginScreen extends Component {
                     </View>
                 </View>
             </View>
-        </KeyboardAvoidingView>
-            <View>
+            
                 <Text style={{fontSize:40}}> </Text>
                 <Pressable style={styles.loginbuttonfield} onPress={this.handleClick2}>
                     <View style={{alignItems: 'center'}}>
                         <Text style={styles.buttontext}>Register</Text>
                         </View>
                 </Pressable>
-            </View>
+            
+            </ScrollView>
+        </KeyboardAvoidingView>
+            
     </ImageBackground>
   );
   }

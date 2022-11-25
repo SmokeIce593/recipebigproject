@@ -1,7 +1,7 @@
 import { Component, createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { ImageBackground, KeyboardAvoidingView, View, Text, 
-         TextInput, Image, StyleSheet, Pressable, Keyboard
+         TextInput, Image, StyleSheet, Pressable, ScrollView
        } from 'react-native';
 
 const questions = [
@@ -36,18 +36,26 @@ export default class SettingScreen extends Component {
     }
 
     return(
+      
       <ImageBackground
         source={ require('../assets/backgroundmobilefinal.png') }
         resizeMode='cover'
         style={ {alignItems: "center", flex: 1, justifyContent: "center"} }> 
         
+        
         <KeyboardAvoidingView 
           behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
           style={ styles.container }>
+          <ScrollView 
+            showsVerticalScrollIndicator={ false } 
+            //style={{ flex:1 }} 
+            keyboardDismissMode="interactive"
+            contentContainerStyle={styles.container}>
           
           <View style={ styles.container }>
             <View style={ styles.registerboxfield }>
               <View style= { styles.zblock }>
+              
 
                 <Text style={ styles.titlefield }>Account Settings</Text>
 
@@ -109,6 +117,7 @@ export default class SettingScreen extends Component {
                   blurOnSubmit={ false }
                 />
 
+              
               </View>
 
                 <Text style={ styles.error }>
@@ -121,16 +130,18 @@ export default class SettingScreen extends Component {
                 <Text style={ styles.buttontext }>Save changes</Text> 
               </Pressable>
             </View>
+            <Pressable 
+              style={ styles.loginbuttonfield }
+              onPress={ this.handleClickCancel }>
+              <Text style={ styles.buttontext }>Cancel</Text>
+            </Pressable>
           </View>
+          
+          </ScrollView>
       </KeyboardAvoidingView>
 
-      <Pressable 
-        style={ styles.loginbuttonfield }
-        onPress={ this.handleClickCancel }>
-        <Text style={ styles.buttontext }>Cancel</Text>
-      </Pressable>
-      
     </ImageBackground>
+    
   );
   }
 
@@ -204,6 +215,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
   },
   registerboxfield: {
     backgroundColor: '#EAFCFF',
@@ -280,14 +292,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF7A70',
     borderRadius: 17,
     fontSize: 36,
-    marginTop: 10,
-    marginBottom: 15,
+    marginTop: 20,
     justifyContent: "center",
     alignContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
     borderWidth: 1,
-    borderColor: '#000000'
+    borderColor: '#000000',
   },
   buttontext: {
     fontSize: 36,

@@ -1,7 +1,7 @@
 import { Component, createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { ImageBackground, KeyboardAvoidingView, View, Text, 
-         TextInput, Image, StyleSheet, Pressable
+         TextInput, Image, StyleSheet, Pressable, ScrollView
        } from 'react-native';
 
 global.userId = -1;
@@ -46,6 +46,11 @@ export default class RegisterScreen extends Component {
         <KeyboardAvoidingView 
           behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
           style={ styles.container }>
+          <ScrollView 
+            showsVerticalScrollIndicator={ false } 
+            style={{ flex:1, paddingTop: 100 }} 
+            keyboardDismissMode="interactive"
+            contentContainerStyle={styles.container}>
           
           <Image style={ styles.logo } source={ require('../assets/logo.png') }/>
           
@@ -178,13 +183,15 @@ export default class RegisterScreen extends Component {
             
 
           </View>
+          <Pressable 
+            style={ styles.loginbuttonfield }
+            onPress={ this.handleClickLogin }>
+            <Text style={ styles.buttontext }>Log In</Text>
+          </Pressable>  
+          </ScrollView>
       </KeyboardAvoidingView>
 
-      <Pressable 
-        style={ styles.loginbuttonfield }
-        onPress={ this.handleClickLogin }>
-        <Text style={ styles.buttontext }>Log In</Text>
-      </Pressable>
+      
       
     </ImageBackground>
   );
@@ -346,7 +353,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF7A70',
     borderRadius: 17,
     fontSize: 36,
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 15,
     justifyContent: "center",
     alignContent: "center",

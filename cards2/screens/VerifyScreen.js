@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 global.verificationCode = '';
 
@@ -21,6 +21,11 @@ export default class Homescreen extends Component {
         <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}>
+          <ScrollView 
+            showsVerticalScrollIndicator={ false } 
+            style={{ flex:1, paddingTop: 300 }} 
+            keyboardDismissMode="interactive"
+            contentContainerStyle={styles.container}>
             <View style={styles.container}>
                 <View style={styles.container}>
                     <Image style={styles.logo} source={require('../assets/logo.png')}/>
@@ -55,6 +60,7 @@ export default class Homescreen extends Component {
                     </View>
                 </View>
             </View>
+          </ScrollView>
         </KeyboardAvoidingView>
         <Text style={{fontSize:150}}> </Text>
     </ImageBackground>
