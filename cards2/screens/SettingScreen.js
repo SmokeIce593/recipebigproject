@@ -32,7 +32,6 @@ export default class SettingScreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
-      password:navigation.getParam('password', ''),
     }
 
     return(
@@ -101,7 +100,7 @@ export default class SettingScreen extends Component {
                   blurOnSubmit={ false }
                   />
 
-                <Text style={ styles.explainText }>Password:</Text>
+                <Text style={ styles.explainText }>New password (blank for no change):</Text>
                 <TextInput
                   clearButtonMode="while-editing"
                   returnKeyType='done'
@@ -109,7 +108,6 @@ export default class SettingScreen extends Component {
                   autoCorrect={ false }
                   textContentType='password'
                   style={ styles.inputfield }
-                  defaultValue={ userInfo.password }
                   placeholder="Password"
                   placeholderTextColor= '#808080'
                   secureTextEntry={ true }
