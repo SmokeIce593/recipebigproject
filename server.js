@@ -103,10 +103,23 @@ app.post('/api/updateinformation', async (req, res, next) =>
 {
   // incoming: login, password
   // outgoing: id, firstName, lastName, error
-	
   var error = '';
-
   const {id, login, password, email, firstname, lastname} = req.body;
+  
+  if(password === ''){
+    error = await accountsettingsnopass(id, login, firstname, lastname);
+  }
+  else{
+    const hashed = await bcrypt.hash(password, 10);
+    error = await accountsettingspass(id, login, firstname, lastname, hashed);
+  }
+
+  var ret = { id:id, firstName:firstname, lastName:lastname, email:email, username:login,error:error};
+  res.status(200).json(ret);
+});
+
+async function accountsettingsnopass(id, login, firstname, lastname){
+  var error = '';
   const connectionString = process.env.DATABASE_URL;
 
   const client = new Client({
@@ -114,10 +127,39 @@ app.post('/api/updateinformation', async (req, res, next) =>
     ssl: { rejectUnauthorized: false }
   });
 
-  
-  const hashed = await bcrypt.hash(password, 10);
-  console.log("ID: " + id + " Login: " + login + " hashed: " + hashed + " firstname: " + firstname + " lastname: " + lastname);
-  
+  try{
+    await client.connect();
+    const duplicatelogin = 'SELECT * FROM users WHERE username = $1 AND id != $2';
+    const valueslogincheck = [login, id];
+    const logincheck = await client.query(duplicatelogin, valueslogincheck);
+
+    if(logincheck.rowCount == 0)
+    {
+      const text = 'Update users set username = $2, firstname = $3, lastname = $4 WHERE id = $1';
+      const values = [id, login, firstname, lastname];
+      const now = await client.query(text, values);
+    }
+    else{
+      error = "Duplicate Login already exists.";
+    }
+    await client.end();
+    }
+    catch{
+      error = "Server related issues, please try again.";
+    }
+
+    return error;
+}
+
+async function accountsettingspass(id, login, firstname, lastname, hashed){
+  var error = '';
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
   try{
     await client.connect();
     const duplicatelogin = 'SELECT * FROM users WHERE username = $1 AND id != $2';
@@ -139,9 +181,9 @@ app.post('/api/updateinformation', async (req, res, next) =>
       error = "Server related issues, please try again.";
     }
 
-  var ret = { id:id, firstName:firstname, lastName:lastname, email:email, username:login,error:error};
-  res.status(200).json(ret);
-});
+    return error;
+}
+
 
 async function resetpassword(password, id){
   var error = '';
