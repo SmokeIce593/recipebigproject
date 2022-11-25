@@ -110,7 +110,7 @@ const AppNavigator = createStackNavigator({
     }
   },
 },{
-  initialRouteName: "Login"
+  initialRouteName: "Search"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({

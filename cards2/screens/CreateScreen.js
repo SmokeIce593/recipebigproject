@@ -1,12 +1,11 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList } from 'react-native';
+import UploadImage from './UploadImage';
 
-global.localName = '';
-global.password = '';
-global.userId = -1;
-global.firstName = '';
-global.lastName = '';
+global.name = '';
+global.description = '';
+
 global.search = '';
 global.card = '';
 
@@ -33,23 +32,74 @@ export default class Homescreen extends Component {
                   <View style={styles.loginboxfield}>
                     <ScrollView style={styles.scrollView}>
                       <View style={{alignItems: 'center'}}>
-                          <Text style={styles.titlefield}>Create Screen</Text>
+                        <Text style={{fontSize:10}}> </Text>
+                          <Text style={styles.titlefield}>Create Recipe</Text>
                           <Text style={{fontSize:20}}> </Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <UploadImage/>
+                          <TextInput
+                            style={styles.inputfield1}
+                            placeholder="Recipe Name"
+                            placeholderTextColor= "#808080"
+                            onChangeText={(val) => { this.changeNameHandler(val) }}
+                            />        
+                          <Text style={styles.headerfield}>Description:</Text>
+                          <ScrollView style={styles.scrollView}>
+                            <TextInput
+                              style={styles.inputfield2}
+                              placeholder="Description"
+                              placeholderTextColor= "#808080"
+                              multiline={true} 
+                              onChangeText={(val) => { this.changeDescHandler(val) }}
+                            />        
+                          </ScrollView>
+
+                          <Text style={styles.headerfield}>Ingredients:</Text>
+                            
+                            
+                            <TextInput
+                              style={styles.inputfield3}
+                              placeholder="Ingredient"
+                              placeholderTextColor= "#808080"
+                              onChangeText={(val) => { this.changeNameHandler(val) }}
+                            />      
+                            <Pressable style={styles.addbuttonfield} onPress={this.handleClick}>
+                              <View style={{alignItems: 'center'}}>
+                                <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                              </View>
+                            </Pressable>  
+                          <Text style={styles.headerfield}>Directions:</Text>
+                            <TextInput
+                                style={styles.inputfield3}
+                                placeholder="Ingredient"
+                                placeholderTextColor= "#808080"
+                                onChangeText={(val) => { this.changeNameHandler(val) }}
+                              />      
+                              <Pressable style={styles.addbuttonfield} onPress={this.handleClick}>
+                                <View style={{alignItems: 'center'}}>
+                                  <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                                </View>
+                              </Pressable>  
+                          <Text style={styles.headerfield}>Tags:</Text>
+                            <TextInput
+                                style={styles.inputfield3}
+                                placeholder="Ingredient"
+                                placeholderTextColor= "#808080"
+                                onChangeText={(val) => { this.changeNameHandler(val) }}
+                              />      
+                              <Pressable style={styles.addbuttonfield} onPress={this.handleClick}>
+                                <View style={{alignItems: 'center'}}>
+                                  <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                                </View>
+                              </Pressable>  
+                          <Text style={styles.headerfield}>Private:</Text>
                       </View>
 
 
                       <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.buttontext}>Save Recipe</Text>
-          </View>
-        </Pressable>
+                        <View style={{alignItems: 'center'}}>
+                          <Text style={styles.buttontext}>Create Recipe</Text>
+                        </View>
+                      </Pressable>
                     </ScrollView>
                   </View>
                 </View>
@@ -152,14 +202,14 @@ export default class Homescreen extends Component {
   }      
   
 
-  changeLoginNameHandler = async (val) =>
+  changeNameHandler = async (val) =>
   {
-    global.loginName = val;
+    global.name = val;
   }  
 
-  changePasswordHandler = async (val) =>
+  changeDescHandler = async (val) =>
   {
-    global.password = val;
+    global.description = val;
   }  
 
 }
@@ -195,10 +245,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 4,
   },
-  inputfield: {
+  headerfield: {
+    textDecorationLine: 'underline',
+    display: "flex",
+    flexDirection: "column",
+    fontSize: 30,
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: "center",
+  },
+  inputfield1: {
     height: 50,
 	  width: 300,
 	  backgroundColor: '#F7F7F7',
+    textAlign: 'center',
 	  borderRadius: 10,
     borderWidth: 1, //this is the border for input fields since react native shadow is weird
 	  marginTop: 4,
@@ -207,6 +267,30 @@ const styles = StyleSheet.create({
     	flexDirection: "column",
 	  justifyContent: "center",
 	  fontSize: 36,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
+  inputfield2: {
+    height: 100,
+	  width: 300,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
+  inputfield3: {
+    height: 30,
+	  width: 300,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
 	  marginRight: "auto",
 	  marginLeft: "auto",
   },
@@ -224,6 +308,27 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+  },
+  addbuttonfield: {
+    height: 30,
+	  width: 300,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    backgroundColor: '#FF7A70',
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
+  smallbuttontext: {
+    fontSize: 18,
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "auto"
   },
   buttontext: {
     fontSize: 36,
