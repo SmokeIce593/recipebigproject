@@ -51,15 +51,16 @@ export default class Homescreen extends Component {
                           placeholder="Enter code"
                           placeholderTextColor= "#808080"
                           onChangeText={(val) => { this.changeVerificationCodeHandler(val) }}
-                        />   
-                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+                        /> 
+                        <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
+                        <Pressable style={styles.loginbuttonfield} onPress={() => this.handleClick(userInfo)}>
                         <View style={{alignItems: 'center'}}>
                             <Text style={styles.buttontext}>Submit</Text>
                         </View>
                         </Pressable>  
                         <Text style={{fontSize:10}}> </Text>
                         <Text style={styles.recovText}>Didn't receive a code?</Text>
-                        <Pressable onPress={this.handleResendClick}>
+                        <Pressable onPress={() => this.handleResendClick(userInfo)}>
                         <View style={{alignItems: 'center'}}>
                             <Text style={styles.forgotText}>Click to resend</Text>
                         </View>
@@ -76,21 +77,22 @@ export default class Homescreen extends Component {
   );
   }
 
-  handleClick = async () =>
+  handleClick = async (userInfo) =>
   {
+
     try
     {
-      var obj = {login:global.loginName.trim(),password:global.password.trim()};
+      var obj = {code:global.verificationCode};
       var js = JSON.stringify(obj);
 
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/login',
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/codeverification',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
       var res = JSON.parse(await response.text());
 
-      if( res.id <= 0 )
+      if( res.error !== '' )
       {
-        this.setState({message: "User/Password combination incorrect"});
+        this.setState({message: "Incorrect code"});
       }
       else
       {
@@ -103,9 +105,28 @@ export default class Homescreen extends Component {
     }
   }  
 
-  handleResendClick = async () => 
+  handleResendClick = async (userInfo) => 
   {
+    try
+    {
+      var obj = {email:userInfo.email};
+      var js = JSON.stringify(obj);
+      console.log(email);
 
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/codecreation',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if( res.error !== '' )
+      {
+        this.setState({message: "Error sending. Please resend"});
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
   }
 
   changeVerificationCodeHandler = async (val) =>
