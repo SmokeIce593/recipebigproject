@@ -135,8 +135,45 @@ export default class SettingScreen extends Component {
             </Pressable>
           </View>
           
+          <Text></Text> 
           </ScrollView>
+          <Text style={{fontSize:60}}> </Text>
       </KeyboardAvoidingView>
+      <View style={styles.footer}>
+          <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/home.png')}/> 
+                <Text>Home</Text>    
+              </View>
+            </Pressable>
+            <Pressable style={styles.footerButton} onPress={() => this.handleRecipeClick(userInfo)}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/reciepe.png')}/> 
+                <Text>Recipe</Text>    
+              </View>
+            </Pressable>
+            <Pressable style={styles.footerButton} onPress={() => this.handleCreateClick(userInfo)}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/star.png')}/> 
+                <Text>Create</Text>      
+              </View>
+            </Pressable>
+            <Pressable 
+              style={styles.footerButton} 
+              onPress={() => this.handleSettingsClick(userInfo) }>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/cog.png')}/>   
+                <Text>Settings</Text>    
+              </View>
+            </Pressable>
+            <Pressable style={styles.footerButton} onPress={this.handleLogoutClick}>
+              <View style={{alignItems: 'center'}}>
+                <Image style={styles.icon} source={require('../assets/logout.png')}/> 
+                <Text>Logout</Text>      
+              </View>
+            </Pressable>
+          </View>
+
 
     </ImageBackground>
     
@@ -205,6 +242,28 @@ export default class SettingScreen extends Component {
   {
     userInfo.email = val;
   } 
+
+  handleHomeClick = async (userInfo) =>
+  {
+    this.props.navigation.navigate('Search', userInfo);
+  }
+  handleRecipeClick = async (userInfo) =>
+  {
+    this.props.navigation.navigate('Recipe', userInfo);
+  }  
+  handleCreateClick = async (userInfo) =>
+  {
+    this.props.navigation.navigate('Create', userInfo);
+  }  
+  handleSettingsClick = async (userInfo) =>
+  {
+    this.props.navigation.navigate('Setting', userInfo);
+  }  
+  handleLogoutClick = async () =>
+  {
+    this.props.navigation.navigate('Login');
+  }      
+  
 
 
 }
@@ -342,6 +401,31 @@ const styles = StyleSheet.create({
     color: '#ff0000',
     justifyContent: "center",
     textAlign: "center",
+  },
+  footer: {
+    position: 'absolute', 
+    bottom: 0, 
+    height: 100, 
+    width: '100%',
+    alignSelf: 'center',
+    backgroundColor: '#93B7BE', 
+    alignContent: 'center', 
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  footerButton: {
+    height: 70,
+    width: 70,
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
   },
 });
 
