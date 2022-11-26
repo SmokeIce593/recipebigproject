@@ -96,7 +96,7 @@ export default class Homescreen extends Component {
       }
       else
       {
-        this.props.navigation.navigate('Search', userInfo);
+        this.props.navigation.navigate('Login', userInfo);
       }
     }
     catch(e)

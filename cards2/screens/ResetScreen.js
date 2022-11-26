@@ -17,6 +17,11 @@ export default class Homescreen extends Component {
   }
 
   render(){
+    const { navigation } = this.props;
+    const userInfo = 
+    {
+      id:navigation.getParam('id', -1),
+    }
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <KeyboardAvoidingView 
@@ -51,8 +56,8 @@ export default class Homescreen extends Component {
                         </View>
                         <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
                         </View>
-
-                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+  
+                        <Pressable style={styles.loginbuttonfield} onPress={() => this.handleClick(userInfo)}>
                         <View style={{alignItems: 'center'}}>
                             <Text style={styles.buttontext}>Submit</Text>
                         </View>
@@ -67,34 +72,39 @@ export default class Homescreen extends Component {
   );
   }
 
-  handleClick = async () =>
+  handleClick = async (userInfo) =>
   {
-    try
-    {
-      var obj = {login:global.loginName.trim(),password:global.password.trim()};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/login',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
+    if (global.password1 !== password2)
       {
-        this.setState({message: "User/Password combination incorrect"});
+        this.setState({message: "Passwords do not match."});
       }
-      else
+      else 
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        this.props.navigation.navigate('Login');
+        try
+        {
+          var obj = {id: userInfo.id, password: global.password1};
+          var js = JSON.stringify(obj);
+
+          const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/changepassword',
+            {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+          var res = JSON.parse(await response.text());
+
+          if( res.error !== '' )
+          {
+            this.setState({message: "Error changing password"});
+          }
+          else
+          {
+            this.props.navigation.navigate('Login');
+          }
+        }
+        catch(e)
+        {
+          this.setState({message: e.message});
+        }
       }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
+    
   }  
 
   changePassword1Handler = async (val) =>
