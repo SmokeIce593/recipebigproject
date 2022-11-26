@@ -109,6 +109,10 @@ export default class LoginScreen extends Component {
       {
         this.setState({message: "User/Password combination incorrect"});
       }
+      else if (res.verified === false)
+      {
+        this.props.navigation.navigate('Verify');
+      }
       else
       {
         this.props.navigation.navigate('Search', { id:res.id, firstName: res.firstName, lastName: res.lastName,
