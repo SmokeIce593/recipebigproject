@@ -36,11 +36,11 @@ function Settings()
         var obj = {id: userId, login:username.value,password:password.value,email:email,firstname:firstName.value,lastname:lastName.value,securityquestion:question,securityanswer:answer};
         var js = JSON.stringify(obj);
 
-        //alert("Made it here");
+        alert(password.value);
         var passwordcode = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
         var emailcode = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-        if(!obj.password.match(passwordcode)){
+        if(!obj.password.match(passwordcode) && password.value != ''){
             setMessage("Your password does not meet requirements: Between 8 to 15 characters which contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character.")
             return;
         }
@@ -95,7 +95,7 @@ function Settings()
                     <span id="info2" className="infotext">Current password: *********</span>
                     <br></br>
                     <span id="info2new" className="infotext">New password: </span>
-                    <input type="text" id="newpassword" placeholder="Password" defaultValue={password} ref={(c) => password = c} className="inputbox"></input>
+                    <input type="text" id="newpassword" placeholder="Password (Leave empty for no change)" defaultValue={password} ref={(c) => password = c} className="inputbox"></input>
                 </div>
                 
                 <div id="firstinfo" className="changeinfo">

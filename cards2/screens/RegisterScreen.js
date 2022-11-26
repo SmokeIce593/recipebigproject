@@ -1,7 +1,7 @@
 import { Component, createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { ImageBackground, KeyboardAvoidingView, View, Text, 
-         TextInput, Image, StyleSheet, Pressable
+         TextInput, Image, StyleSheet, Pressable, ScrollView
        } from 'react-native';
 
 global.userId = -1;
@@ -46,6 +46,11 @@ export default class RegisterScreen extends Component {
         <KeyboardAvoidingView 
           behavior={ Platform.OS === 'ios' ? 'padding' : 'height' }
           style={ styles.container }>
+          <ScrollView 
+            showsVerticalScrollIndicator={ false } 
+            style={{ flex:1, paddingTop: 100 }} 
+            keyboardDismissMode="interactive"
+            contentContainerStyle={styles.container}>
           
           <Image style={ styles.logo } source={ require('../assets/logo.png') }/>
           
@@ -178,13 +183,15 @@ export default class RegisterScreen extends Component {
             
 
           </View>
+          <Pressable 
+            style={ styles.loginbuttonfield }
+            onPress={ this.handleClickLogin }>
+            <Text style={ styles.buttontext }>Log In</Text>
+          </Pressable>  
+          </ScrollView>
       </KeyboardAvoidingView>
 
-      <Pressable 
-        style={ styles.loginbuttonfield }
-        onPress={ this.handleClickLogin }>
-        <Text style={ styles.buttontext }>Log In</Text>
-      </Pressable>
+      
       
     </ImageBackground>
   );
@@ -217,10 +224,9 @@ export default class RegisterScreen extends Component {
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        this.props.navigation.navigate('Verify');
+        this.sendCode(obj);
+        this.props.navigation.navigate('Verify', { id:res.id, firstName: res.firstName, lastName: res.lastName,
+          username: res.username, email: res.email });
       }
     }
     catch(e)
@@ -228,6 +234,30 @@ export default class RegisterScreen extends Component {
       this.setState({message: e.message});
     }
   }  
+
+  sendCode = async (registerInfo) =>
+  {
+    try
+    {
+      var obj = {email:registerInfo.email};
+      var js = JSON.stringify(obj);
+      console.log(email);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/codecreation',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if( res.error !== '' )
+      {
+        console.log("Error sending. Please resend");
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
+  }
 
   changeLoginNameHandler = async (val) =>
   {
@@ -346,7 +376,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF7A70',
     borderRadius: 17,
     fontSize: 36,
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 15,
     justifyContent: "center",
     alignContent: "center",

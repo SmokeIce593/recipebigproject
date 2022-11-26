@@ -30,7 +30,6 @@ export default class SearchScreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
-      password:navigation.getParam('password', ''),
     }
 
     return(
@@ -43,7 +42,7 @@ export default class SearchScreen extends Component {
               placeholderTextColor= "#808080"
               onChangeText={(val) => { this.changeSearchHandler(val) }}
             />    
-            <Pressable style={styles.buttonfield} onPress={this.handleSearchClick}>
+            <Pressable style={styles.buttonfield} onPress={() => this.handleSearchClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/searchicon.png')}/>     
               </View>
@@ -74,19 +73,19 @@ export default class SearchScreen extends Component {
           </View>
           
           <View style={styles.footer}>
-          <Pressable style={styles.footerButton} onPress={this.handleHomeClick}>
+          <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/home.png')}/> 
                 <Text>Home</Text>    
               </View>
             </Pressable>
-            <Pressable style={styles.footerButton} onPress={this.handleRecipeClick}>
+            <Pressable style={styles.footerButton} onPress={() => this.handleRecipeClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/reciepe.png')}/> 
                 <Text>Recipe</Text>    
               </View>
             </Pressable>
-            <Pressable style={styles.footerButton} onPress={this.handleCreateClick}>
+            <Pressable style={styles.footerButton} onPress={() => this.handleCreateClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
                 <Image style={styles.icon} source={require('../assets/star.png')}/> 
                 <Text>Create</Text>      
@@ -140,21 +139,21 @@ export default class SearchScreen extends Component {
     }
   }
   
-  handleHomeClick = async () =>
+  handleHomeClick = async (userInfo) =>
   {
-    this.props.navigation.navigate('Search');
+    this.props.navigation.navigate('Search', userInfo);
   }
-  handleRecipeClick = async () =>
+  handleRecipeClick = async (userInfo) =>
   {
-    this.props.navigation.navigate('Recipe');
+    this.props.navigation.navigate('Recipe', userInfo);
   }  
-  handleCreateClick = async () =>
+  handleCreateClick = async (userInfo) =>
   {
-    this.props.navigation.navigate('Create');
+    this.props.navigation.navigate('Create', userInfo);
   }  
   handleSettingsClick = async (userInfo) =>
   {
-    this.props.navigation.push('Setting', userInfo);
+    this.props.navigation.navigate('Setting', userInfo);
   }  
   handleLogoutClick = async () =>
   {

@@ -61,6 +61,8 @@ const AppNavigator = createStackNavigator({
   Register: {
     screen: RegisterScreen,
     navigationOptions: {
+      gestureEnabled: false,
+      animationEnabled: false,
       headerShown: false  // Will hide header for HomePage
     }
   },
@@ -68,6 +70,8 @@ const AppNavigator = createStackNavigator({
     screen: RecipeScreen,
     navigationOptions: {
       title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
       headerShown: true,  // Will hide header for HomePage
       headerLeft: ()=> null,
       headerStyle: {
@@ -83,6 +87,8 @@ const AppNavigator = createStackNavigator({
     screen: CreateScreen,
     navigationOptions: {
       title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
       headerShown: true,  // Will hide header for HomePage
       headerLeft: ()=> null,
       headerStyle: {

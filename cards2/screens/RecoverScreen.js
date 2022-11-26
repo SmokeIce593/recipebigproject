@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
 
 global.email = '';
 global.verificationCode = '';
@@ -23,6 +23,11 @@ export default class Homescreen extends Component {
         <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}>
+          <ScrollView 
+            showsVerticalScrollIndicator={ false } 
+            style={{ paddingTop: 125 }} 
+            keyboardDismissMode="interactive"
+            contentContainerStyle={styles.container}>
             <View style={styles.container}>
                 <View style={styles.container}>
                     <Image style={styles.logo} source={require('../assets/logo.png')}/>
@@ -40,7 +45,7 @@ export default class Homescreen extends Component {
                           placeholderTextColor= "#808080"
                           onChangeText={(val) => { this.changeEmailHandler(val) }}
                         />   
-                        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick1}>
+                        <Pressable style={styles.loginbuttonfield} onPress={this.sendCode}>
                         <View style={{alignItems: 'center'}}>
                             <Text style={styles.buttontext}>Submit</Text>
                         </View>
@@ -55,7 +60,10 @@ export default class Homescreen extends Component {
                           placeholder="Verification Code"
                           placeholderTextColor= "#808080"
                           onChangeText={(val) => { this.changeVerificationCodeHandler(val) }}
-                        />   
+                        /> 
+                        <Text style={ styles.error }>
+                          { this.state.message }
+                        </Text>   
                         <Pressable style={styles.loginbuttonfield} onPress={this.handleClick2}>
                         <View style={{alignItems: 'center'}}>
                             <Text style={styles.buttontext}>Submit</Text>
@@ -65,41 +73,35 @@ export default class Homescreen extends Component {
                     </View>
                 </View>
             </View>
-        </KeyboardAvoidingView>
-            <View>
-                <Text style={{fontSize:40}}> </Text>
-                <Pressable style={styles.loginbuttonfield} onPress={this.handleClick3}>
+            <Pressable style={styles.loginbuttonfield} onPress={this.handleClick3}>
                     <View style={{alignItems: 'center'}}>
                         <Text style={styles.buttontext}>Return to Login</Text>
                         </View>
                 </Pressable>
+            </ScrollView>
+        </KeyboardAvoidingView>
+            <View>
+                
             </View>
     </ImageBackground>
   );
   }
 
-  handleClick1 = async () =>
+  sendCode = async () =>
   {
     try
     {
-      var obj = {login:global.loginName.trim(),password:global.password.trim()};
+      var obj = {email:global.email};
       var js = JSON.stringify(obj);
 
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/login',
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/codecreation',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
       var res = JSON.parse(await response.text());
 
-      if( res.id <= 0 )
+      if( res.error !== '' )
       {
-        this.setState({message: "User/Password combination incorrect"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        this.props.navigation.navigate('Search');
+        this.setState({message: "Error sending. Please resend"});
       }
     }
     catch(e)
@@ -110,7 +112,29 @@ export default class Homescreen extends Component {
 
   handleClick2 = async () =>
   {
-    this.props.navigation.navigate('Reset');
+    try
+    {
+      var obj = {code:global.verificationCode};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/codeverification',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if( res.error !== '' )
+      {
+        this.setState({message: "Incorrect code"});
+      }
+      else
+      {
+        this.props.navigation.navigate('Reset', {id: res.id});
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
   }  
   
   handleClick3 = async () =>
@@ -170,6 +194,8 @@ const styles = StyleSheet.create({
     borderWidth: 1, //this is the border for input fields since react native shadow is weird
 	  marginTop: 4,
 	  marginBottom: 4,
+    paddingLeft: 10,
+    paddingRight: 10,
 	  display: "flex",
     	flexDirection: "column",
 	  justifyContent: "center",
@@ -185,7 +211,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF7A70',
     borderRadius: 10,
     fontSize: 36,
-    marginTop: 4,
+    marginTop: 20,
     marginBottom: 2,
     justifyContent: "center",
     alignContent: "center",
@@ -204,6 +230,12 @@ const styles = StyleSheet.create({
     marginRight: '5%',
     alignContent: "center",
     justifyContent: "center",
-  }
+  },
+  error: {
+    fontSize: 15,
+    color: '#ff0000',
+    justifyContent: "center",
+    textAlign: "center",
+  },
 });
 
