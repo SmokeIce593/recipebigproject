@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
-import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
+import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image, FlatList } from 'react-native';
 import { StyleSheet, Pressable } from 'react-native';
+// import { List, ListItem } from "react-native-elements";
 
 global.search = '';
 
@@ -9,10 +10,14 @@ export default class SearchScreen extends Component {
   constructor() 
   {
     super()
-    this.state = 
-    {
-       message: ' ',
-    }
+    this.state = {
+      loading: false,
+      data: [],
+      page: 1,
+      seed: 1,
+      error: null,
+      refreshing: false,
+    };
   }
 
   render(){
@@ -43,6 +48,29 @@ export default class SearchScreen extends Component {
                 <Image style={styles.icon} source={require('../assets/searchicon.png')}/>     
               </View>
             </Pressable>
+          </View>
+
+          <View>
+            <FlatList
+            data={this.state.data}
+            renderItem={({ item }) => (
+              <ListItem
+                roundAvatar
+                title={`${item.name.first} ${item.name.last}`}
+                subtitle={item.email}
+                avatar={{ uri: item.picture.thumbnail }}
+                containerStyle={{ borderBottomWidth: 0 }}
+              />
+            )}
+            keyExtractor={item => item.email}
+            ItemSeparatorComponent={this.renderSeparator}
+            ListHeaderComponent={this.renderHeader}
+            ListFooterComponent={this.renderFooter}
+            onRefresh={this.handleRefresh}
+            refreshing={this.state.refreshing}
+            onEndReached={this.handleLoadMore}
+            onEndReachedThreshold={50}
+            />
           </View>
           
           <View style={styles.footer}>
@@ -86,11 +114,11 @@ export default class SearchScreen extends Component {
 
   handleSearchClick = async () => 
   {
-    var obj = {userId:global.userId,search:global.search};
+    var obj = {userId:global.userId.trim(),search:global.search.trim()};
     var js = JSON.stringify(obj);
     try
     {
-      const response = await fetch('https://cop4331-10.herokuapp.com/api/searchcards',
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
       var res = JSON.parse(await response.text());
       var _results = res.results;
@@ -181,9 +209,14 @@ const styles = StyleSheet.create({
     height: 50,
 	  width: 300,
 	  backgroundColor: '#F7F7F7',
-	  borderRadius: 10,
-    borderWidth: 1, //this is the border for input fields since react native shadow is weird
-	  marginTop: 4,
+	  // borderRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderTopLeftRadius: 10,
+    // borderWidth: 1, //this is the border for input fields since react native shadow is weird
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    marginTop: 4,
 	  marginBottom: 4,
 	  display: "flex",
     	flexDirection: "column",
@@ -198,10 +231,15 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
 	  marginRight: "auto",
     backgroundColor: '#FF7A70',
-    borderRadius: 10,
+    // borderRadius: 10,
+    borderBottomRightRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
     fontSize: 36,
     marginTop: 4,
-    marginBottom: 2,
+    marginBottom: 4,
     justifyContent: "center",
     alignContent: "center",
     marginRight: "auto",
