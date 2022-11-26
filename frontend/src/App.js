@@ -13,6 +13,7 @@ import CreatePage from './pages/CreatePage';
 import RecipesPage from './pages/RecipesPage';
 import RecoverPage from './pages/RecoverPage';
 import ResetPage from './pages/ResetPage';
+import RecipeviewerPage from './pages/RecipeviewerPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
       <Route path="/home" index element={<HomePage />} />
       <Route path="/recover" index element={<RecoverPage />} />
       <Route path="/reset" index element={<ResetPage />} />
+      <Route path="/recipeviewer" index element={<RecipeviewerPage />} />
     </Routes>
   </BrowserRouter>
 );
