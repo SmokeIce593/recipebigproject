@@ -1,27 +1,40 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList, ListView } from 'react-native';
+import { createRef } from 'react';
+import { Picker } from '@react-native-picker/picker';
+import UploadImage from './UploadImage';
 
-global.localName = '';
-global.password = '';
-global.userId = -1;
-global.firstName = '';
-global.lastName = '';
-global.search = '';
-global.card = '';
+global.name = '';
+global.description = '';
+global.ingredient = '';
+global.tags = '';
+global.instructions = '';
 
+const questions = [
+  "Set recipe to public", 
+  "Set recipe to private", 
+];
 
-export default class Homescreen extends Component {
+const ingredients = ["test", "123"];
+
+export default class Createscreen extends Component {
 
   constructor() 
   {
     super()
     this.state = 
     {
-       message: ' '
+      message: ' '
     }
   }
   
+
+  renderRow(data) {
+    return (
+      <Text>{`\u2022 ${data}`}</Text>
+    );
+  }
 
   render(){
     const { navigation } = this.props;
@@ -43,28 +56,103 @@ export default class Homescreen extends Component {
                   <View style={styles.loginboxfield}>
                     <ScrollView style={styles.scrollView}>
                       <View style={{alignItems: 'center'}}>
-                          <Text style={styles.titlefield}>Create Screen</Text>
+                        <Text style={{fontSize:5}}> </Text>
+                          <Text style={styles.titlefield}>Create Recipe</Text>
                           <Text style={{fontSize:20}}> </Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
-                          <Text style={styles.titlefield}>Create Screen</Text>
+                          <UploadImage/>
+                          <TextInput
+                            style={styles.inputfield1}
+                            placeholder="Recipe Name"
+                            placeholderTextColor= "#808080"
+                            onChangeText={(val) => { this.changeNameHandler(val) }}
+                            />        
+                          <Text style={styles.headerfield}>Description:</Text>
+                          <ScrollView style={styles.scrollView}>
+                            <TextInput
+                              style={styles.inputfield2}
+                              placeholder="Description"
+                              placeholderTextColor= "#808080"
+                              multiline={true} 
+                              onChangeText={(val) => { this.changeDescHandler(val) }}
+                            />        
+                          </ScrollView>
+
+                          <Text style={styles.headerfield}>Ingredients:</Text>
+                          <FlatList
+                            data={"test"}
+                            style={{margin: 50}}
+                            
+                          >
+                            <Text>test</Text></FlatList>
+                            <TextInput
+                              style={styles.inputfield3}
+                              placeholder="Ingredient"
+                              placeholderTextColor= "#808080"
+                              onChangeText={(val) => { this.changeIngredientHandler(val) }}
+                            />      
+                            <Pressable style={styles.addbuttonfield} onPress={this.addIngredientClick}>
+                              <View style={{alignItems: 'center'}}>
+                                <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                              </View>
+                            </Pressable>  
+                          <Text style={styles.headerfield}>Directions:</Text>
+                            <TextInput
+                                style={styles.inputfield3}
+                                placeholder="Ingredient"
+                                placeholderTextColor= "#808080"
+                                onChangeText={(val) => { this.changeNameHandler(val) }}
+                              />      
+                              <Pressable style={styles.addbuttonfield} onPress={this.handleClick}>
+                                <View style={{alignItems: 'center'}}>
+                                  <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                                </View>
+                              </Pressable>  
+                          <Text style={styles.headerfield}>Tags:</Text>
+                            <TextInput
+                                style={styles.inputfield3}
+                                placeholder="Ingredient"
+                                placeholderTextColor= "#808080"
+                                onChangeText={(val) => { this.changeNameHandler(val) }}
+                              />      
+                              <Pressable style={styles.addbuttonfield} onPress={this.handleClick}>
+                                <View style={{alignItems: 'center'}}>
+                                  <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                                </View>
+                              </Pressable>  
+                          <View style= { styles.zblock }>
+                            <Text style={styles.headerfield}>Private:</Text>
+                          </View>
+                          
+                            <View style ={ {zIndex: 0, elevation: 0} }>
+                              <Picker
+                                style={ styles.picker }
+                                itemStyle={ styles.question }
+                                selectedValue={ this.state.selectedQuestion }
+                                onValueChange=
+                                {
+                                  (itemValue, itemIndex) =>
+                                  {        
+                                    this.setState({ selectedQuestion: itemValue })
+                                    global.question = itemIndex;
+                                  }
+                                }>
+                                <Picker.Item label="Set recipe to public" value='0' />
+                                <Picker.Item label="Set recipe to private" value='1' />
+                              </Picker>
+                            </View>
                       </View>
-
-
-                      <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.buttontext}>Save Recipe</Text>
-          </View>
-        </Pressable>
+                      {/* insert here for button inside box */}
                     </ScrollView>
                   </View>
                 </View>
             </View>
         </KeyboardAvoidingView>
+        <Text style={{fontSize:15}}> </Text>
+        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.buttontext}>Create Recipe</Text>
+          </View>
+        </Pressable>
         {/* <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
           <View style={{alignItems: 'center'}}>
             <Text style={styles.buttontext}>Save Recipe</Text>
@@ -72,7 +160,7 @@ export default class Homescreen extends Component {
         </Pressable> */}
         
         
-        <Text style={{fontSize:50}}> </Text>
+        <Text style={{fontSize:90}}> </Text>
 
 
         <View style={styles.footer}>
@@ -160,16 +248,25 @@ export default class Homescreen extends Component {
   {
     this.props.navigation.navigate('Login');
   }      
-  
-
-  changeLoginNameHandler = async (val) =>
+  changeNameHandler = async (val) =>
   {
-    global.loginName = val;
+    global.name = val;
   }  
 
-  changePasswordHandler = async (val) =>
+  changeDescHandler = async (val) =>
   {
-    global.password = val;
+    global.description = val;
+  }  
+
+
+
+  addIngredientClick = async () =>
+  {
+    this.props.navigation.navigate('Recipe');
+  }  
+  changeIngredientHandler = async (val) =>
+  {
+    global.ingredient = val;
   }  
 
 }
@@ -187,7 +284,7 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     borderRadius: 21,
     height: 600,
-    width: 370,
+    width: 360,
     justifyContent: "center",
     marginRight: "auto",
     marginReft: "auto",
@@ -205,10 +302,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 4,
   },
-  inputfield: {
+  headerfield: {
+    textDecorationLine: 'underline',
+    display: "flex",
+    flexDirection: "column",
+    fontSize: 30,
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: "center",
+    zIndex: 1,
+    elevation: 1,
+    backgroundColor: '#EAFCFF',
+  },
+  inputfield1: {
     height: 50,
 	  width: 300,
 	  backgroundColor: '#F7F7F7',
+    textAlign: 'center',
 	  borderRadius: 10,
     borderWidth: 1, //this is the border for input fields since react native shadow is weird
 	  marginTop: 4,
@@ -217,6 +327,30 @@ const styles = StyleSheet.create({
     	flexDirection: "column",
 	  justifyContent: "center",
 	  fontSize: 36,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
+  inputfield2: {
+    height: 100,
+	  width: 300,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
+  inputfield3: {
+    height: 30,
+	  width: 300,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
 	  marginRight: "auto",
 	  marginLeft: "auto",
   },
@@ -234,6 +368,27 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+  },
+  addbuttonfield: {
+    height: 30,
+	  width: 300,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    backgroundColor: '#FF7A70',
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
+  smallbuttontext: {
+    fontSize: 18,
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "auto"
   },
   buttontext: {
     fontSize: 36,
@@ -265,6 +420,33 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+  },
+  picker: {
+    height: 50,
+    width: 370,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    marginTop: 1,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  question: {
+    fontSize: 17,
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+    zblock: {
+    width: 350,
+    backgroundColor: '#EAFCFF',
+    borderRadius: 21,
+    paddingTop: 8,
+    paddingBottom: 5,
+    zIndex: 1,
+    elevation: 1,
+    borderRadius: 21,
   },
 });
 
