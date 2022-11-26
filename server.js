@@ -1033,7 +1033,7 @@ app.delete('/api/badwordscheck', async (req, res, next) =>
 });
 
 
-app.delete('/api/deleterecipe', async (req, res, next) => 
+app.post('/api/deleterecipe', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -1042,9 +1042,10 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   var rid = -1;
   var rn = '';
 
-  const { id, recipe } = req.body;
+  const { id } = req.body;
   const connectionString = process.env.DATABASE_URL;
 
+  console.log(id);
   const client = new Client({
     connectionString: connectionString,
     ssl: { rejectUnauthorized: false }
@@ -1052,7 +1053,7 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
 
   try {
     await client.connect();
-    const text = 'DELETE FROM recipe WHERE id = $1';
+    const text = 'DELETE FROM recipes WHERE id = $1';
     const value = [id];
     const now = await client.query(text, value);
     
@@ -1069,7 +1070,7 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
     error = "Server related issues, please try again.";
   }
 
-  var ret = { rid:id, rn:recipename, error:'' };
+  var ret = { rid:id, error:'' };
   res.status(200).json(ret);
 });
 
