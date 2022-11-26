@@ -8,7 +8,7 @@ function Verify()
     var _ud = localStorage.getItem('email_data');
     var ud = JSON.parse(_ud);
     var email = ud.email;
-    var codeInput; // temporarily remove user info until they are verified
+    var codeInput;
     const app_name = 'recipeprojectlarge'
     function buildPath(route)
     {

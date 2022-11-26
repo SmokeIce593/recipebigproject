@@ -846,7 +846,7 @@ async function sendemail(email, code){
   var mailOptions = {
     from: 'recipeasy1234@gmail.com',
     to: email,
-    subject: 'Sending Email using Node.js',
+    subject: 'Recipeasy verification code',
     text: html
   };
   
