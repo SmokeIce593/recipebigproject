@@ -44,6 +44,13 @@ img{
     background: #FF7A70;
     border-radius: 40px;
 }
+.searchButton:hover {
+    background: #D14358;
+    cursor: pointer;
+}
+.searchButton:active {
+    background: #BF3045;
+}
 
 .glassimg {
     display: flex;

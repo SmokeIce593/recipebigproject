@@ -24,6 +24,7 @@ img{
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
+
 .loginbutton{
 	display: block;
 	margin-left: auto;
@@ -38,6 +39,15 @@ img{
     margin-right: auto;
     margin-left: auto;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+.loginbutton:hover{
+    background-color: #D14358;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+.loginbutton:active{
+    background-color: #BF3045;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.0);
 }
 
 
@@ -101,4 +111,8 @@ img{
     margin-right: 10px;
     margin-bottom: 15px;
     text-align: center;
+}
+
+.bottomBuffer{
+    margin-bottom: 30px;
 }

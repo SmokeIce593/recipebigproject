@@ -7,6 +7,7 @@ img{
 	height:auto;
 }
 
+
 .loginbuttonfield{
     display: block;
     margin-left: auto;
@@ -23,6 +24,16 @@ img{
     margin-left: auto;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
+.loginbuttonfield:hover{
+    background-color: #D14358;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+.loginbuttonfield:active{
+    background-color: #BF3045;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.0);
+}
+
 
 .registerbuttonfield{
     display: block;
@@ -38,6 +49,16 @@ img{
     margin-right: auto;
     margin-left: auto;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+.registerbuttonfield:hover{
+    background-color: #D14358;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+.registerbuttonfield:active{
+    background-color: #BF3045;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.0);
+    cursor: pointer;
 }
 
 
@@ -109,4 +130,26 @@ img{
     border: none;
   background-color: inherit;
   font-size: 16px;
+}
+.recoverLink:hover{
+	color: blue;
+		justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    border: none;
+  background-color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.recoverLink:active{
+	color: blue;
+		justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    border: none;
+  background-color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: underline;
 }

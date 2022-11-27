@@ -116,7 +116,7 @@ function Register()
 
         <input type="button" id="loginButton" className="loginbutton" value="Login" 
                 onClick={goLogin}/>
-
+        <div id="bump" className="bottomBuffer"></div> 
      </div>
     );
 };
