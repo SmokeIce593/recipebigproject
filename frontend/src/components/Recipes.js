@@ -16,7 +16,111 @@ function previousPage(pageCount){
 
 function Recipes()
 {
-	window.addEventListener('load', async function loadRecipes(){
+   const app_name = 'recipeprojectlarge'
+   function buildPath(route)
+   {
+       if (process.env.NODE_ENV === 'production') 
+       {
+           return 'https://' + app_name +  '.herokuapp.com/' + route;
+       }
+       else
+       {        
+           return 'http://localhost:5000/' + route;
+       }
+   }
+
+   
+   //var recipeID = 'c2d0d25c-45d4-4154-9e07-59a5bbe3411b';
+   const goDelete= async event => 
+   {
+      event.preventDefault();
+
+      var obj = {id: recipeID};
+      var js = JSON.stringify(obj);
+
+      try
+      {    
+         const response = await fetch(buildPath('api/deleterecipe'),
+               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+         var res = JSON.parse(await response.text());
+         window.location.href = '/recipes';
+         alert(res.error);
+      }
+      catch(e)
+      {
+         alert(e.toString());
+         return;
+      }    
+   };
+
+   const goView= async event => 
+   {
+      event.preventDefault();
+
+      var obj = {recipeID: recipeID};
+      var js = JSON.stringify(obj);
+
+      try
+      {    
+         const response = await fetch(buildPath('api/getsinglerecipe'),
+               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+         var res = JSON.parse(await response.text());
+         var direction = res.directions;
+         var ingredient = res.ingredients;
+         var recipe = res.recipe;
+         var tag = res.tags;
+         //alert(direction[0]["directions"]);
+         //alert(ingredient[0]["ingredient"]);
+         //alert(tag[0]["tagname"]);
+         //alert(recipe["recipe"]);
+         var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
+         localStorage.setItem('recipe_data', JSON.stringify(recipe));
+
+         if(res.error != null){
+            window.location.href = '/recipeviewer';
+         }
+      }
+      catch(e)
+      {
+         alert(e.toString());
+         return;
+      }    
+   };
+
+   const goEdit= async event => 
+   {
+      event.preventDefault();
+
+      var obj = {recipeID: recipeID};
+      var js = JSON.stringify(obj);
+
+      try
+      {    
+         const response = await fetch(buildPath('api/getsinglerecipe'),
+               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+         var res = JSON.parse(await response.text());
+         var direction = res.directions;
+         var ingredient = res.ingredients;
+         var recipe = res.recipe;
+         var tag = res.tags;
+         var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
+         localStorage.setItem('recipe_data', JSON.stringify(recipe));
+
+         if(res.error != null){
+            window.location.href = '/edit';
+         }
+      }
+      catch(e)
+      {
+         alert(e.toString());
+         return;
+      }    
+   };
+
+    window.addEventListener('load', async function loadRecipes(){
 		if(loadFlag == 0){		//for some reason the event kept firing 3 times and I couldn't figure out how to stop it, 
 								//loadFlag is a dirty solution to prevent that
 			recipeCount = 10;	//delete this, recipe count should respond to APIand set to respond to API
@@ -35,23 +139,23 @@ function Recipes()
 																	//max of 10 recipes per page, if more load to next page
 					let listItem = document.createElement("tr");
 						listItem.className = "recipeBox";
-						//listItem.onclick = {};			//goes to specified recipe on click, probably needs a function
+						listItem.onclick = {goView};			//goes to specified recipe on click, probably needs a function
 					let recipeTitle = document.createElement("div");
 						recipeTitle.className = "recipeTitle";
 					let recipeDescription = document.createElement("div");
 						recipeDescription.className = "recipeDescription";
 					let recipeTags = document.createElement("div");
 						recipeTags.className = "recipeTags";
-					let editBTN = this.document.createElement("button");
+					/*let editBTN = this.document.createElement("button");
 						editBTN.type = "button";
 						editBTN.className = "editButton";
 						editBTN.innerHTML = "Edit";
-						//editBTN.onclick = " ";
+						editBTN.onclick = {goEdit};*/
 					let deleteBTN = this.document.createElement("button");
 						deleteBTN.type = "button";
 						deleteBTN.className = "deleteButton";
 						deleteBTN.innerHTML = "Delete";
-						//deleteBTN.onclick = " ";
+						deleteBTN.onclick = {goDelete};
 					let title = "Recipe Title";				//place title here
 					let dscrp = "Recipe Description";		//place description here
 					let tags = "Recipe Tags";				//place tags here. If tags are an array, maybe add the array 
@@ -62,7 +166,7 @@ function Recipes()
 					//append all created items into list
 					mainDiv.appendChild(listItem);
 					listItem.appendChild(deleteBTN);
-					listItem.appendChild(editBTN);
+					//listItem.appendChild(editBTN);
 					listItem.appendChild(recipeTitle);
 					listItem.appendChild(recipeDescription);
 					listItem.appendChild(recipeTags);
@@ -93,6 +197,26 @@ function Recipes()
 				<button type="button" id="next" className="nextButton" onClick={nextPage()}>Next Page</button>
 			</div>
 		</body>
+   /*return(
+    <div>
+        <div id="recipesDiv" className="displayregion">
+            <input type="button" id="deleteButton" className="deletebuttonfield" value="Delete" 
+                onClick={goDelete}/>
+                <br />
+        </div>
+        <div id="recipesDiv" className="displayregion">
+            <input type="button" id="viewButton" className="viewbuttonfield" value="View" 
+                onClick={goView}/>
+                <br />
+        </div>
+        <div id="recipesDiv" className="displayregion">
+            <input type="button" id="editButton" className="editbuttonfield" value="Edit" 
+                onClick={goEdit}/>
+                <br />
+        </div>
+        
+    </div>
+     */   
    );
 };
 
