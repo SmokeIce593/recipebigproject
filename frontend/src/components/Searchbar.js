@@ -43,7 +43,7 @@ function Searchbar()
             <button type="submit" id="homeBut" class="barButton" onClick={goHome}>
                 <img src={home} alt="Home icon" width="20"></img> Home</button>
             <button type="submit" id="recipesBut" class="barButton" onClick={goRecipes}>
-                <img src={bread} alt="Bread icon" width="20"></img> Recipes</button>
+                <img src={bread} alt="Bread icon" width="20"></img> My Recipes</button>
             <button type="submit" id="createBut" class="barButton" onClick={goCreate}>
                 <img src={star} alt="Star icon" width="20"></img> Create</button>
             <button type="submit" id="logoutBut" class="barButton" onClick={goSettings}>

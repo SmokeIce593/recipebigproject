@@ -63,6 +63,7 @@ textarea {
 	padding-right: 2%;
 	padding-left: 2%;
 	background-color: #FF7A70;
+	margin-bottom: 2px;
 }
 .addButton:hover{
 	background-color: #D14358;
