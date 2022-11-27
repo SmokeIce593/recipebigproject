@@ -229,6 +229,18 @@ function Recipes()
 
     return(
 		<body>
+         <div>
+        <div id="recipesDiv" className="displayregion">
+            <input type="button" id="deleteButton" className="deletebuttonfield" value="Delete" 
+                onClick={goDelete}/>
+                <br />
+        </div>
+        <div id="recipesDiv" className="displayregion">
+            <input type="button" id="viewButton" className="viewbuttonfield" value="View" 
+                onClick={goView}/>
+                <br />
+        </div>
+    </div>
         <div id="recipesDiv" className="displayregion">
             <input type="button" id="getMyRecipesbutton" className="getbuttonfield" value="get" 
                 onClick={getMyRecipes}/>
