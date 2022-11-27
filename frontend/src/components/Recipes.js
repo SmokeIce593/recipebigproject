@@ -29,7 +29,6 @@ function Recipes()
        }
    }
 
-   
    var recipeID = '70730eaf-30a4-45cd-9191-63684c646a55';
    const goDelete= async event => 
    {
@@ -121,10 +120,58 @@ function Recipes()
       }    
    };
 
+   const getMyRecipes= async event => 
+   {
+      console.log("TEST");
+      const recipes = [];
+      for(let i = 0; i < 5; i++){
+         const traits = [];
+         traits[0] = "recipe title " + i;
+         traits[1] = "recipe description " + i;
+         traits[2] = "recipe tag " + i;
+         recipes[i] = traits;
+      }
+      return recipes;
+
+      /*event.preventDefault();
+
+      var obj = {recipeID: recipeID};
+      var js = JSON.stringify(obj);
+
+      try
+      {    
+         const response = await fetch(buildPath('api/myrecipes'),
+               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+         
+         var res = JSON.parse(await response.text());
+         var direction = res.directions;
+         var ingredient = res.ingredients;
+         var recipe = res.recipe;
+         var tag = res.tags;
+         //alert(direction[0]["directions"]);
+         //alert(ingredient[0]["ingredient"]);
+         //alert(tag[0]["tagname"]);
+         //alert(recipe["recipe"]);
+         var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
+         localStorage.setItem('recipe_data', JSON.stringify(recipe));
+
+         if(res.error != null){
+            return res;
+         }
+      }
+      catch(e)
+      {
+         alert(e.toString());
+         return;
+      }    */
+   };
+
    window.addEventListener('load', async function loadRecipes(){
 		if(loadFlag == 0){		//for some reason the event kept firing 3 times and I couldn't figure out how to stop it, 
-								//loadFlag is a dirty solution to prevent that
-			recipeCount = 10;	//delete this, recipe count should respond to APIand set to respond to API
+								      //loadFlag is a dirty solution to prevent that
+         const recipes = window.addEventListener('load',getMyRecipes);
+         console.log(recipes);
+			//recipeCount = 10;	//delete this, recipe count should respond to APIand set to respond to API
 
 			if(recipeCount == 0){	//if no recipes, display this message
 				document.getElementById("defaultMsg").style.display = "block";
