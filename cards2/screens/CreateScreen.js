@@ -3,20 +3,19 @@ import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Imag
 import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList, ListView } from 'react-native';
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
-import UploadImage from './UploadImage';
 
-global.name = '';
-global.description = '';
-global.ingredient = '';
-global.tags = '';
-global.instructions = '';
+global.ingredients = [];
+global.tags = [];
+global.directions = [];
 
-const questions = [
-  "Set recipe to public", 
-  "Set recipe to private", 
+const privacyoptions = [
+  "Make recipe public", 
+  "Make recipe private", 
 ];
 
-const ingredients = ["test", "123"];
+const ingredientsBullets = [];
+const directionsBullets = [];
+const tagsBullets = [];
 
 export default class Createscreen extends Component {
 
@@ -28,7 +27,6 @@ export default class Createscreen extends Component {
       message: ' '
     }
   }
-  
 
   renderRow(data) {
     return (
@@ -59,7 +57,6 @@ export default class Createscreen extends Component {
                         <Text style={{fontSize:5}}> </Text>
                           <Text style={styles.titlefield}>Create Recipe</Text>
                           <Text style={{fontSize:20}}> </Text>
-                          <UploadImage/>
                           <TextInput
                             style={styles.inputfield1}
                             placeholder="Recipe Name"
@@ -79,48 +76,81 @@ export default class Createscreen extends Component {
 
                           <Text style={styles.headerfield}>Ingredients:</Text>
                           <FlatList
-                            data={"test"}
-                            style={{margin: 50}}
-                            
-                          >
-                            <Text>test</Text></FlatList>
+                            data={ingredientsBullets}
+                            extraData={this.state.refresh}
+                            renderItem={({ item }) => {
+                              return (
+                                <View style= {{flexDirection:'row'}}>
+                                  <Text style={styles.bulletlist}>{`\u2022 ${item.key}`}</Text>
+                                </View>
+                              )
+                            }}
+                            style={{margin: 10}}>
+                          </FlatList>
                             <TextInput
                               style={styles.inputfield3}
                               placeholder="Ingredient"
                               placeholderTextColor= "#808080"
+                              value={this.state.ingredient}
                               onChangeText={(val) => { this.changeIngredientHandler(val) }}
                             />      
                             <Pressable style={styles.addbuttonfield} onPress={this.addIngredientClick}>
                               <View style={{alignItems: 'center'}}>
-                                <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                                <Text style={styles.smallbuttontext}>+ Add Ingredient</Text>
                               </View>
                             </Pressable>  
                           <Text style={styles.headerfield}>Directions:</Text>
+                          <FlatList
+                            data={directionsBullets}
+                            extraData={this.state.refresh}
+                            renderItem={({ item }) => {
+                              return (
+                                <View>
+                                  <Text style={styles.bulletlist}>{`\u2022 ${item.key}`}</Text>
+                                </View>
+                              )
+                            }}
+                            style={{margin: 10}}>
+                          </FlatList>
                             <TextInput
                                 style={styles.inputfield3}
-                                placeholder="Ingredient"
+                                placeholder="Next step:"
                                 placeholderTextColor= "#808080"
-                                onChangeText={(val) => { this.changeNameHandler(val) }}
+                                value={this.state.direction}
+                                onChangeText={(val) => { this.changeDirectionHandler(val) }}
                               />      
-                              <Pressable style={styles.addbuttonfield} onPress={this.handleClick}>
+                              <Pressable style={styles.addbuttonfield} onPress={this.addDirectionClick}>
                                 <View style={{alignItems: 'center'}}>
-                                  <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                                  <Text style={styles.smallbuttontext}>+ Add Step</Text>
                                 </View>
                               </Pressable>  
                           <Text style={styles.headerfield}>Tags:</Text>
+                          <FlatList
+                            data={tagsBullets}
+                            extraData={this.state.refresh}
+                            renderItem={({ item }) => {
+                              return (
+                                <View>
+                                  <Text style={styles.bulletlist}>{`\u2022 ${item.key}`}</Text>
+                                </View>
+                              )
+                            }}
+                            style={{margin: 10}}>
+                          </FlatList>
                             <TextInput
                                 style={styles.inputfield3}
-                                placeholder="Ingredient"
+                                placeholder="ex. Vegetarian"
                                 placeholderTextColor= "#808080"
-                                onChangeText={(val) => { this.changeNameHandler(val) }}
+                                value={this.state.tag}
+                                onChangeText={(val) => { this.changeTagHandler(val) }}
                               />      
-                              <Pressable style={styles.addbuttonfield} onPress={this.handleClick}>
+                              <Pressable style={styles.addbuttonfield} onPress={this.addTagClick}>
                                 <View style={{alignItems: 'center'}}>
-                                  <Text style={styles.smallbuttontext}>+Add Ingredient</Text>
+                                  <Text style={styles.smallbuttontext}>+ Add Tag</Text>
                                 </View>
                               </Pressable>  
                           <View style= { styles.zblock }>
-                            <Text style={styles.headerfield}>Private:</Text>
+                            <Text style={styles.headerfield}>Visibility:</Text>
                           </View>
                           
                             <View style ={ {zIndex: 0, elevation: 0} }>
@@ -133,11 +163,11 @@ export default class Createscreen extends Component {
                                   (itemValue, itemIndex) =>
                                   {        
                                     this.setState({ selectedQuestion: itemValue })
-                                    global.question = itemIndex;
+                                    global.privacy = itemValue;
                                   }
                                 }>
-                                <Picker.Item label="Set recipe to public" value='0' />
-                                <Picker.Item label="Set recipe to private" value='1' />
+                                <Picker.Item label="Make recipe public" value={ false } />
+                                <Picker.Item label="Make recipe private" value={ true } />
                               </Picker>
                             </View>
                       </View>
@@ -148,7 +178,7 @@ export default class Createscreen extends Component {
             </View>
         </KeyboardAvoidingView>
         <Text style={{fontSize:15}}> </Text>
-        <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+        <Pressable style={styles.loginbuttonfield} onPress={() => this.createRecipe(userInfo)}>
           <View style={{alignItems: 'center'}}>
             <Text style={styles.buttontext}>Create Recipe</Text>
           </View>
@@ -199,28 +229,29 @@ export default class Createscreen extends Component {
   );
   }
 
-  handleClick = async () =>
+  createRecipe = async (userInfo) =>
   {
     try
     {
-      var obj = {login:global.loginName.trim(),password:global.password.trim()};
+      var obj = {recipename:this.state.name, recipetext:this.state.description,
+                fkuser:userInfo.id, privaterecipe:this.state.private,
+                tags:global.tags, ingredients: global.ingredients,
+                directions: global.directions};
       var js = JSON.stringify(obj);
 
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/login',
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/saverecipe',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
       var res = JSON.parse(await response.text());
 
-      if( res.id <= 0 )
+      if( res.error !== '' )
       {
-        this.setState({message: "User/Password combination incorrect"});
+        this.setState({message: "Error creating recipe"});
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        this.props.navigation.navigate('Search');
+
+        this.props.navigation.navigate('Recipe', userInfo);
       }
     }
     catch(e)
@@ -248,26 +279,55 @@ export default class Createscreen extends Component {
   {
     this.props.navigation.navigate('Login');
   }      
+
   changeNameHandler = async (val) =>
   {
-    global.name = val;
+    this.state.name = val;
   }  
-
   changeDescHandler = async (val) =>
   {
-    global.description = val;
+    this.state.description = val;
   }  
-
-
 
   addIngredientClick = async () =>
   {
-    this.props.navigation.navigate('Recipe');
-  }  
+    ingredientsBullets.push({key: this.state.ingredient});
+    global.ingredients.push(this.state.ingredient);
+    this.state.ingredient = '';
+    this.setState({
+      refresh: !this.state.refresh
+    })
+  } 
+  addDirectionClick = async () =>
+  {
+    directionsBullets.push({key: this.state.direction});
+    global.directions.push(this.state.direction);
+    this.state.direction = '';
+    this.setState({
+      refresh: !this.state.refresh
+    })
+  }
+  addTagClick = async () =>
+  {
+    tagsBullets.push({key: this.state.tag});
+    global.tags.push(this.state.tag);
+    this.state.tag = '';
+    this.setState({
+      refresh: !this.state.refresh
+    })
+  }
   changeIngredientHandler = async (val) =>
   {
-    global.ingredient = val;
+    this.state.ingredient = val;
   }  
+  changeDirectionHandler = async (val) =>
+  {
+    this.state.direction = val;
+  }
+  changeTagHandler = async (val) =>
+  {
+    this.state.tag = val;
+  }
 
 }
 
@@ -288,6 +348,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: "auto",
     marginReft: "auto",
+    
   },
   logo: {
     width: 400,
@@ -313,6 +374,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     elevation: 1,
     backgroundColor: '#EAFCFF',
+    marginTop: 15,
   },
   inputfield1: {
     height: 50,
@@ -341,6 +403,7 @@ const styles = StyleSheet.create({
 	  fontSize: 18,
 	  marginRight: "auto",
 	  marginLeft: "auto",
+    paddingLeft: 10,
   },
   inputfield3: {
     height: 30,
@@ -353,6 +416,7 @@ const styles = StyleSheet.create({
 	  fontSize: 18,
 	  marginRight: "auto",
 	  marginLeft: "auto",
+    paddingLeft: 10,
   },
   loginbuttonfield: {
     height: 50,
@@ -430,6 +494,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: "center",
     alignContent: "center",
+    marginBottom: 70,
   },
   question: {
     fontSize: 17,
@@ -447,6 +512,14 @@ const styles = StyleSheet.create({
     zIndex: 1,
     elevation: 1,
     borderRadius: 21,
+  },
+  bulletlist: {
+    fontSize: 20,
+  },
+  deletebullet: {
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "auto"
   },
 });
 
