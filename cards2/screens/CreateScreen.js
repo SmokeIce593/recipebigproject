@@ -13,9 +13,9 @@ const privacyoptions = [
   "Make recipe private", 
 ];
 
-const ingredientsBullets = [];
-const directionsBullets = [];
-const tagsBullets = [];
+global.ingredientsBullets = [];
+global.directionsBullets = [];
+global.tagsBullets = [];
 
 export default class Createscreen extends Component {
 
@@ -61,6 +61,7 @@ export default class Createscreen extends Component {
                             style={styles.inputfield1}
                             placeholder="Recipe Name"
                             placeholderTextColor= "#808080"
+                            value={this.state.name}
                             onChangeText={(val) => { this.changeNameHandler(val) }}
                             />        
                           <Text style={styles.headerfield}>Description:</Text>
@@ -69,6 +70,7 @@ export default class Createscreen extends Component {
                               style={styles.inputfield2}
                               placeholder="Description"
                               placeholderTextColor= "#808080"
+                              value = {this.state.description}
                               multiline={true} 
                               onChangeText={(val) => { this.changeDescHandler(val) }}
                             />        
@@ -76,7 +78,7 @@ export default class Createscreen extends Component {
 
                           <Text style={styles.headerfield}>Ingredients:</Text>
                           <FlatList
-                            data={ingredientsBullets}
+                            data={global.ingredientsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -101,7 +103,7 @@ export default class Createscreen extends Component {
                             </Pressable>  
                           <Text style={styles.headerfield}>Directions:</Text>
                           <FlatList
-                            data={directionsBullets}
+                            data={global.directionsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -126,7 +128,7 @@ export default class Createscreen extends Component {
                               </Pressable>  
                           <Text style={styles.headerfield}>Tags:</Text>
                           <FlatList
-                            data={tagsBullets}
+                            data={global.tagsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -255,7 +257,18 @@ export default class Createscreen extends Component {
       }
       else
       {
-
+        global.tags = [];
+        global.ingredients = [];
+        global.directions = [];
+        global.ingredientsBullets = [];
+        global.directionsBullets = [];
+        global.tagsBullets = [];
+        this.setState({
+          name: '',
+          description: '',
+          private: 'false',
+          refresh: !this.state.refresh
+        })
         this.props.navigation.navigate('Recipe', userInfo);
       }
     }
@@ -296,7 +309,7 @@ export default class Createscreen extends Component {
 
   addIngredientClick = async () =>
   {
-    ingredientsBullets.push({key: this.state.ingredient});
+    global.ingredientsBullets.push({key: this.state.ingredient});
     global.ingredients.push(this.state.ingredient);
     this.state.ingredient = '';
     this.setState({
@@ -305,7 +318,7 @@ export default class Createscreen extends Component {
   } 
   addDirectionClick = async () =>
   {
-    directionsBullets.push({key: this.state.direction});
+    global.directionsBullets.push({key: this.state.direction});
     global.directions.push(this.state.direction);
     this.state.direction = '';
     this.setState({
@@ -314,7 +327,7 @@ export default class Createscreen extends Component {
   }
   addTagClick = async () =>
   {
-    tagsBullets.push({key: this.state.tag});
+    global.tagsBullets.push({key: this.state.tag});
     global.tags.push(this.state.tag);
     this.state.tag = '';
     this.setState({
