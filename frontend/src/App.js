@@ -14,7 +14,6 @@ import RecipesPage from './pages/RecipesPage';
 import RecoverPage from './pages/RecoverPage';
 import ResetPage from './pages/ResetPage';
 import RecipeviewerPage from './pages/RecipeviewerPage';
-import EditPage from './pages/EditPage';
 
 function App() {
   return (
@@ -32,7 +31,6 @@ function App() {
       <Route path="/recover" index element={<RecoverPage />} />
       <Route path="/reset" index element={<ResetPage />} />
       <Route path="/recipeviewer" index element={<RecipeviewerPage />} />
-      <Route path="/edit" index element={<EditPage />} />
     </Routes>
   </BrowserRouter>
 );

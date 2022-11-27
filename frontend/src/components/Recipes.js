@@ -30,14 +30,14 @@ function Recipes()
    }
 
    
-   //var recipeID = 'c2d0d25c-45d4-4154-9e07-59a5bbe3411b';
+   var recipeID = '70730eaf-30a4-45cd-9191-63684c646a55';
    const goDelete= async event => 
    {
       event.preventDefault();
 
       var obj = {id: recipeID};
       var js = JSON.stringify(obj);
-
+      /*
       try
       {    
          const response = await fetch(buildPath('api/deleterecipe'),
@@ -52,6 +52,7 @@ function Recipes()
          alert(e.toString());
          return;
       }    
+      */
    };
 
    const goView= async event => 
@@ -120,7 +121,7 @@ function Recipes()
       }    
    };
 
-    window.addEventListener('load', async function loadRecipes(){
+   window.addEventListener('load', async function loadRecipes(){
 		if(loadFlag == 0){		//for some reason the event kept firing 3 times and I couldn't figure out how to stop it, 
 								//loadFlag is a dirty solution to prevent that
 			recipeCount = 10;	//delete this, recipe count should respond to APIand set to respond to API
@@ -209,12 +210,6 @@ function Recipes()
                 onClick={goView}/>
                 <br />
         </div>
-        <div id="recipesDiv" className="displayregion">
-            <input type="button" id="editButton" className="editbuttonfield" value="Edit" 
-                onClick={goEdit}/>
-                <br />
-        </div>
-        
     </div>
      */   
    );
