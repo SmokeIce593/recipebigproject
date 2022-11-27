@@ -76,3 +76,18 @@ img{
 	display: none;
 	visibility: hidden;
 }
+
+.error{
+	color: red;
+	justify-content: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.buffer{
+	position: block;
+    width: 370px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    text-align: center;
+}
