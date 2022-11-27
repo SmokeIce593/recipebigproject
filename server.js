@@ -455,10 +455,15 @@ app.post('/api/getsinglerecipe', async (req, res, next) =>
   // outgoing: id, fkrecipeid, categoryname, categorycolor
 
   var error = '';
+  var recipe;
+  var ingredient = [];
+  var direction = [];
+  var tag = [];
 
   const {recipeID} = req.body;
   const connectionString = process.env.DATABASE_URL;
-
+  
+  console.log(recipeID);
   const client = new Client({
     connectionString: connectionString,
     ssl: { rejectUnauthorized: false }
@@ -467,43 +472,49 @@ app.post('/api/getsinglerecipe', async (req, res, next) =>
   try{
     await client.connect();
     const recipequery = 'Select * from recipes where id = $1';
-    const recipevalue = [userID];
-    const recipe = await client.query(text, value);
+    const recipevalue = [recipeID];
+    const recipeq = await client.query(recipequery, recipevalue);
     
     const ingredientquery = 'Select * from ingredients where recipefk = $1';
-    const ingredientvalue = [userID];
-    const ingredient = await client.query(text, value);
+    const ingredientvalue = [recipeID];
+    const ingredientq = await client.query(ingredientquery, ingredientvalue);
 
-    const directionquery = 'Select * from ingredients where recipefk = $1';
-    const directionvalue = [userID];
-    const direction = await client.query(text, value);
+    const tagquery = 'Select * from tags where fkrecipeid = $1';
+    const tagvalue = [recipeID];
+    const tagq = await client.query(tagquery, tagvalue);
 
+    const directionquery = 'Select * from directions where fkrecipe = $1';
+    const directionvalue = [recipeID];
+    const directionq = await client.query(directionquery, directionvalue);
+    console.log(ingredientq.rows[0]["ingredient"]);
+    console.log(ingredientq.rowCount);
+    
+    recipe = recipeq.rows[0];
+    for( var i=0; i<ingredientq.rowCount; i++ )
+    {
+      ingredient.push(ingredientq.rows[i]);
+      console.log(ingredientq.rows[i]["ingredient"]);
+    }
+
+    for( var i=0; i<tagq.rowCount; i++ )
+    {
+      tag.push(tagq.rows[i]);
+      console.log(tagq.rows[i]["tagname"]);
+    }
+  
+    for( var i=0; i<directionq.rowCount; i++ )
+    {
+      direction.push(directionq.rows[i]);
+    }
+  
   await client.end();
   }
   catch{
     error = "Server related issues, please try again.";
   }
 
-
-  var _recipe = [];
-  for( var i=0; i<recipe.length; i++ )
-  {
-    _recipe.push(recipe[i]);
-  }
-
-  var _ingredient = [];
-  for( var i=0; i<ingredient.length; i++ )
-  {
-    _ingredient.push(ingredient[i]);
-  }
-
-  var _direction = [];
-  for( var i=0; i<direction.length; i++ )
-  {
-    _direction.push(direction[i]);
-  }
-
-  var ret = {recipe:_recipe, ingredients:_ingredient,directions:_direction, error: error};
+  console.log(error);
+  var ret = {recipe:recipe, ingredients:ingredient,directions:direction, tags:tag, error: error};
   res.status(200).json(ret);
 });
 
@@ -606,7 +617,7 @@ app.get('/api/search', async (req, res, next) =>
 
   try{
     await client.connect();
-    const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON Cast(r.id as int) = Cast(c.fkrecipeid as int) left JOIN tags as t ON Cast(r.id as int) = Cast(t.fkrecipeid as int) left join users as u ON Cast(r.userid as int) = Cast(u.id as int) Where (r.recipe like '%$1%' OR t.tagname like '%$1%' OR c.categoryname like '%$1%' OR u.firstname like '%$1%' or u.lastname like '%$1%') GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname";
+    const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON r.id = c.fkrecipeid left JOIN tags as t ON r.id = t.fkrecipeid left join users as u ON Cast(r.userid as varchar) = Cast(u.id as varchar) Where (r.recipe like '%$1%' OR t.tagname like '%$1%' OR c.categoryname like '%$1%' OR u.firstname like '%$1%' or u.lastname like '%$1%') GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname ORDER BY r.date DESC";
     const value = [search];
     const now = await client.query(text, value);
     await client.end();
@@ -846,7 +857,7 @@ async function sendemail(email, code){
   var mailOptions = {
     from: 'recipeasy1234@gmail.com',
     to: email,
-    subject: 'Sending Email using Node.js',
+    subject: 'Recipeasy verification code',
     text: html
   };
   
@@ -1033,7 +1044,7 @@ app.delete('/api/badwordscheck', async (req, res, next) =>
 });
 
 
-app.delete('/api/deleterecipe', async (req, res, next) => 
+app.post('/api/deleterecipe', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -1042,9 +1053,10 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
   var rid = -1;
   var rn = '';
 
-  const { id, recipe } = req.body;
+  const { id } = req.body;
   const connectionString = process.env.DATABASE_URL;
 
+  console.log(id);
   const client = new Client({
     connectionString: connectionString,
     ssl: { rejectUnauthorized: false }
@@ -1052,7 +1064,7 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
 
   try {
     await client.connect();
-    const text = 'DELETE FROM recipe WHERE id = $1';
+    const text = 'DELETE FROM recipes WHERE id = $1';
     const value = [id];
     const now = await client.query(text, value);
     
@@ -1069,34 +1081,12 @@ app.delete('/api/deleterecipe', async (req, res, next) =>
     error = "Server related issues, please try again.";
   }
 
-  var ret = { rid:id, rn:recipename, error:'' };
+  var ret = { rid:id, error:'' };
   res.status(200).json(ret);
 });
 
 
-app.post('/api/searchcards', async (req, res, next) => 
-{
-  // incoming: userId, search
-  // outgoing: results[], error
 
-  var error = '';
-
-  const { userId, search } = req.body;
-
-  var _search = search.trim();
-  
-  const db = client.db("COP4331Cards");
-  const results = await db.collection('Cards').find({"Card":{$regex:_search+'.*', $options:'r'}}).toArray();
-  
-  var _ret = [];
-  for( var i=0; i<results.length; i++ )
-  {
-    _ret.push( results[i].Card );
-  }
-  
-  var ret = {results:_ret, error:error};
-  res.status(200).json(ret);
-})
 
 
 app.use((req, res, next) => 

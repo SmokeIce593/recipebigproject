@@ -1,0 +1,64 @@
+.displayregion{
+	position: relative;
+    background-color: #EAFCFF;
+    width: calc(100%-200px);
+    height: 100%;
+    margin-top: 10px;
+    margin-left: 100px;
+    margin-right: 100px;
+    justify-content: center;
+    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5)
+}
+
+.recipeHeader {
+    text-align: center;
+    font-size: 36px;
+    margin-top: 0.5%;
+}
+
+hr {
+    display: block;
+    clear: both;
+    width: 96%;
+    color: #000000;
+    height: 1px;
+}
+
+#line {
+    float: left;
+    width: 100%;
+    height: 10px;
+    margin-bottom: 1%;
+}
+
+.col-container {
+    padding: 10px;
+}
+
+.col-child {
+    width: 50%;
+    float: left;
+}
+
+.smallHeader {
+    text-align: center;
+    font-size: 26px;
+}
+
+.recipelist {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 0.5%;
+}
+
+.description {
+    font-size: 18px;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+.tags {
+    font-size: 18px;
+    margin-left: 30%;
+    margin-right: 30%;
+}
