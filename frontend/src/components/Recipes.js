@@ -17,14 +17,14 @@ function Recipes()
    }
 
    
-   var recipeID = 'c2d0d25c-45d4-4154-9e07-59a5bbe3411b';
+   var recipeID = '70730eaf-30a4-45cd-9191-63684c646a55';
    const goDelete= async event => 
    {
       event.preventDefault();
 
       var obj = {id: recipeID};
       var js = JSON.stringify(obj);
-
+      /*
       try
       {    
          const response = await fetch(buildPath('api/deleterecipe'),
@@ -39,6 +39,7 @@ function Recipes()
          alert(e.toString());
          return;
       }    
+      */
    };
 
    const goView= async event => 
