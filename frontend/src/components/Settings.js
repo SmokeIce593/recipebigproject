@@ -103,13 +103,11 @@ function Settings()
                 </div>
                 {/*<div id="line"><hr /></div> */}
                 <div id="logininfo" className="changeinfo">
-                    <br></br>
                     <span id="info1new" className="infotext">USERNAME</span>
                     <input type="text" id="newlogin" defaultValue={username} ref={(c) => username = c} className="inputbox"></input>
                 </div>
 
                 <div id="passwordinfo" className="changeinfo">
-                    <br></br>
                     <span id="info2" className="infotext">PASSWORD</span>
                     {/*<br></br>
                     <span id="info2new" className="infotext">New password </span>*/}
@@ -120,13 +118,11 @@ function Settings()
                 </div>
                 
                 <div id="firstinfo" className="changeinfo">
-                    <br></br>
                     <span id="info6new" className="infotext">FIRST NAME</span>
                     <input type="text" id="newfirst" defaultValue={firstName} ref={(c) => firstName = c} className="inputbox"></input>
                 </div>
 
                 <div id="lastinfo" className="changeinfo">
-                    <br></br>
                     <span id="info7new" className="infotext">LAST NAME</span>
                     <input type="text" id="newlast" defaultValue={lastName} ref={(c) => lastName = c} className="inputbox"></input>
                 </div>
