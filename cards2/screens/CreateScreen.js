@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   },
   inputfield1: {
     height: 50,
-	  width: 300,
+	  width: 280,
 	  backgroundColor: '#F7F7F7',
     textAlign: 'center',
 	  borderRadius: 10,
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   },
   inputfield2: {
     height: 100,
-	  width: 300,
+	  width: 280,
 	  backgroundColor: '#F7F7F7',
 	  borderRadius: 10,
     borderWidth: 1, //this is the border for input fields since react native shadow is weird
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   },
   inputfield3: {
     height: 30,
-	  width: 300,
+	  width: 280,
 	  backgroundColor: '#F7F7F7',
 	  borderRadius: 10,
     borderWidth: 1, //this is the border for input fields since react native shadow is weird
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   },
   addbuttonfield: {
     height: 30,
-	  width: 300,
+	  width: 280,
     marginLeft: "auto",
 	  marginRight: "auto",
     backgroundColor: '#FF7A70',
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: 370,
+    width: 280,
     marginLeft: "auto",
 	  marginRight: "auto",
     marginTop: 1,

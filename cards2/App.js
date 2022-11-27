@@ -47,6 +47,7 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
       title: '',
       gestureEnabled: false,
+      animationEnabled: false,
       headerShown: true,  // Will hide header for HomePage
       headerLeft: ()=> null,
       headerStyle: {
