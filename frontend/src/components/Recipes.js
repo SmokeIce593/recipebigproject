@@ -76,6 +76,39 @@ function Recipes()
       }    
    };
 
+   const goEdit= async event => 
+   {
+      event.preventDefault();
+
+      var obj = {recipeID: recipeID};
+      var js = JSON.stringify(obj);
+
+      try
+      {    
+         const response = await fetch(buildPath('api/getsinglerecipe'),
+               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+         var res = JSON.parse(await response.text());
+         var direction = res.directions;
+         var ingredient = res.ingredients;
+         var recipe = res.recipe;
+         var tag = res.tags;
+         var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
+         localStorage.setItem('recipe_data', JSON.stringify(recipe));
+
+         if(res.error != null){
+            window.location.href = '/edit';
+         }
+      }
+      catch(e)
+      {
+         alert(e.toString());
+         return;
+      }    
+   };
+
+   
+
    return(
     <div>
         <div id="recipesDiv" className="displayregion">
@@ -88,6 +121,12 @@ function Recipes()
                 onClick={goView}/>
                 <br />
         </div>
+        <div id="recipesDiv" className="displayregion">
+            <input type="button" id="editButton" className="editbuttonfield" value="Edit" 
+                onClick={goEdit}/>
+                <br />
+        </div>
+        
     </div>
         
    );
