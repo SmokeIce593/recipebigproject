@@ -1,25 +1,28 @@
 .displayregion{
 	position: relative;
-    background-color: #EAFCFF;
+    background-color: rgba(234,252,255,0.1);
     width: calc(100%-200px);
     height: 100%;
     margin-top: 10px;
     margin-left: 100px;
     margin-right: 100px;
     justify-content: space-between;
-    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5)
+    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.1)
 }
 
 .pageheader {
     text-align: center;
-    background-color: #EAFCFF;
+    background-color: rgba(234,252,255,0.1);
     border-right: none;
     border-left: none;
     border-top: none;
     font-size: 36px;
+    font-weight: 700;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     border-radius: 2px;
     border-color: black;
-    margin-top: 0.5%;
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 .changeinfo {
@@ -28,8 +31,9 @@
     justify-self: center;
     justify-content: center;
     font-size: 18px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin: auto;
-    margin-bottom: 0.5%;
+    margin-bottom: 2%;
 }
 
 .inputbox {
@@ -37,21 +41,24 @@
 	width: 370px;
 	background-color: #F7F7F7;
 	border-radius: 5px;
-	margin-top: 0px;
+	margin-top: 5px;
 	margin-bottom: 10px;
 	display: flex;
     flex-direction: column;
 	justify-content: center;
 	font-size: 16px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 	margin-right: auto;
 	margin-left: auto;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
 }
 
 .infotext {
+    font-size: 14;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #555555;
     margin-top: 0%;
-    margin-bottom: 0.5%;
-
+    margin-bottom: 10px;
 }
 
 hr {
@@ -78,6 +85,7 @@ hr {
     background-color: #FF7A70;
     border-radius: 10px;
     font-size: 22px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     margin-top: 15px;
     justify-content: center;
     margin-right: auto;
@@ -92,4 +100,19 @@ hr {
 .savebutton:active{
     background-color: #BF3045;
     box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.0);
+}
+
+.error{
+	color: red;
+	justify-content: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.buffer{
+	position: block;
+    width: 370px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    text-align: center;
 }

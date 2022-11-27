@@ -23,11 +23,13 @@ function Home()
             <div id="userName" className="user">Hi {firstName} {lastName}</div>
             <img src={logo} alt="logo" className="logohome"></img>
 
+            <form>
             <div id="search" className="Search">
                 <input type="text" id="search" placeholder="Search" className="searchBox"></input>
                 <button type="submit" id="searchBut" class="searchButton" onClick={doSearch}>
                     <img src={glass} alt="glass icon" width="40" className="glassimg"></img></button>
             </div>
+            </form>
 
 
         </div>
