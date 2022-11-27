@@ -600,7 +600,7 @@ app.put('/api/editrecipe', async (req, res, next) =>
 });
 
 
-app.post('/api/search', async (req, res, next) => 
+app.get('/api/search', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
@@ -627,45 +627,9 @@ app.post('/api/search', async (req, res, next) =>
   }
 
   var _ret = [];
-  for( var i=0; i<now.rowCount; i++ )
+  for( var i=0; i<now.length; i++ )
   {
-    _ret.push(now.rows[i]);
-  }
-  
-  var ret = {filter: _ret, error: error};
-  res.status(200).json(ret);
-});
-
-app.post('/api/myrecipes', async (req, res, next) => 
-{
-  // incoming: fkrecipeid, categoryname, categorycolor
-  // outgoing: id, fkrecipeid, categoryname, categorycolor
-	
-  var error = '';
-
-  const {userID} = req.body;
-  const connectionString = process.env.DATABASE_URL;
-
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: { rejectUnauthorized: false }
-  });
-
-  try{
-    await client.connect();
-    const text = "Select * from recipes where userid = $1 ORDER BY r.date DESC";
-    const value = [userID];
-    const now = await client.query(text, value);
-    await client.end();
-  }
-  catch{
-    error = "Server related issues, please try again.";
-  }
-
-  var _ret = [];
-  for( var i=0; i<now.rowCount; i++ )
-  {
-    _ret.push(now.rows[i]);
+    _ret.push(now[i]);
   }
   
   var ret = {filter: _ret, error: error};
