@@ -3,6 +3,13 @@ import './recipeviewer.css'
 
 function Recipeviewer()
 {
+    var _ud = localStorage.getItem('recipe_data');
+    var ud = JSON.parse(_ud);
+    var direction = ud.direction;
+    var ingredient = ud.ingredient;
+    var recipeall = ud.recipe;
+    var tag = ud.tag;
+
    const app_name = 'recipeprojectlarge'
    function buildPath(route)
    {
@@ -16,10 +23,11 @@ function Recipeviewer()
        }
    }
 
-   var recipeName = "pie";
+   var recipeName = recipeall["recipe"];
+   var description = recipeall["text_recipe"];
+   
    var recipe = "wow this sentence is going to be really long I am typing it for a test.. hey this is still going? okay imma stop typing now";
    var ingredients = "step1 step2";
-   var description = "a recipe description that is very descriptive, it describes a recipe that involves cooking to make food";
    var tags = "this recipe has no gluten!";
    
 
