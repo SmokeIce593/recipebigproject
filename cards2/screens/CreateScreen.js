@@ -25,7 +25,8 @@ export default class Createscreen extends Component {
     super()
     this.state = 
     {
-      message: ' '
+      message: ' ',
+      private: false,
     }
   }
   componentDidMount() {
@@ -158,13 +159,13 @@ export default class Createscreen extends Component {
                               <Picker
                                 style={ styles.picker }
                                 itemStyle={ styles.question }
-                                selectedValue={ this.state.selectedQuestion }
+                                selectedValue={ this.state.private }
                                 onValueChange=
                                 {
                                   (itemValue, itemIndex) =>
                                   {        
-                                    this.setState({ selectedQuestion: itemValue })
-                                    this.state.private = itemValue;
+                                    this.setState({ private: itemValue })
+                                    //this.state.private = itemValue;
                                   }
                                 }>
                                 <Picker.Item label="Make recipe public" value={ false } />

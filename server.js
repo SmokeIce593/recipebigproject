@@ -1124,6 +1124,72 @@ app.post('/api/deleterecipe', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/editrecipe', async (req, res, next) => 
+{
+
+  var error = '';
+  const { recipeID, recipename, recipetext, fkuser, privaterecipe, tags, ingredients, directions } = req.body;
+  var deleterecipe = await deleterecipe(recipeID);
+
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+    await client.connect();
+    const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
+    const value = [recipeID, recipename, recipetext, fkuser, privaterecipe];
+    const now = await client.query(text, value);
+    await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+
+  saveingredients(ingredients, newid);
+  savedirections(directions, newid);
+  savetags(newid, tags, "orange", "test");
+
+  var ret = {error: error};
+  res.status(200).json(ret);
+
+});
+
+async function deleterecipe(id){
+  var error = '';
+  var rn = '';
+  const connectionString = process.env.DATABASE_URL;
+
+  console.log(id);
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try {
+    await client.connect();
+    const text = 'DELETE FROM recipes WHERE id = $1';
+    const value = [id];
+    const now = await client.query(text, value);
+    
+    const tagtext = 'DELETE FROM tags WHERE fkrecipeid = $1';
+    const tagvalue = [id];
+    const tagnow = await client.query(tagtext, tagvalue);
+
+    const cattext = 'DELETE FROM category WHERE fkrecipeid = $1';
+    const catvalue = [id];
+    const catnow = await client.query(cattext, catvalue);
+    await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  var ret = { rid:id, error:error };
+  return ret;
+}
 
 
 

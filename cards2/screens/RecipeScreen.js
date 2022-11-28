@@ -44,6 +44,12 @@ export default class RecipeScreen extends Component {
     }
   }
 
+  UNSAFE_componentWillMount()
+  {
+    var id= this.props.navigation.getParam('id', -1);
+    this.getMyRecipes(id);
+  }
+
 
   render(){
 
@@ -70,7 +76,7 @@ export default class RecipeScreen extends Component {
                   {/* to make gap at top of scroll view so first box does not collide */}
 
 
-                  <Text style={styles.error}>{this.state.message}</Text>
+                  
                   {this.state.myRecipes.map((prop, key) => {
                     return (
                       <View style={styles.container3}>
@@ -91,7 +97,7 @@ export default class RecipeScreen extends Component {
                   })
                   }
 
-                    
+                <Text style={styles.error}>{this.state.message}</Text>
                 </ScrollView>
               </View>
             </View>
@@ -148,7 +154,7 @@ export default class RecipeScreen extends Component {
   {
     try
     {
-      var obj = {id:id};
+      var obj = {userID:id};
       var js = JSON.stringify(obj);
 
       const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/myrecipes',
@@ -169,6 +175,10 @@ export default class RecipeScreen extends Component {
       {
         this.setState({message: "success"});
         this.setState({myRecipes: res.filter});
+        console.log("No error");
+        console.log("id: " + id);
+        console.log("Response:");
+        console.log(res.filter);
       }
     }
     catch(e)
