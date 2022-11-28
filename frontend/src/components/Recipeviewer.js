@@ -76,6 +76,7 @@ function Recipeviewer()
         <div id="recipeviewerDiv" className="displayregionviewer">
             <div id="recipeName" className="recipeHeader">{recipeName}</div>
             <div id="line"><hr /></div>
+            <div id="text0" className="smallHeader">Description</div> 
             <div id="description" className="description">{description}</div>
             <br></br>
             <div id="columns" className="col-container">
