@@ -12,8 +12,9 @@ const {v1: uuidv1, v4: uuidv4} = require('uuid');
 
 app.get('/recipes/:query', async (req, res) =>
 {
+  const api_key = CSNM42zvHHK6kV039mwseZ4YryWHRh7cSfZjHfIn;
   const response = await axios.get(
-    `https://api.edamam.com/search?q=${req.params.query}$app_id=${process.env.APP_ID}$app_key=${process.env.APP_KEY}`
+    `https://api.nal.usda.gov/fdc/v1/foods/search?query=apple&pageSize=2&api_key=${api_key}`
   )
 
   console.log(response.data.hits)
