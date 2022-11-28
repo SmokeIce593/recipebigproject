@@ -99,7 +99,7 @@ export default class Createscreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
-      myRecipe:navigation.getParam('myRecipe', ''),
+      myRecipe:navigation.getParam('myRecipe', 'default'),
     }
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
@@ -181,7 +181,7 @@ export default class Createscreen extends Component {
                               <Text style={styles.buttontext}>Edit</Text>
                             </View>
                           </Pressable>
-                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+                          <Pressable style={styles.loginbuttonfield} onPress={() => this.handleClickDelete(userInfo)}>
                             <View style={{alignItems: 'center'}}>
                               <Text style={styles.buttontext}>Delete</Text>
                             </View>
@@ -244,6 +244,43 @@ export default class Createscreen extends Component {
           </View>
     </ImageBackground>
   );
+  }
+
+  handleClickDelete = async (userInfo) =>
+  {
+
+    try
+    {
+      console.log("THIS:" + userInfo.myRecipe);
+      var obj = {id:userInfo.myRecipe};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/deleterecipe',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if(res.error !== '')
+      {
+        this.setState({message: res.error});
+        console.log(res.error);
+      }
+      else
+      {
+        global.ingredients = [];
+        global.tags = [];
+        global.directions = [];
+        global.ingredientsBullets = [];
+        global.directionsBullets = [];
+        global.tagsBullets = [];
+        console.log(res.rid);
+        this.props.navigation.navigate('Recipe', userInfo);
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
   }
 
   refresh = async (recipeID) =>

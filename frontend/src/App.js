@@ -10,6 +10,7 @@ import VerifyPage from './pages/VerifyPage';
 import HomePage from './pages/HomePage';
 import SettingsPage from './pages/SettingsPage';
 import CreatePage from './pages/CreatePage';
+import EditPage from './pages/EditPage';
 import RecipesPage from './pages/RecipesPage';
 import RecoverPage from './pages/RecoverPage';
 import ResetPage from './pages/ResetPage';
@@ -26,6 +27,7 @@ function App() {
       <Route path="/register" index element={<RegisterPage />} />
       <Route path="/verify" index element={<VerifyPage />} />
       <Route path="/create" index element={<CreatePage />} />
+      <Route path="/edit" index element={<EditPage />} />
       <Route path="/settings" index element={<SettingsPage />} />
       <Route path="/recipes" index element={<RecipesPage />} />
       <Route path="/home" index element={<HomePage />} />

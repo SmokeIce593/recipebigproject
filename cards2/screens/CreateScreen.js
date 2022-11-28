@@ -11,12 +11,7 @@ const privacyoptions = [
   "Make recipe private", 
 ];
 
-global.ingredients = [];
-global.tags = [];
-global.directions = [];
-global.ingredientsBullets = [];
-global.directionsBullets = [];
-global.tagsBullets = [];
+
 
 export default class Createscreen extends Component {
 
@@ -27,6 +22,12 @@ export default class Createscreen extends Component {
     {
       message: ' ',
       private: false,
+      ingredients: [],
+      tags: [],
+      directions: [],
+      ingredientsBullets: [],
+      directionsBullets: [],
+      tagsBullets: [],
     }
   }
   componentDidMount() {
@@ -78,7 +79,7 @@ export default class Createscreen extends Component {
 
                           <Text style={styles.headerfield}>Ingredients:</Text>
                           <FlatList
-                            data={global.ingredientsBullets}
+                            data={this.state.ingredientsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -103,7 +104,7 @@ export default class Createscreen extends Component {
                             </Pressable>  
                           <Text style={styles.headerfield}>Directions:</Text>
                           <FlatList
-                            data={global.directionsBullets}
+                            data={this.state.directionsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -128,7 +129,7 @@ export default class Createscreen extends Component {
                               </Pressable>  
                           <Text style={styles.headerfield}>Tags:</Text>
                           <FlatList
-                            data={global.tagsBullets}
+                            data={this.state.tagsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -241,8 +242,8 @@ export default class Createscreen extends Component {
     {
       var obj = {recipename:this.state.name, recipetext:this.state.description,
                 fkuser:userInfo.id, privaterecipe:this.state.private,
-                tags:global.tags, ingredients: global.ingredients,
-                directions: global.directions};
+                tags:this.state.tags, ingredients: this.state.ingredients,
+                directions: this.state.directions};
 
       var js = JSON.stringify(obj);
 
@@ -257,18 +258,19 @@ export default class Createscreen extends Component {
       }
       else
       {
-        global.tags = [];
-        global.ingredients = [];
-        global.directions = [];
-        global.ingredientsBullets = [];
-        global.directionsBullets = [];
-        global.tagsBullets = [];
         this.setState({
           name: '',
           description: '',
           private: 'false',
           message: '',
+          ingredients: [],
+          tags: [],
+          directions: [],
+          ingredientsBullets: [],
+          directionsBullets: [],
+          tagsBullets: [],
           refresh: !this.state.refresh,
+          
         })
         this.props.navigation.navigate('Recipe', userInfo);
       }
@@ -310,29 +312,50 @@ export default class Createscreen extends Component {
 
   addIngredientClick = async () =>
   {
-    global.ingredientsBullets.push({key: this.state.ingredient});
-    global.ingredients.push(this.state.ingredient);
+    var ingredientsBulletsL = this.state.ingredientsBullets;
+    var ingredientsL = this.state.ingredients;
+
+    ingredientsBulletsL.push({key: this.state.ingredient});
+    ingredientsL.push(this.state.ingredient);
+
+
     this.setState({
       ingredient: '',
+      ingredientsBullets: ingredientsBulletsL,
+      ingredients: ingredientsL,
       refresh: !this.state.refresh,
     })
   } 
   addDirectionClick = async () =>
   {
-    global.directionsBullets.push({key: this.state.direction});
-    global.directions.push(this.state.direction);
+    var directionsBulletsL = this.state.directionsBullets;
+    var directionsL = this.state.directions;
+
+    directionsBulletsL.push({key: this.state.direction});
+    directionsL.push(this.state.direction);
+
+
     this.setState({
       direction: '',
-      refresh: !this.state.refresh
+      directionsBullets: directionsBulletsL,
+      directions: directionsL,
+      refresh: !this.state.refresh,
     })
   }
   addTagClick = async () =>
   {
-    global.tagsBullets.push({key: this.state.tag});
-    global.tags.push(this.state.tag);
+    var tagsBulletsL = this.state.tagsBullets;
+    var tagsL = this.state.tags;
+
+    tagsBulletsL.push({key: this.state.tag});
+    tagsL.push(this.state.tag);
+
+
     this.setState({
       tag: '',
-      refresh: !this.state.refresh
+      tagsBullets: tagsBulletsL,
+      tags: tagsL,
+      refresh: !this.state.refresh,
     })
   }
   changeIngredientHandler = async (val) =>

@@ -17,7 +17,7 @@ img{
     border: 1px solid;
     border-color: black;
     border-radius: 21px;
-    height: 666px;
+    height: auto;
     width: 75%;
     justify-content: center;
     margin-right: auto;
@@ -34,7 +34,7 @@ img{
     background-color: #FF7A70;
     border-radius: 10px;
     font-size: 36px;
-    margin-bottom: 6%;
+    margin-bottom: 3%;
     justify-content: center;
     margin-right: auto;
     margin-left: auto;
