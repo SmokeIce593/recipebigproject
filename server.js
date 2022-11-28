@@ -486,9 +486,6 @@ app.post('/api/getsinglerecipe', async (req, res, next) =>
     const directionquery = 'Select * from directions where fkrecipe = $1';
     const directionvalue = [recipeID];
     const directionq = await client.query(directionquery, directionvalue);
-    console.log(ingredientq.rows[0]["ingredient"]);
-    console.log(ingredientq.rowCount);
-    
     recipe = recipeq.rows[0];
     for( var i=0; i<ingredientq.rowCount; i++ )
     {

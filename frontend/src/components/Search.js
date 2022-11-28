@@ -14,7 +14,7 @@ function previousPage(pageCount){
 
 }
 
-function Recipes()
+function Search()
 {
    const app_name = 'recipeprojectlarge'
    function buildPath(route)
@@ -29,7 +29,6 @@ function Recipes()
        }
    }
 
-   //var recipeID = '70730eaf-30a4-45cd-9191-63684c646a55';
    var recipeID;
    function goDelete(recipeID){
    return async function(){
@@ -43,7 +42,7 @@ function Recipes()
 
          var res = JSON.parse(await response.text());
          window.location.href = '/recipes';
-         //alert(res.error);
+         alert(res.error);
       }
       catch(e)
       {
@@ -69,10 +68,6 @@ function Recipes()
          var ingredient = res.ingredients;
          var recipe = res.recipe;
          var tag = res.tags;
-         //alert(direction[0]["directions"]);
-         //alert(ingredient[0]["ingredient"]);
-         //alert(tag[0]["tagname"]);
-         //alert(recipe["recipe"]);
          var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
          localStorage.setItem('recipe_data', JSON.stringify(recipe));
 
@@ -119,38 +114,15 @@ function Recipes()
       }    
    };
 
-   async function getMyRecipes()
-   {
-      let user_data = JSON.parse(localStorage.getItem("user_data"));
-      //console.log(user_data);
-      let userID = user_data.id;
-      //console.log(userID);
-      var obj = {userID: userID};
-      var js = JSON.stringify(obj);
-      try
-      {    
-         const response = await fetch(buildPath('api/myrecipes'),
-               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-         
-         var res = JSON.parse(await response.text());
-         //alert(res.filter[0]["recipe"]);
-         if(res.error != null){
-            //console.log(res.filter);
-            return res.filter;
-         }
-      }
-      catch(e)
-      {
-         alert(e.toString());
-         return;
-      }    
-   };
+   async function searchRecipes(){
+
+   }
 
    window.addEventListener('load', async function loadRecipes(){
 		if(loadFlag == 0){		//for some reason the event kept firing 3 times and I couldn't figure out how to stop it, 
 			loadFlag++;			   //loadFlag is a dirty solution to prevent that
          
-         var myRecipes = await getMyRecipes();
+         var myRecipes = await searchRecipes();
 			recipeCount = myRecipes.length;
          console.log(myRecipes);
 
@@ -175,18 +147,7 @@ function Recipes()
 						recipeTitle.className = "recipeTitle";
 					let recipeDescription = document.createElement("div");
 						recipeDescription.className = "recipeDescription";
-					/*let recipeTags = document.createElement("div");
-						recipeTags.className = "recipeTags";*/
-					/*let editBTN = this.document.createElement("button");
-						editBTN.type = "button";
-						editBTN.className = "editButton";
-						editBTN.innerHTML = "Edit";
-						editBTN.onclick = {goEdit};*/
 					let deleteBTN = this.document.createElement("button");
-						deleteBTN.type = "button";
-						deleteBTN.className = "deleteButton";
-						deleteBTN.innerHTML = "Delete";
-						deleteBTN.onclick = goDelete(recipeID);
 					let title = myRecipes[i]["recipe"];				//place title here
 					let dscrp = myRecipes[i]["text_recipe"];		//place description here
 					//let tags = "Recipe Tags";				//place tags here. If tags are an array, maybe add the array 
@@ -196,8 +157,6 @@ function Recipes()
 					//recipeTags.innerHTML = "Tags: " + tags;
 					//append all created items into list
 					mainDiv.appendChild(listItem);
-					listItem.appendChild(deleteBTN);
-					//listItem.appendChild(editBTN);
 					listItem.appendChild(recipeTitle);
 					listItem.appendChild(recipeDescription);
 					//listItem.appendChild(recipeTags);
@@ -217,14 +176,10 @@ function Recipes()
 		}
 	});
 
-   var _ud = localStorage.getItem('user_data');
-   var ud = JSON.parse(_ud);
-   var firstName = ud.firstName;
     return(
 		<body>
-         <p id="title"  className="recipesTitle">{firstName}'s Recipes</p>
 			<div id="recipesDiv" className="displayregion">
-				<p id="defaultMsg" className="defaultMsg">No recipes found. Go to Create to start making new recipes!</p>
+				<p id="defaultMsg" className="defaultMsg">No recipes found!</p>
 			</div>
 			<div>
 				<button type="button" id="previous" className="previousButton"  onClick={previousPage()}>Previous Page</button>
@@ -234,4 +189,4 @@ function Recipes()
    );
 };
 
-export default Recipes;
+export default Search;
