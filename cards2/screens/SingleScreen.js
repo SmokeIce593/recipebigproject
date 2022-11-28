@@ -4,13 +4,6 @@ import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, LogBox, FlatLi
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 
-global.ingredients = [];
-global.tags = [];
-global.directions = [];
-global.ingredientsBullets = [];
-global.directionsBullets = [];
-global.tagsBullets = [];
-
 const questions = [
   "Set recipe to public", 
   "Set recipe to private", 
@@ -27,6 +20,12 @@ export default class Createscreen extends Component {
     {
       message: ' ',
       myRecipe: {},
+      ingredients: [],
+      tags: [],
+      directions: [],
+      ingredientsBullets: [],
+      directionsBullets: [],
+      tagsBullets: [],
     }
   }
   
@@ -60,28 +59,36 @@ export default class Createscreen extends Component {
       }
       else
       {
+        var directionsBulletsL = [];
+        var ingredientsBulletsL = [];
+        var tagsBulletsL = [];
         console.log('success');
         this.setState({recipe: res.recipe.recipe});
         this.setState({description: res.recipe.text_recipe});
+
         this.setState({directions: [...res.directions]});
         for (var i = 0; i < this.state.directions.length; i++)
         {
-          global.directionsBullets.push({key: this.state.directions[i].directions})
+          directionsBulletsL.push({key: this.state.directions[i].directions})
         }
 
         this.setState({ingredients: [...res.ingredients]});
         for (var i = 0; i < this.state.ingredients.length; i++)
         {
-          global.ingredientsBullets.push({key: this.state.ingredients[i].ingredient})
+          ingredientsBulletsL.push({key: this.state.ingredients[i].ingredient})
         }
 
         this.setState({tags: [...res.tags]});
         for (var i = 0; i < this.state.tags.length; i++)
         {
-          global.tagsBullets.push({key: this.state.tags[i].tagname})
+          tagsBulletsL.push({key: this.state.tags[i].tagname})
         }
 
-        console.log(this.state.tags);
+        this.setState({
+          directionsBullets: directionsBulletsL,
+          ingredientsBullets: ingredientsBulletsL,
+          tagsBullets: tagsBulletsL,
+        })
       }
     }
     catch(e)
@@ -124,7 +131,7 @@ export default class Createscreen extends Component {
                           <View style={styles.container2}>
                             <Text style={styles.headerfield}>Ingredients:</Text>
                             <FlatList
-                            data={global.ingredientsBullets}
+                            data={this.state.ingredientsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -139,7 +146,7 @@ export default class Createscreen extends Component {
                           <View style={styles.container2}>
                           <Text style={styles.headerfield}>Instructions:</Text>
                             <FlatList
-                            data={global.directionsBullets}
+                            data={this.state.directionsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -161,7 +168,7 @@ export default class Createscreen extends Component {
                           <View style={styles.container2}>
                           <Text style={styles.headerfield}>Tags:</Text>
                             <FlatList
-                            data={global.tagsBullets}
+                            data={this.state.tagsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -237,12 +244,20 @@ export default class Createscreen extends Component {
 
   refresh = async (recipeID) =>
   {
-    global.ingredients = [];
-    global.tags = [];
-    global.directions = [];
-    global.ingredientsBullets = [];
-    global.directionsBullets = [];
-    global.tagsBullets = [];
+    this.setState({
+      name: '',
+      description: '',
+      private: 'false',
+      message: '',
+      ingredients: [],
+      tags: [],
+      directions: [],
+      ingredientsBullets: [],
+      directionsBullets: [],
+      tagsBullets: [],
+      refresh: !this.state.refresh,
+      
+    })
     await this.getSingleRecipe(recipeID);
     
     this.setState({refresh: !this.state.refresh});
@@ -266,9 +281,7 @@ export default class Createscreen extends Component {
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
+
         //this.props.navigation.navigate('Search');
       }
     }
@@ -295,9 +308,7 @@ export default class Createscreen extends Component {
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
+
         //this.props.navigation.navigate('Search');
       }
     }
@@ -335,15 +346,7 @@ export default class Createscreen extends Component {
   {
     this.props.navigation.navigate('Login');
   }      
-  changeNameHandler = async (val) =>
-  {
-    global.name = val;
-  }  
 
-  changeDescHandler = async (val) =>
-  {
-    global.description = val;
-  }  
 
 
 
