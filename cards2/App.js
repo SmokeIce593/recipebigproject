@@ -13,6 +13,7 @@ import VerifyScreen from './screens/VerifyScreen';
 import ResetScreen from './screens/ResetScreen';
 import SingleScreen from './screens/SingleScreen';
 import SingleAdminScreen from './screens/SingleOwnerScreen';
+import EditScreen from './screens/EditScreen'
 
 export default class App extends React.Component {
   render() {
@@ -67,8 +68,6 @@ const AppNavigator = createStackNavigator({
     screen: SingleScreen,
     navigationOptions: {
       title: '',
-      gestureEnabled: false,
-      animationEnabled: false,
       headerShown: true,  // Will hide header for HomePage
       headerLeft: ()=> null,
       headerStyle: {
@@ -84,8 +83,6 @@ const AppNavigator = createStackNavigator({
     screen: SingleAdminScreen,
     navigationOptions: {
       title: '',
-      gestureEnabled: false,
-      animationEnabled: false,
       headerShown: true,  // Will hide header for HomePage
       headerLeft: ()=> null,
       headerStyle: {
@@ -173,8 +170,25 @@ const AppNavigator = createStackNavigator({
       ),
     }
   },
+  Edit: {
+    screen: EditScreen,
+    navigationOptions: {
+      title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
 },{
-  initialRouteName: "SingleAdmin"
+  initialRouteName: "Login"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({

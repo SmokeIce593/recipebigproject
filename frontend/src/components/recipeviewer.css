@@ -87,3 +87,19 @@ hr {
     margin-left: 30%;
     margin-right: 30%;
 }
+
+.ingredientslist {
+    margin-left: 0px;
+}
+
+.directionslist {
+    margin-left: 0px;
+}
+
+.tagslist {
+    margin-left: 0px;
+}
+
+.tableClass {
+    margin-left: 0px;
+}

@@ -65,6 +65,7 @@ function Recipeviewer()
             listIngredient.id = "ingredientElement"
             listIngredient.innerText = ingredient[i]["ingredient"];
             mainDiv1.appendChild(listIngredient);
+            listIngredient.appendChild(ingredientItem);
         }
         for (let i = 0; i < directionCount; i++) {
             let listDirection = document.createElement("tr");
@@ -72,6 +73,7 @@ function Recipeviewer()
             listDirection.id = "directionElement"
             listDirection.innerText = direction[i]["directions"];
             mainDiv2.appendChild(listDirection);
+            listDirection.appendChild(directionItem);
         }
         for (let i = 0; i < tagCount; i++) {
             let listTag = document.createElement("tr");
@@ -79,6 +81,7 @@ function Recipeviewer()
             listTag.id = "tagElement"
             listTag.innerText = tag[i]["tagname"];
             mainDiv3.appendChild(listTag);
+            listTag.appendChild(tagItem);
         }
 }
 });
