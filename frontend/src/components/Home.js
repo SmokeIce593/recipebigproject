@@ -27,25 +27,14 @@ function Home()
 
     const doSearch = async event=>
     {
+      if(document.getElementById('search').value != ""){
         let searchQuery = document.getElementById('search').value;
-        var obj = {search: searchQuery};
-        var js = JSON.stringify(obj);
-         //console.log(js);
-         try
-         {    
-            const response = await fetch(buildPath('api/search'),
-               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-            var res = JSON.parse(await response.text());
-            console.log(res);
-            //window.location.href = '/search';
-            //alert(res.error);
-         }
-         catch(e)
-         {
-            alert(e.toString());
-            return;
-         }
+        localStorage.setItem("query", searchQuery);
+        window.location.href = '/search';
       }
+      else
+         return;
+   }
 
    return(
       <body>
