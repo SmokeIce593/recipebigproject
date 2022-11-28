@@ -35,10 +35,13 @@ table {
 
 .recipeTitle{
     font-size: xx-large;
+    margin-left:1%;
+    margin-top:0.5%;
 }
 
 .recipeDescription{
     font-size: large;
+    margin:1%;
 }
 
 .recipeTags{
