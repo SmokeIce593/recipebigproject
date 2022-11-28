@@ -90,7 +90,6 @@ function Recipeviewer()
                 </div>
             </div>
             <div id="line2"><br></br><hr/></div>
-            <div id="text3" className="smallHeader">Tags</div> 
             <div id="tagslist" className="tags">{tags}</div>
             <br></br>
         </div>

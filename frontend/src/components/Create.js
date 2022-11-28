@@ -92,7 +92,7 @@ function Create()
             else
             {
                 setMessage('');
-                window.location.href = '/home';
+                window.location.href = '/recipes';
             }
         }
         catch(e)

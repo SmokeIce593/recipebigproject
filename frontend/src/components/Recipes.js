@@ -91,14 +91,13 @@ function Recipes()
       }
    };
 
-   const goEdit= async event => 
+   function goEdit(recipeID)
    {
       console.log("entered goEdit");
       
       return async function()
       {
          console.log("entered goEdit's return function");
-         event.preventDefault();
 
          var obj = {recipeID: recipeID};
          var js = JSON.stringify(obj);
@@ -107,9 +106,9 @@ function Recipes()
          {
             console.log("trying to connect to editrecipe api");
             const response = await fetch(buildPath('api/editrecipe'),
-                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}})
             var res = JSON.parse(await response.text());
+            console.log(res);
             var direction = res.directions;
             var ingredient = res.ingredients;
             var recipe = res.recipe;
@@ -128,7 +127,7 @@ function Recipes()
             alert(e.toString());
             return;
          }  
-      }   
+      }  
    };
 
    async function getMyRecipes()
