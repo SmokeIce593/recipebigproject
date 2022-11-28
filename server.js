@@ -601,12 +601,13 @@ app.post('/api/search', async (req, res, next) =>
 {
   // incoming: fkrecipeid, categoryname, categorycolor
   // outgoing: id, fkrecipeid, categoryname, categorycolor
-	
+  
   var error = '';
   var ret = [];
   const {search} = req.body;
+  console.log(search)
   const connectionString = process.env.DATABASE_URL;
-
+  var editedsearch = "%" + search + "%";
   const client = new Client({
     connectionString: connectionString,
     ssl: { rejectUnauthorized: false }
@@ -614,13 +615,16 @@ app.post('/api/search', async (req, res, next) =>
 
   try{
     await client.connect();
-    const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON r.id = c.fkrecipeid left JOIN tags as t ON r.id = t.fkrecipeid left join users as u ON Cast(r.userid as varchar) = Cast(u.id as varchar) Where (r.recipe like '%$1%' OR t.tagname like '%$1%' OR c.categoryname like '%$1%' OR u.firstname like '%$1%' or u.lastname like '%$1%') GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname ORDER BY r.date DESC";
-    const value = [search];
+    const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON r.id = c.fkrecipeid left JOIN tags as t ON r.id = t.fkrecipeid left join users as u ON Cast(r.userid as varchar) = Cast(u.id as varchar) Where (r.recipe like $1 OR t.tagname like $1 OR c.categoryname like $1 OR u.firstname like $1 or u.lastname like $1) GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname ORDER BY r.date DESC";
+    const value = [editedsearch];
     const now = await client.query(text, value);
+    console.log("made it here");
+    
     for( var i=0; i<now.rowCount; i++ )
     {
       ret.push(now.rows[i]);
     }
+    
     await client.end();
   }
   catch{
