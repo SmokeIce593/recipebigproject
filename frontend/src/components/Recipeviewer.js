@@ -57,19 +57,24 @@ function Recipeviewer()
 
         for (let i = 0; i < ingredientCount; i++) {
             let listIngredient = document.createElement("tr");
+            listIngredient.className = "tableClass"
             listIngredient.id = "ingredientElement"
             document.getElementById("ingredientElement").innerText = ingredient[i]["ingredient"];
             mainDiv1.appendChild(listIngredient);
         }
         for (let i = 0; i < directionCount; i++) {
             let listDirection = document.createElement("tr");
+            listDirection.className = "tableClass"
             listDirection.id = "directionElement"
             document.getElementById("directionElement").innerText = direction[i]["directions"];
+            mainDiv2.appendChild(listDirection);
         }
         for (let i = 0; i < tagCount; i++) {
             let listTag = document.createElement("tr");
+            listTag.className = "tableClass"
             listTag.id = "tagElement"
             document.getElementById("tagElement").innerText = tag[i]["tags"];
+            mainDiv3.appendChild(listTag);
         }
 }
     loadFlag++;
