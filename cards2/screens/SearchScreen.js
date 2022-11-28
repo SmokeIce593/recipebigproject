@@ -14,33 +14,7 @@ export default class SearchScreen extends Component {
     {
       message: ' ',
       myRecipes: [],
-      test: 
-      [
-        {
-          id: '124312341234',
-          recipe: 'my recipe 1',
-          text_recipe: 'my description',
-          userid: '123412341234',
-          date: '11-11-11',
-          privateTable: false,
-        },
-        {
-          id: '124312341234',
-          recipe: 'my recipe 2',
-          text_recipe: 'my description',
-          userid: '123412341234',
-          date: '11-11-11',
-          privateTable: false,
-        },
-        {
-          id: '124312341234',
-          recipe: 'my recipe 3',
-          text_recipe: 'my description',
-          userid: '123412341234',
-          date: '11-11-11',
-          privateTable: false,
-        },
-      ],
+
     }
   }
 
@@ -65,6 +39,14 @@ export default class SearchScreen extends Component {
 
   componentDidMount() {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  }
+
+  componentDidMount() {
+    LogBox.ignoreLogs(['Each child should have a unique "key" prop']);
+  }
+  
+  componentDidMount() {
+    LogBox.ignoreLogs(['  Each child in a list should have a unique "key" prop']);
   }
 
   render(){
@@ -104,7 +86,7 @@ export default class SearchScreen extends Component {
 
 
                   {/* <Text style={styles.error}>{this.state.message}</Text> */}
-                  {this.state.test.map((prop, key) => {
+                  {this.state.myRecipes.map((prop, key) => {
                     return (
                       <View style={styles.container3}>
                       <View style={styles.recipetab}>
@@ -124,11 +106,7 @@ export default class SearchScreen extends Component {
                   })
                   }
 
-                    <Pressable style={styles.loginbuttonfield} onPress={() => this.loadRecipes(userInfo.id)}>
-                      <View style={{alignItems: 'center'}}>
-                        <Text style={styles.buttontext}>Refresh</Text>
-                      </View>
-                  </Pressable>
+                    
                 </ScrollView>
               </View>
             </View>
@@ -185,31 +163,39 @@ export default class SearchScreen extends Component {
 
   handleSearchClick = async () => 
   {
-    var obj = {userId:global.userId.trim(),search:global.search.trim()};
+    var obj = {search:global.search.trim()};
     var js = JSON.stringify(obj);
     try
     {
       const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
       var res = JSON.parse(await response.text());
-      var _results = res.results;
-      var resultText = '';
-      for( var i=0; i<_results.length; i++ )
+
+      if (res.error !== '')
       {
-          resultText += _results[i];
-          if( i < _results.length - 1 )
-          {
-              resultText += '\n';
-          }
+        this.setState({message: "Error getting recipes"});
       }
-      resultText += '\n';
-      this.setState({searchCriteria: resultText });
+
+      else if ( res.id <= 0 )
+      {
+        this.setState({message: "No recipes"});
+      }
+      else
+      {
+        this.setState({message: "success"});
+        this.setState({myRecipes: res.filter});
+        console.log("No error");
+        console.log("id: " + id);
+        console.log("Response:");
+        console.log(res.filter);
+      }
     }
     catch(e)
     {
-      this.setState({searchCriteria: e.message });
+      this.setState({message: e.message});
     }
   }
+  
   
   handleHomeClick = async (userInfo) =>
   {
