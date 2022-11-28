@@ -14,33 +14,6 @@ export default class RecipeScreen extends Component {
     {
       message: ' ',
       myRecipes: [],
-      test: 
-      [
-        {
-          id: '124312341234',
-          recipe: 'my recipe 1',
-          text_recipe: 'my description',
-          userid: '123412341234',
-          date: '11-11-11',
-          privateTable: false,
-        },
-        {
-          id: '124312341234',
-          recipe: 'my recipe 2',
-          text_recipe: 'my description',
-          userid: '123412341234',
-          date: '11-11-11',
-          privateTable: false,
-        },
-        {
-          id: '124312341234',
-          recipe: 'my recipe 3',
-          text_recipe: 'my description',
-          userid: '123412341234',
-          date: '11-11-11',
-          privateTable: false,
-        },
-      ],
     }
   }
 
@@ -61,7 +34,7 @@ export default class RecipeScreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
-      myRecipe:navigation.getParam('myRecipe', ''),
+      myRecipe:navigation.getParam('myRecipe', 'default'),
 
     }
     return(
@@ -175,10 +148,6 @@ export default class RecipeScreen extends Component {
       {
         this.setState({message: "success"});
         this.setState({myRecipes: res.filter});
-        console.log("No error");
-        console.log("id: " + id);
-        console.log("Response:");
-        console.log(res.filter);
       }
     }
     catch(e)
@@ -195,7 +164,8 @@ export default class RecipeScreen extends Component {
   handleClickRecipe = async (prop, userInfo) =>
   {
     userInfo.myRecipe = prop.id;
-    console.log("Prop" + prop.recipe);
+    console.log("this:" + userInfo.myRecipe);
+    console.log(userInfo.id);
     this.props.navigation.navigate('SingleAdmin', userInfo);
   }
 
