@@ -89,17 +89,17 @@ hr {
 }
 
 .ingredientslist {
-    float: left;
+    margin-left: 0px;
 }
 
 .directionslist {
-    float: left;
+    margin-left: 0px;
 }
 
 .tagslist {
-    float: left;
+    margin-left: 0px;
 }
 
 .tableClass {
-    float: left;
+    margin-left: 0px;
 }

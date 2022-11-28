@@ -19,6 +19,7 @@ table {
 	font-size: x-large;
 	margin-top: 5%;
 	margin-bottom: 5%;
+    padding: 2%;
     display: none;
     visibility: hidden;
 }

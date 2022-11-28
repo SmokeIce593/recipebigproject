@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './recipes.css'
+import './search.css'
 
 let recipeCount = 0;
 let loadFlag = 0;
@@ -114,8 +114,25 @@ function Search()
       }    
    };
 
+   let searchQuery = localStorage.getItem("query");
    async function searchRecipes(){
-
+      console.log(searchQuery);
+      var obj = {search: searchQuery};
+      var js = JSON.stringify(obj);
+       //console.log(js);
+       try
+       {    
+          const response = await fetch(buildPath('api/search'),
+             {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+          var res = JSON.parse(await response.text());
+          console.log(res);
+          return res.filter;
+       }
+       catch(e)
+       {
+          alert(e.toString());
+          return;
+       }
    }
 
    window.addEventListener('load', async function loadRecipes(){
@@ -178,6 +195,7 @@ function Search()
 
     return(
 		<body>
+         <p id="title"  className="recipesTitle">Results for "{searchQuery}"</p>
 			<div id="recipesDiv" className="displayregion">
 				<p id="defaultMsg" className="defaultMsg">No recipes found!</p>
 			</div>
