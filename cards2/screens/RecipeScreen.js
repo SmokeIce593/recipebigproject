@@ -1,25 +1,38 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList, ListView } from 'react-native';
+import { createRef } from 'react';
+import { Picker } from '@react-native-picker/picker';
 
-global.localName = '';
-global.password = '';
-global.userId = -1;
-global.firstName = '';
-global.lastName = '';
-global.search = '';
-global.card = '';
+global.name = '';
+global.description = '';
+global.ingredient = '';
+global.tags = '';
+global.instructions = '';
 
+const questions = [
+  "Set recipe to public", 
+  "Set recipe to private", 
+];
 
-export default class Homescreen extends Component {
+const ingredients = ["test", "123"];
+
+export default class Createscreen extends Component {
 
   constructor() 
   {
     super()
     this.state = 
     {
-       message: ' '
+      message: ' '
     }
+  }
+  
+
+  renderRow(data) {
+    return (
+      <Text>{`\u2022 ${data}`}</Text>
+    );
   }
 
   render(){
@@ -32,31 +45,74 @@ export default class Homescreen extends Component {
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
     }
-    
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}>
             <View style={styles.container}>
-                <View style={styles.container}>
-                    <Image style={styles.logo} source={require('../assets/logo.png')}/>
-                </View>
-                <View style={styles.container}>
-                    <View style={styles.loginboxfield}>
-                        <View style={{alignItems: 'center'}}>
-                        <Text style={styles.titlefield}>Recipe Screen</Text>
-                        <Text style={{fontSize:20}}> </Text>
-                        
-                        
-                        <Text style={{fontSize:20, color: '#ff0000', justifyContent: "center"}}>{this.state.message} </Text>
+              <View style={styles.mainbox}>
+                <ScrollView style={styles.scrollView}>
+                  <Text></Text> 
+                  {/* to make gap at top of scroll view so first box does not collide */}
+                    <View style={styles.recipetab}>
+                      <Text style={styles.titlefield}>Recipe Title</Text>
+                      <View style={{margin: 5}}>
+                        <Text style={styles.headerfield}>Description:</Text>
+                        <View style={styles.container2}>
+                          <Text style={styles.desctext}>insert alot of description text here to make sure users know the full description</Text>
                         </View>
-
-                       
+                        <Text></Text> 
+                        <View style={styles.container3}>
+                          <View style={styles.container2}>
+                            <Text style={styles.headerfield}>Ingredients:</Text>
+                            <Text>-waterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                          </View>
+                          <View style={styles.container2}>
+                          <Text style={styles.headerfield}>Tags:</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                            <Text>-water</Text>
+                          </View>
+                        </View>
+                        <Text></Text> 
+                        <Text style={styles.headerfield}>Privacy:</Text>
+                        <Text>Public</Text>
+                        <Text></Text> 
+                        <View style={styles.container3}>
+                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+                            <View style={{alignItems: 'center'}}>
+                              <Text style={styles.buttontext}>Edit</Text>
+                            </View>
+                          </Pressable>
+                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+                            <View style={{alignItems: 'center'}}>
+                              <Text style={styles.buttontext}>Delete</Text>
+                            </View>
+                          </Pressable>
+                        </View>
+                      </View>
                     </View>
+                    </ScrollView>
+                  </View>
                 </View>
-            </View>
         </KeyboardAvoidingView>
+        <Text style={{fontSize:15}}> </Text>
+        
+       
+        
+        
+        <Text style={{fontSize:90}}> </Text>
+
+
         <View style={styles.footer}>
         <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
               <View style={{alignItems: 'center'}}>
@@ -97,24 +153,24 @@ export default class Homescreen extends Component {
   {
     try
     {
-      var obj = {login:global.loginName.trim(),password:global.password.trim()};
+      var obj = {id:userInfo.id};
       var js = JSON.stringify(obj);
 
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/login',
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
       var res = JSON.parse(await response.text());
 
       if( res.id <= 0 )
       {
-        this.setState({message: "User/Password combination incorrect"});
+        this.setState({message: "No recipes"});
       }
       else
       {
         global.firstName = res.firstName;
         global.lastName = res.lastName;
         global.userId = res.id;
-        this.props.navigation.navigate('Search');
+        //this.props.navigation.navigate('Search');
       }
     }
     catch(e)
@@ -122,6 +178,65 @@ export default class Homescreen extends Component {
       this.setState({message: e.message});
     }
   }  
+  editRecipeClick = async async =>
+  {
+    try
+    {
+      var obj = {id:userInfo.id};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if( res.id <= 0 )
+      {
+        this.setState({message: "No recipes"});
+      }
+      else
+      {
+        global.firstName = res.firstName;
+        global.lastName = res.lastName;
+        global.userId = res.id;
+        //this.props.navigation.navigate('Search');
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
+  }  
+  deleteRecipeClick = async async =>
+  {
+    try
+    {
+      var obj = {};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/delete',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if( res.id <= 0 )
+      {
+        this.setState({message: "No recipes"});
+      }
+      else
+      {
+        global.firstName = res.firstName;
+        global.lastName = res.lastName;
+        global.userId = res.id;
+        //this.props.navigation.navigate('Search');
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
+  }  
+
 
   handleHomeClick = async (userInfo) =>
   {
@@ -143,16 +258,19 @@ export default class Homescreen extends Component {
   {
     this.props.navigation.navigate('Login');
   }      
-
-  changeLoginNameHandler = async (val) =>
+  changeNameHandler = async (val) =>
   {
-    global.loginName = val;
+    global.name = val;
   }  
 
-  changePasswordHandler = async (val) =>
+  changeDescHandler = async (val) =>
   {
-    global.password = val;
+    global.description = val;
   }  
+
+
+
+  
 
 }
 
@@ -161,36 +279,49 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  loginboxfield: {
+  container2: {
+    flex: 1,
+    width: '100%'
+  },
+  container3: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  mainbox: {
     alignItems: "center",
     position: "center",
     backgroundColor: '#EAFCFF',
     borderWidth: 3,
     borderColor: '#000000',
     borderRadius: 21,
-    height: 330,
-    width: 370,
+    height: 600,
+    width: 360,
     justifyContent: "center",
     marginRight: "auto",
     marginReft: "auto",
   },
-  logo: {
-    width: 400,
-    height: 100,
-    justifyContent: "center",
-  },
   titlefield: {
-    display: "flex",
-    flexDirection: "column",
-    fontSize: 36,
-    minWidth: 122,
+    alignContent: 'center',
+    justifyContent: 'center',
+    fontSize: 30,
     textAlign: "center",
-    marginTop: 4,
   },
-  inputfield: {
+  headerfield: {
+    textDecorationLine: 'underline',
+    fontSize: 25,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  desctext: {
+    fontSize: 18,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  inputfield1: {
     height: 50,
-	  width: 300,
+	  width: 280,
 	  backgroundColor: '#F7F7F7',
+    textAlign: 'center',
 	  borderRadius: 10,
     borderWidth: 1, //this is the border for input fields since react native shadow is weird
 	  marginTop: 4,
@@ -202,9 +333,48 @@ const styles = StyleSheet.create({
 	  marginRight: "auto",
 	  marginLeft: "auto",
   },
+  inputfield2: {
+    height: 100,
+	  width: 280,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
+  inputfield3: {
+    height: 30,
+	  width: 280,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
   loginbuttonfield: {
     height: 50,
-	  width: 300,
+	  width: 150,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    backgroundColor: '#FF7A70',
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
+  addbuttonfield: {
+    height: 30,
+	  width: 280,
     marginLeft: "auto",
 	  marginRight: "auto",
     backgroundColor: '#FF7A70',
@@ -247,6 +417,43 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+  },
+  picker: {
+    height: 50,
+    width: 280,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    marginTop: 1,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  question: {
+    fontSize: 17,
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+    zblock: {
+    width: 350,
+    backgroundColor: '#EAFCFF',
+    borderRadius: 21,
+    paddingTop: 8,
+    paddingBottom: 5,
+    zIndex: 1,
+    elevation: 1,
+    borderRadius: 21,
+  },
+  recipetab: {
+    backgroundColor: '#93B7BE', 
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 21,
+    height: '100%',
+    width: 340,
+    marginRight: "auto",
+    marginReft: "auto",
   },
 });
 

@@ -26,26 +26,38 @@ function Recipeviewer()
    var recipeName = recipeall["recipe"];
    var description = recipeall["text_recipe"];
    
-   var recipe = "wow this sentence is going to be really long I am typing it for a test.. hey this is still going? okay imma stop typing now";
-   var ingredients = "step1 step2";
-   var tags = "this recipe has no gluten!";
-   
+   var recipe;
+   var ingredients;
+   var tags;
+   let loadFlag = 0;
+
+   window.addEventListener('load', async function loadRecipe(){
+    if(loadFlag == 0){		//for some reason the event kept firing 3 times and I couldn't figure out how to stop it, 
+                            //loadFlag is a dirty solution to prevent that
+        document.getElementById("ingredientslist").innerText = ingredient[0]["ingredient"];
+        document.getElementById("directionslist").innerText = direction[0]["directions"];
+        document.getElementById("tagslist").innerText = tag[0]["tagname"];
+}
+    loadFlag++;
+});
 
    return(
         <div id="recipeviewerDiv" className="displayregion">
             <div id="recipeName" className="recipeHeader">{recipeName}</div>
             <div id="line"><hr /></div>
             <div id="description" className="description">{description}</div>
+            <div id="line"><hr /></div>
             <div id="columns" className="col-container">
-                <div id="leftcol" className="col-child">
+                <div id="leftcol" className="col-child1">
                     <div id="text1" className="smallHeader">Directions</div> 
-                    <div id="recipelist" className="recipelist">{recipe}</div>
+                    <div id="directionslist" className="recipelist">{recipe}</div>
                 </div>
-                <div id="rightcol" className="col-child">
+                <div id="rightcol" className="col-child2">
                     <div id="text1" className="smallHeader">Ingredients</div> 
-                    <div id="ingredientslist" className="recipelist">{ingredients}</div>
+                    <div id="ingredientslist" defaultValue={ingredients} className="recipelist"></div>
                 </div>
             </div>
+            <br></br>
             <div id="line"><hr /></div>
             <div id="text3" className="smallHeader">Tags</div> 
             <div id="tagslist" className="tags">{tags}</div>
