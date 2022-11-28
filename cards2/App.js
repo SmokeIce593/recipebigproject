@@ -21,7 +21,9 @@ const AppNavigator = createStackNavigator({
   Login: {
     screen: LoginScreen,
     navigationOptions: {
-      headerShown: false // Will hide header for HomePage
+      headerShown: false, // Will hide header for HomePage
+      gestureEnabled: false,
+      animationEnabled: false,
     }
   },
   Verify: {
@@ -84,6 +86,23 @@ const AppNavigator = createStackNavigator({
       ),
     }
   },
+  Recipe: {
+    screen: RecipeScreen,
+    navigationOptions: {
+      title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
   Create: {
     screen: CreateScreen,
     navigationOptions: {
@@ -105,6 +124,8 @@ const AppNavigator = createStackNavigator({
     screen: SettingScreen,
     navigationOptions: {
       title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
       headerShown: true,  // Will hide header for HomePage
       headerLeft: ()=> null,
       headerStyle: {
@@ -117,7 +138,7 @@ const AppNavigator = createStackNavigator({
     }
   },
 },{
-  initialRouteName: "Create"
+  initialRouteName: "Recipe"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
 import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList, ListView } from 'react-native';
 import { createRef } from 'react';
@@ -15,27 +15,68 @@ const questions = [
   "Set recipe to private", 
 ];
 
-const ingredients = ["test", "123"];
+global.myRecipes = [];
 
-export default class Createscreen extends Component {
+export default class RecipeScreen extends Component {
 
   constructor() 
   {
     super()
     this.state = 
     {
-      message: ' '
+      message: ' ',
+      myRecipes: [],
+      test: 
+      [
+        {
+          id: '124312341234',
+          recipe: 'my recipe 1',
+          text_recipe: 'my description',
+          userid: '123412341234',
+          date: '11-11-11',
+          privateTable: false,
+        },
+        {
+          id: '124312341234',
+          recipe: 'my recipe 2',
+          text_recipe: 'my description',
+          userid: '123412341234',
+          date: '11-11-11',
+          privateTable: false,
+        },
+        {
+          id: '124312341234',
+          recipe: 'my recipe 3',
+          text_recipe: 'my description',
+          userid: '123412341234',
+          date: '11-11-11',
+          privateTable: false,
+        },
+      ],
     }
   }
-  
 
-  renderRow(data) {
-    return (
-      <Text>{`\u2022 ${data}`}</Text>
-    );
+  loadRecipes = async (id) =>
+  { var recipes = await this.getMyRecipes(id);
+    console.log(recipes);
+    return recipes;
+  }
+
+  UNSAFE_componentDidMount()
+  {
+    var id = this.props.navigation.getParam('id');
+
+    this.setState({myRecipes: this.loadRecipes});
+    global.myRecipes.push(this.loadRecipes(id));
+
+    console.log("Printing state:");
+    console.log(this.state.myRecipes);
+    console.log("Printing global:");
+    console.log(global.myRecipes);
   }
 
   render(){
+
     const { navigation } = this.props;
     const userInfo = 
     {
@@ -44,6 +85,8 @@ export default class Createscreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
+      myRecipe:navigation.getParam('myRecipe', ''),
+
     }
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
@@ -55,55 +98,36 @@ export default class Createscreen extends Component {
                 <ScrollView style={styles.scrollView}>
                   <Text></Text> 
                   {/* to make gap at top of scroll view so first box does not collide */}
-                    <View style={styles.recipetab}>
-                      <Text style={styles.titlefield}>Recipe Title</Text>
-                      <View style={{margin: 5}}>
-                        <Text style={styles.headerfield}>Description:</Text>
-                        <View style={styles.container2}>
-                          <Text style={styles.desctext}>insert alot of description text here to make sure users know the full description</Text>
-                        </View>
-                        <Text></Text> 
-                        <View style={styles.container3}>
-                          <View style={styles.container2}>
-                            <Text style={styles.headerfield}>Ingredients:</Text>
-                            <Text>-waterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                          </View>
-                          <View style={styles.container2}>
-                          <Text style={styles.headerfield}>Tags:</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                          </View>
-                        </View>
-                        <Text></Text> 
-                        <Text style={styles.headerfield}>Privacy:</Text>
-                        <Text>Public</Text>
-                        <Text></Text> 
-                        <View style={styles.container3}>
-                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-                            <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Edit</Text>
+
+
+                  <Text style={styles.error}>{this.state.message}</Text>
+                  {this.state.test.map((prop, key) => {
+                    return (
+                      
+                      <View style={styles.recipetab}>
+                        <Pressable style={styles.recipebutton} onPress={() => this.handleClickRecipe(prop, userInfo)}>
+                          <Text style={styles.titlefield}>{prop.recipe}</Text>
+                          <View style={{margin: 5}}>
+                            <Text style={styles.headerfield}>Description:</Text>
+                            <View style={styles.container2}>
+                              <Text style={styles.desctext}>{prop.text_recipe}</Text>
                             </View>
-                          </Pressable>
-                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-                            <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Delete</Text>
-                            </View>
-                          </Pressable>
-                        </View>
+                          </View>
+                        </Pressable>
                       </View>
-                    </View>
-                    </ScrollView>
-                  </View>
-                </View>
+                    
+                    )
+                  })
+                  }
+
+                    <Pressable style={styles.loginbuttonfield} onPress={() => this.loadRecipes(userInfo.id)}>
+                      <View style={{alignItems: 'center'}}>
+                        <Text style={styles.buttontext}>Refresh</Text>
+                      </View>
+                  </Pressable>
+                </ScrollView>
+              </View>
+            </View>
         </KeyboardAvoidingView>
         <Text style={{fontSize:15}}> </Text>
         
@@ -147,6 +171,39 @@ export default class Createscreen extends Component {
           </View>
     </ImageBackground>
   );
+  }
+
+  getMyRecipes = async (id) =>
+  {
+    try
+    {
+      var obj = {id:id};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/myrecipes',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if (res.error !== '')
+      {
+        this.setState({message: "Error getting recipes"});
+      }
+
+      else if ( res.id <= 0 )
+      {
+        this.setState({message: "No recipes"});
+      }
+      else
+      {
+        this.setState({message: "success"});
+        return res.filter;
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
   }
 
   handleClick = async () =>
@@ -237,6 +294,12 @@ export default class Createscreen extends Component {
     }
   }  
 
+  handleClickRecipe = async (prop, userInfo) =>
+  {
+    userInfo.myRecipe = prop.id;
+    console.log("Prop" + prop.recipe);
+    this.props.navigation.navigate('Search', userInfo);
+  }
 
   handleHomeClick = async (userInfo) =>
   {
@@ -446,14 +509,18 @@ const styles = StyleSheet.create({
     borderRadius: 21,
   },
   recipetab: {
-    backgroundColor: '#93B7BE', 
+    backgroundColor: '#ffffff', 
     borderWidth: 1,
     borderColor: '#000000',
     borderRadius: 21,
-    height: '100%',
     width: 340,
     marginRight: "auto",
     marginReft: "auto",
+    marginBottom: 10,
+  },
+  recipebutton: {
+    zIndex: 10,
+    paddingBottom: 20,
   },
 });
 

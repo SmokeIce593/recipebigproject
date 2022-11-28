@@ -243,7 +243,7 @@ export default class Createscreen extends Component {
                 fkuser:userInfo.id, privaterecipe:this.state.private,
                 tags:global.tags, ingredients: global.ingredients,
                 directions: global.directions};
-                console.log(obj);
+
       var js = JSON.stringify(obj);
 
       const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/saverecipe',
