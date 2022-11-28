@@ -225,15 +225,15 @@ function Recipes()
                 onClick={goDelete}/>
                 <br />
         </div>
-        <div id="recipesDiv" className="displayregion">
+        <div id="recipesDiv" className="displayregionrecipes">
             <input type="button" id="viewButton" className="viewbuttonfield" value="View" 
                 onClick={goView}/>
                 <br />
         </div>
     </div>
-        <div id="recipesDiv" className="displayregion">
+        <div id="recipesDiv" className="displayregionrecipes">
         </div>
-			<div id="recipesDiv" className="displayregion">
+			<div id="recipesDiv" className="displayregionrecipes">
 				<p id="defaultMsg" className="defaultMsg">No recipes found. Go to Create to start making new recipes!</p>
 			</div>
 			<div>
@@ -243,12 +243,12 @@ function Recipes()
 		</body>
    /*return(
     <div>
-        <div id="recipesDiv" className="displayregion">
+        <div id="recipesDiv" className="displayregionrecipes">
             <input type="button" id="deleteButton" className="deletebuttonfield" value="Delete" 
                 onClick={goDelete}/>
                 <br />
         </div>
-        <div id="recipesDiv" className="displayregion">
+        <div id="recipesDiv" className="displayregionrecipes">
             <input type="button" id="viewButton" className="viewbuttonfield" value="View" 
                 onClick={goView}/>
                 <br />

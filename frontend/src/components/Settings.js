@@ -129,6 +129,7 @@ function Settings()
                 <div id="bump" className="buffer"><span id="registerResult" className = "error">{message}</span></div> 
                 <input type="submit" id="savebuton" value = "Save Changes" className="savebutton"
                 onClick={doSave} />
+                <br></br>
             </form>
         </div>
    );
