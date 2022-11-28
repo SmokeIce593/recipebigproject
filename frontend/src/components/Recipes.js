@@ -33,28 +33,25 @@ function Recipes()
    var recipeID;
    function goDelete(recipeID)
    {
-      return async function(){
-         var result = window.confirm("Are you sure you want to delete this recipe?");
-         if (result)
-         {
-            var obj = {id: recipeID};
-            var js = JSON.stringify(obj);
-            try
-            {  
-               const response = await fetch(buildPath('api/deleterecipe'),
-                     {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+      return async function()
+      {
+         var obj = {id: recipeID};
+         var js = JSON.stringify(obj);
+         try
+         {    
+            const response = await fetch(buildPath('api/deleterecipe'),
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-               var res = JSON.parse(await response.text());
-               window.location.href = '/recipes';
-               //alert(res.error);
-            }
-            catch(e)
-            {
-               alert(e.toString());
-               return;
-            }    
+            var res = JSON.parse(await response.text());
+            window.location.href = '/recipes';
+            //alert(res.error);
          }
-      } 
+         catch(e){
+
+           alert(e.toString());
+            return;
+         }    
+      }
    };
 
    function goView(recipeID)
