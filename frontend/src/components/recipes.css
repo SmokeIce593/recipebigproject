@@ -29,7 +29,7 @@ table {
     padding: 10px;
 }
 
-.recipeBox:hover{
+.recipeTitle:hover{
     text-decoration: underline;
     cursor: pointer;
 }
@@ -38,6 +38,7 @@ table {
     font-size: xx-large;
     margin-left:1%;
     margin-top:0.5%;
+    width:auto;
 }
 
 .recipeDescription{
@@ -90,6 +91,7 @@ table {
     float: right;
     margin-top: 1%;
     margin-right: 1%;
+    margin-bottom: 1%;
     border-radius: 25px;
 	padding-bottom: 5px;
 	padding-top: 5px;

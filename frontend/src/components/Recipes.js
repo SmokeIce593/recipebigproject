@@ -173,7 +173,7 @@ function Recipes()
                recipeID = myRecipes[i]["id"];
 					let listItem = document.createElement("tr");
 						listItem.className = "recipeBox";
-						listItem.onclick = goView(recipeID);			//goes to specified recipe on click, probably needs a function
+						//listItem.onclick = goView(recipeID);			//goes to specified recipe on click, probably needs a function
 					let recipeTitle = document.createElement("div");
 						recipeTitle.className = "recipeTitle";
 					let recipeDescription = document.createElement("div");
@@ -195,13 +195,15 @@ function Recipes()
 					//let tags = "Recipe Tags";				//place tags here. If tags are an array, maybe add the array 
 															         //here and loop to list all elements in a comma separated-list
 					recipeTitle.innerHTML = title;			//I will add overflow prevention to all of these later on.
-					recipeDescription.innerHTML = dscrp;
+					recipeTitle.onclick = goView(recipeID);
+               recipeDescription.innerHTML = dscrp;
 					//recipeTags.innerHTML = "Tags: " + tags;
 					//append all created items into list
 					mainDiv.appendChild(listItem);
-					listItem.appendChild(deleteBTN);
-					listItem.appendChild(editBTN);
+					//listItem.appendChild(deleteBTN);
 					listItem.appendChild(recipeTitle);
+               listItem.appendChild(editBTN);
+               listItem.appendChild(deleteBTN);
 					listItem.appendChild(recipeDescription);
 					//listItem.appendChild(recipeTags);
 					listCount++;
