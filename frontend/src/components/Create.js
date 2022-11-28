@@ -261,7 +261,7 @@ function Create()
         </table>
 		
 			<div id="bumper" className="buffer"><span id="loginResult" className = "error">{message}</span></div> 
-            <input type="submit" id="submitButton" className="submitButton" value ="Save Recipe" onClick={createRecipe} />
+            <input type="submit" id="submitButton" className="submitBut" value ="Save Recipe" onClick={createRecipe} />
         </form>
         </div>
    );
