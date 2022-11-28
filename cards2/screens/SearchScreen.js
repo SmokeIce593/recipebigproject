@@ -159,6 +159,11 @@ export default class SearchScreen extends Component {
           
       </ImageBackground>
   );
+
+  }handleClickRecipe = async (prop, userInfo) =>
+  {
+    userInfo.myRecipe = prop.id;
+    this.props.navigation.navigate('Single', userInfo);
   }
 
   handleSearchClick = async () => 
