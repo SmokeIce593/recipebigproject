@@ -174,7 +174,7 @@ const AppNavigator = createStackNavigator({
     }
   },
 },{
-  initialRouteName: "SingleAdmin"
+  initialRouteName: "Login"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
