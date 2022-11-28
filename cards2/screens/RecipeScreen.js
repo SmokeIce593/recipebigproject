@@ -70,13 +70,8 @@ export default class RecipeScreen extends Component {
                   {/* to make gap at top of scroll view so first box does not collide */}
 
 
-<<<<<<< HEAD
                   <Text style={styles.error}>{this.state.message}</Text>
                   {this.state.myRecipes.map((prop, key) => {
-=======
-                  {/* <Text style={styles.error}>{this.state.message}</Text> */}
-                  {this.state.test.map((prop, key) => {
->>>>>>> d32da622082bee4dd72c6718d20d440dff071a6d
                     return (
                       <View style={styles.container3}>
                       <View style={styles.recipetab}>
@@ -172,13 +167,8 @@ export default class RecipeScreen extends Component {
       }
       else
       {
-<<<<<<< HEAD
         this.setState({message: "success"});
         this.setState({myRecipes: res.filter});
-=======
-        this.setState({message: ""});
-        return res.filter;
->>>>>>> d32da622082bee4dd72c6718d20d440dff071a6d
       }
     }
     catch(e)
@@ -189,67 +179,8 @@ export default class RecipeScreen extends Component {
 
   refresh = async (id) =>
   {
-<<<<<<< HEAD
     await this.getMyRecipes(id);
   }
-=======
-    try
-    {
-      var obj = {id:userInfo.id};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
-      {
-        this.setState({message: "No recipes"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
-  }  
-  editRecipeClick = async async =>
-  {
-    try
-    {
-      var obj = {id:userInfo.id};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
-      {
-        this.setState({message: "No recipes"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
-  }  
->>>>>>> d32da622082bee4dd72c6718d20d440dff071a6d
 
   handleClickRecipe = async (prop, userInfo) =>
   {
@@ -379,13 +310,8 @@ const styles = StyleSheet.create({
 	  marginLeft: "auto",
   },
   loginbuttonfield: {
-<<<<<<< HEAD
     width: 200,
     height: 50,
-=======
-    height: 20,
-	  width: 360,
->>>>>>> d32da622082bee4dd72c6718d20d440dff071a6d
     backgroundColor: '#FF7A70',
     borderRadius: 10,
     fontSize: 36,
