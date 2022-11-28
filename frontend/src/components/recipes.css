@@ -29,7 +29,7 @@ table {
     padding: 10px;
 }
 
-.recipeBox:hover{
+.recipeTitle:hover{
     text-decoration: underline;
     cursor: pointer;
 }
@@ -38,6 +38,7 @@ table {
     font-size: xx-large;
     margin-left:1%;
     margin-top:0.5%;
+    width:auto;
 }
 
 .recipeDescription{
@@ -70,40 +71,13 @@ table {
     float: right;
     margin-top: 1%;
     margin-right: 1%;
-    border-radius: 25px;
-	padding-bottom: 5px;
-	padding-top: 5px;
-	padding-right: 5px;
-	padding-left: 5px;
-	background-color: #FF7A70;
-	margin-bottom: 3px;
-}
-.editButton:hover{
-	background-color: #D14358;
-    cursor: pointer;
-}
-.editButton:active{
-	background-color: #BF3045;
 }
 
 .deleteButton{
     float: right;
     margin-top: 1%;
     margin-right: 1%;
-    border-radius: 25px;
-	padding-bottom: 5px;
-	padding-top: 5px;
-	padding-right: 5px;
-	padding-left: 5px;
-	background-color: #FF7A70;
-	margin-bottom: 3px;
-}
-.deleteButton:hover{
-	background-color: #D14358;
-    cursor: pointer;
-}
-.deleteButton:active{
-	background-color: #BF3045;
+    margin-bottom: 1%;
 }
 
 .listTable{

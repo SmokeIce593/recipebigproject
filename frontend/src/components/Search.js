@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './search.css'
+import './recipes.css'
 
 let recipeCount = 0;
 let loadFlag = 0;
