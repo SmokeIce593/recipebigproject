@@ -107,6 +107,12 @@ export default class Createscreen extends Component {
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
       myRecipe:navigation.getParam('myRecipe', 'default'),
+      myRecipe:navigation.getParam('myRecipe', ''),
+      recipeName:navigation.getParam('recipeName', ''),
+      recipeDesc:navigation.getParam('RecipeDesc', ''),
+      recipeIngBullets:navigation.getParam('recipeIngBullets', ''),
+      recipeDirBullets:navigation.getParam('recipeDirBullets', ''),
+      recipeTagsBullets:navigation.getParam('recipeTagsBullets', ''),
     }
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
@@ -347,6 +353,14 @@ export default class Createscreen extends Component {
   }  
   handleEditClick = async (userInfo) =>
   {
+    userInfo.recipeName = this.state.recipe;
+  
+    userInfo.recipeDesc = this.state.description;
+    userInfo.recipeIng = this.state.ingredientsBullets;
+    userInfo.recipeDir = this.state.ingredientsBullets;
+    userInfo.recipeTag = this.state.tagsBullets;
+
+
     this.props.navigation.navigate('Edit', userInfo);
   }
   getDataFromState = async (data) =>

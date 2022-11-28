@@ -1,21 +1,24 @@
 import React, { Component, useState } from 'react';
-import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, LogBox, FlatList, ListView } from 'react-native';
+import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image, TouchableNativeFeedbackBase } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, LogBox, ScrollView, FlatList, ListView } from 'react-native';
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 
-global.name = '';
-global.description = '';
-global.ingredient = '';
-global.tags = '';
-global.instructions = '';
 
-const questions = [
-  "Set recipe to public", 
-  "Set recipe to private", 
+
+const privacyoptions = [
+  "Make recipe public", 
+  "Make recipe private", 
 ];
 
-const ingredients = ["test", "123"];
+global.ingredients = [];
+global.tags = [];
+global.directions = [];
+global.ingredientsBullets = [];
+global.directionsBullets = [];
+global.tagsBullets = [];
+
+
 
 export default class Createscreen extends Component {
 
@@ -24,13 +27,80 @@ export default class Createscreen extends Component {
     super()
     this.state = 
     {
-      message: ' '
+      message: ' ',
+      private: false,
     }
   }
-  
   componentDidMount() {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }
+
+
+  UNSAFE_componentWillMount()
+  {
+
+    var recipeID= this.props.navigation.getParam('myRecipe', -1);
+    this.getSingleRecipe(recipeID);
+
+  }
+
+  getSingleRecipe = async (recipeID) =>
+  {
+    try
+    {
+      var obj = {recipeID:recipeID};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/getsinglerecipe',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if (res.error !== '')
+      {
+        this.setState({message: "Error getting recipes"});
+      }
+      else
+      {
+        var directionsBulletsL = [];
+        var ingredientsBulletsL = [];
+        var tagsBulletsL = [];
+        console.log('success');
+        this.setState({recipe: res.recipe.recipe});
+        this.setState({description: res.recipe.text_recipe});
+
+        this.setState({directions: [...res.directions]});
+        for (var i = 0; i < this.state.directions.length; i++)
+        {
+          directionsBulletsL.push({key: this.state.directions[i].directions})
+        }
+
+        this.setState({ingredients: [...res.ingredients]});
+        for (var i = 0; i < this.state.ingredients.length; i++)
+        {
+          ingredientsBulletsL.push({key: this.state.ingredients[i].ingredient})
+        }
+
+        this.setState({tags: [...res.tags]});
+        for (var i = 0; i < this.state.tags.length; i++)
+        {
+          tagsBulletsL.push({key: this.state.tags[i].tagname})
+        }
+
+        this.setState({
+          directionsBullets: directionsBulletsL,
+          ingredientsBullets: ingredientsBulletsL,
+          tagsBullets: tagsBulletsL,
+        })
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
+  }
+
+
 
   render(){
     const { navigation } = this.props;
@@ -41,30 +111,50 @@ export default class Createscreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
+      myRecipe:navigation.getParam('myRecipe', ''),
+      recipeName:navigation.getParam('recipeName', 'default'),
+      recipeDesc:navigation.getParam('recipeDesc', ''),
+      recipeIng:navigation.getParam('recipeIng', ''),
+      recipeDir:navigation.getParam('recipeDir', ''),
+      recipeTags:navigation.getParam('recipeTag', ''),
+     
     }
+    
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}> 
-         <View style={styles.container}>
-              <View style={styles.mainbox}>
-                <ScrollView style={styles.scrollView}>
-                  <Text></Text> 
-                  {/* to make gap at top of scroll view so first box does not collide */}
-                    <View style={styles.recipetab}>
-                      <Text style={styles.titlefield}>Recipe Title</Text>
-                      <View style={{margin: 5}}>
-                        <Text style={styles.headerfield}>Description:</Text>
-                        <View style={styles.container2}>
-                          <Text style={styles.desctext}>insert alot of description text here to make sure users know the full description</Text>
-                        </View>
-                        <Text></Text> 
-                        <View style={styles.container3}>
-                          <View style={styles.container2}>
-                            <Text style={styles.headerfield}>Ingredients:</Text>
-                            <FlatList
-                            data={global.ingredientsBullets}
+        style={styles.container}>
+            <View style={styles.container}>
+                <View style={styles.container}>
+                  <View style={styles.loginboxfield}>
+                    <ScrollView style={styles.scrollView}>
+                      <View style={{alignItems: 'center'}}>
+                        <Text style={{fontSize:5}}> </Text>
+                          <Text style={styles.titlefield}>Edit Recipe</Text>
+                          <Text style={{fontSize:20}}> </Text>
+                          <TextInput
+                            style={styles.inputfield1}
+                            defaultValue={userInfo.recipeName}
+                            placeholderTextColor= "#808080"
+                            value={this.state.name}
+                            onChangeText={(val) => { this.changeNameHandler(val) }}
+                            />        
+                          <Text style={styles.headerfield}>Description:</Text>
+                          <ScrollView style={styles.scrollView}>
+                            <TextInput
+                              style={styles.inputfield2}
+                              defaultValue={userInfo.recipeDesc}
+                              placeholderTextColor= "#808080"
+                              value = {this.state.description}
+                              multiline={true} 
+                              onChangeText={(val) => { this.changeDescHandler(val) }}
+                            />        
+                          </ScrollView>
+
+                          <Text style={styles.headerfield}>Ingredients:</Text>
+                          <FlatList
+                            data={this.state.ingredientsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -75,68 +165,115 @@ export default class Createscreen extends Component {
                             }}
                             style={{margin: 10}}>
                           </FlatList>
-                          </View>
-                          <View style={styles.container2}>
-                          <Text style={styles.headerfield}>Instructions:</Text>
-                            <FlatList
-                            data={global.ingredientsBullets}
+                            <TextInput
+                              style={styles.inputfield3}
+                              placeholder="Ingredient"
+                              placeholderTextColor= "#808080"
+                              value={this.state.ingredient}
+                              onChangeText={(val) => { this.changeIngredientHandler(val) }}
+                            />      
+                            <Pressable style={styles.addbuttonfield} onPress={this.addIngredientClick}>
+                              <View style={{alignItems: 'center'}}>
+                                <Text style={styles.smallbuttontext}>+ Add Ingredient</Text>
+                              </View>
+                            </Pressable>  
+                          <Text style={styles.headerfield}>Directions:</Text>
+                          <FlatList
+                            data={this.state.directionsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
-                                <View style= {{flexDirection:'row'}}>
+                                <View>
                                   <Text style={styles.bulletlist}>{`\u2022 ${item.key}`}</Text>
                                 </View>
                               )
                             }}
                             style={{margin: 10}}>
                           </FlatList>
-                          </View>
-                        </View>
-                        <Text></Text> 
-                        <View style={styles.container3}>
-                          <View style={styles.container2}>
-                          <Text style={styles.headerfield}>Privacy:</Text>
-                          <Text>Public</Text>
-                          </View>
-                          <View style={styles.container2}>
+                            <TextInput
+                                style={styles.inputfield3}
+                                placeholder="Next step:"
+                                placeholderTextColor= "#808080"
+                                value={this.state.direction}
+                                onChangeText={(val) => { this.changeDirectionHandler(val) }}
+                              />      
+                              <Pressable style={styles.addbuttonfield} onPress={this.addDirectionClick}>
+                                <View style={{alignItems: 'center'}}>
+                                  <Text style={styles.smallbuttontext}>+ Add Step</Text>
+                                </View>
+                              </Pressable>  
                           <Text style={styles.headerfield}>Tags:</Text>
-                            <FlatList
-                            data={global.ingredientsBullets}
+                          <FlatList
+                            data={this.state.tagsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
-                                <View style= {{flexDirection:'row'}}>
+                                <View>
                                   <Text style={styles.bulletlist}>{`\u2022 ${item.key}`}</Text>
                                 </View>
                               )
                             }}
                             style={{margin: 10}}>
                           </FlatList>
+                            <TextInput
+                                style={styles.inputfield3}
+                                placeholder="ex. Vegetarian"
+                                placeholderTextColor= "#808080"
+                                value={this.state.tag}
+                                onChangeText={(val) => { this.changeTagHandler(val) }}
+                              />      
+                              <Pressable style={styles.addbuttonfield} onPress={this.addTagClick}>
+                                <View style={{alignItems: 'center'}}>
+                                  <Text style={styles.smallbuttontext}>+ Add Tag</Text>
+                                </View>
+                              </Pressable>  
+                          <View style= { styles.zblock }>
+                            <Text style={styles.headerfield}>Visibility:</Text>
                           </View>
-                        </View>
-                        <Text></Text> 
-                        <View style={styles.container3}>
-                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-                            <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Save</Text>
+                          
+                            <View style ={ {zIndex: 0, elevation: 0} }>
+                              <Picker
+                                style={ styles.picker }
+                                itemStyle={ styles.question }
+                                selectedValue={ this.state.private }
+                                onValueChange=
+                                {
+                                  (itemValue, itemIndex) =>
+                                  {        
+                                    this.setState({ private: itemValue })
+                                    //this.state.private = itemValue;
+                                  }
+                                }>
+                                <Picker.Item label="Make recipe public" value={ false } />
+                                <Picker.Item label="Make recipe private" value={ true } />
+                              </Picker>
                             </View>
-                          </Pressable>
-                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-                            <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Cancel</Text>
-                            </View>
-                          </Pressable>
-                        </View>
-                        
+
+                            <Text style={ styles.error }>
+                              { this.state.message }
+                            </Text>
                       </View>
-                    </View>
+                      {/* insert here for button inside box */}
                     </ScrollView>
                   </View>
                 </View>
+            </View>
         </KeyboardAvoidingView>
         <Text style={{fontSize:15}}> </Text>
+        <Pressable style={styles.loginbuttonfield} onPress={async () => this.EditRecipe(userInfo)}>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.buttontext}>Save</Text>
+          </View>
+        </Pressable>
+        {/* <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.buttontext}>Save Recipe</Text>
+          </View>
+        </Pressable> */}
+        
         
         <Text style={{fontSize:90}}> </Text>
+
 
         <View style={styles.footer}>
         <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
@@ -174,28 +311,44 @@ export default class Createscreen extends Component {
   );
   }
 
-  handleClick = async () =>
+  EditRecipe = async (userInfo) =>
   {
     try
     {
-      var obj = {id:userInfo.id};
+        
+      var obj = {recipeID: userInfo.myRecipe,recipename:this.state.name, recipetext:this.state.description,
+                fkuser:userInfo.id, privaterecipe:this.state.private,
+                tags:this.state.tagsBullets, ingredients: this.state.ingredientsBullets,
+                directions: this.state.directionsBullets};
+    
+
       var js = JSON.stringify(obj);
 
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/editrecipe',
         {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
       var res = JSON.parse(await response.text());
 
-      if( res.id <= 0 )
+      if(res.error)
       {
-        this.setState({message: "No recipes"});
+        this.setState({message: res.error});
       }
       else
       {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
+        global.tags = [];
+        global.ingredients = [];
+        global.directions = [];
+        global.ingredientsBullets = [];
+        global.directionsBullets = [];
+        global.tagsBullets = [];
+        this.setState({
+          name: '',
+          description: '',
+          private: 'false',
+          message: '',
+          refresh: !this.state.refresh,
+        })
+        this.props.navigation.navigate('Recipe', userInfo);
       }
     }
     catch(e)
@@ -203,66 +356,6 @@ export default class Createscreen extends Component {
       this.setState({message: e.message});
     }
   }  
-  editRecipeClick = async async =>
-  {
-    try
-    {
-      var obj = {id:userInfo.id};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
-      {
-        this.setState({message: "No recipes"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
-  }  
-  deleteRecipeClick = async async =>
-  {
-    try
-    {
-      var obj = {};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/delete',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
-      {
-        this.setState({message: "No recipes"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
-  }  
-
-
   handleHomeClick = async (userInfo) =>
   {
     this.props.navigation.navigate('Search', userInfo);
@@ -283,203 +376,268 @@ export default class Createscreen extends Component {
   {
     this.props.navigation.navigate('Login');
   }      
+
   changeNameHandler = async (val) =>
   {
-    global.name = val;
+    this.setState({name: val});
   }  
-
   changeDescHandler = async (val) =>
   {
-    global.description = val;
+    this.setState({description: val});
   }  
 
+  addIngredientClick = async () =>
+  {
+    var ingredientsBulletsL = this.state.ingredientsBullets;
+    var ingredientsL = this.state.ingredients;
+
+    ingredientsBulletsL.push({key: this.state.ingredient});
+    ingredientsL.push(this.state.ingredient);
 
 
-  
+    this.setState({
+      ingredient: '',
+      ingredientsBullets: ingredientsBulletsL,
+      ingredients: ingredientsL,
+      refresh: !this.state.refresh,
+    })
+  } 
+  addDirectionClick = async () =>
+  {
+    var directionsBulletsL = this.state.directionsBullets;
+    var directionsL = this.state.directions;
+
+    directionsBulletsL.push({key: this.state.direction});
+    directionsL.push(this.state.direction);
+
+
+    this.setState({
+      direction: '',
+      directionsBullets: directionsBulletsL,
+      directions: directionsL,
+      refresh: !this.state.refresh,
+    })
+  }
+  addTagClick = async () =>
+  {
+    var tagsBulletsL = this.state.tagsBullets;
+    var tagsL = this.state.tags;
+
+    tagsBulletsL.push({key: this.state.tag});
+    tagsL.push(this.state.tag);
+
+
+    this.setState({
+      tag: '',
+      tagsBullets: tagsBulletsL,
+      tags: tagsL,
+      refresh: !this.state.refresh,
+    })
+  }
+  changeIngredientHandler = async (val) =>
+  {
+    this.setState({ingredient: val});
+  }  
+  changeDirectionHandler = async (val) =>
+  {
+    this.setState({direction: val});
+  }
+  changeTagHandler = async (val) =>
+  {
+    this.setState({tag: val});
+  }
 
 }
 
 const styles = StyleSheet.create({
-    container: {
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    container2: {
-      flex: 1,
-      width: '100%'
-    },
-    container3: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-    },
-    mainbox: {
-      alignItems: "center",
-      position: "center",
-      borderRadius: 21,
-      height: 600,
-      width: 360,
-      justifyContent: "center",
-      marginRight: "auto",
-      marginReft: "auto",
-    },
-    titlefield: {
-      alignContent: 'center',
-      justifyContent: 'center',
-      fontSize: 30,
-      textAlign: "center",
-    },
-    headerfield: {
-      textDecorationLine: 'underline',
-      fontSize: 25,
-      justifyContent: 'center',
-      alignContent: 'center',
-    },
-    desctext: {
-      fontSize: 18,
-      justifyContent: 'center',
-      alignContent: 'center',
-    },
-    inputfield1: {
-      height: 50,
-        width: 280,
-        backgroundColor: '#F7F7F7',
-      textAlign: 'center',
-        borderRadius: 10,
-      borderWidth: 1, //this is the border for input fields since react native shadow is weird
-        marginTop: 4,
-        marginBottom: 4,
-        display: "flex",
-          flexDirection: "column",
-        justifyContent: "center",
-        fontSize: 36,
-        marginRight: "auto",
-        marginLeft: "auto",
-    },
-    inputfield2: {
-      height: 100,
-        width: 280,
-        backgroundColor: '#F7F7F7',
-        borderRadius: 10,
-      borderWidth: 1, //this is the border for input fields since react native shadow is weird
-        marginTop: 4,
-        marginBottom: 4,
-        fontSize: 18,
-        marginRight: "auto",
-        marginLeft: "auto",
-    },
-    inputfield3: {
-      height: 30,
-        width: 280,
-        backgroundColor: '#F7F7F7',
-        borderRadius: 10,
-      borderWidth: 1, //this is the border for input fields since react native shadow is weird
-        marginTop: 4,
-        marginBottom: 4,
-        fontSize: 18,
-        marginRight: "auto",
-        marginLeft: "auto",
-    },
-    loginbuttonfield: {
-      height: 50,
-        width: 150,
-      marginLeft: "auto",
-        marginRight: "auto",
-      backgroundColor: '#FF7A70',
-      borderRadius: 10,
-      fontSize: 36,
-      marginTop: 4,
-      marginBottom: 2,
-      justifyContent: "center",
-      alignContent: "center",
-      marginRight: "auto",
-      marginLeft: "auto",
-    },
-    addbuttonfield: {
-      height: 30,
-        width: 280,
-      marginLeft: "auto",
-        marginRight: "auto",
-      backgroundColor: '#FF7A70',
-      borderRadius: 10,
-      fontSize: 36,
-      marginTop: 4,
-      marginBottom: 2,
-      justifyContent: "center",
-      alignContent: "center",
-      marginRight: "auto",
-      marginLeft: "auto",
-    },
-    buttontext: {
-      fontSize: 36,
-      alignContent: "center",
-      justifyContent: "center",
-      margin: "auto"
-    },
-    footer: {
-      position: 'absolute', 
-      bottom: 0, 
-      height: 100, 
-      width: '100%',
-      alignSelf: 'center',
-      backgroundColor: '#93B7BE', 
-      alignContent: 'center', 
-      justifyContent: 'center',
-      flexDirection: 'row'
-    },
-    footerButton: {
-      height: 70,
-      width: 70,
-      marginLeft: "auto",
-      marginRight: "auto",
-      borderRadius: 10,
-      fontSize: 36,
-      marginTop: 4,
-      marginBottom: 2,
-      justifyContent: "center",
-      alignContent: "center",
-      marginRight: "auto",
-      marginLeft: "auto",
-    },
-    picker: {
-      height: 50,
-      width: 280,
-      marginLeft: "auto",
-        marginRight: "auto",
-      marginTop: 1,
-      marginBottom: 20,
-      justifyContent: "center",
-      alignContent: "center",
-    },
-    question: {
-      fontSize: 17,
-      marginTop: 0,
-      marginBottom: 0,
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-      zblock: {
-      width: 350,
-      backgroundColor: '#EAFCFF',
-      borderRadius: 21,
-      paddingTop: 8,
-      paddingBottom: 5,
-      zIndex: 1,
-      elevation: 1,
-      borderRadius: 21,
-    },
-    recipetab: {
-      backgroundColor: '#EAFCFF',
-      position: "center",
-      justifyContent: 'center',
-      alignContent: 'center',
-      borderWidth: 3,
-      borderColor: '#000000',
-      borderRadius: 21,
-      height: '100%',
-      width: 340,
-      marginRight: "auto",
-      marginReft: "auto",
-    },
-  });
-  
-  
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginboxfield: {
+    alignItems: "center",
+    position: "center",
+    backgroundColor: '#EAFCFF',
+    borderWidth: 3,
+    borderColor: '#000000',
+    borderRadius: 21,
+    height: 600,
+    width: 360,
+    justifyContent: "center",
+    marginRight: "auto",
+    marginReft: "auto",
+    
+  },
+  logo: {
+    width: 400,
+    height: 100,
+    justifyContent: "center",
+  },
+  titlefield: {
+    display: "flex",
+    flexDirection: "column",
+    fontSize: 36,
+    minWidth: 122,
+    textAlign: "center",
+    marginTop: 4,
+  },
+  headerfield: {
+    textDecorationLine: 'underline',
+    display: "flex",
+    flexDirection: "column",
+    fontSize: 30,
+    justifyContent: 'center',
+    alignContent: 'center',
+    textAlign: "center",
+    zIndex: 1,
+    elevation: 1,
+    backgroundColor: '#EAFCFF',
+    marginTop: 15,
+  },
+  inputfield1: {
+    height: 50,
+	  width: 280,
+	  backgroundColor: '#F7F7F7',
+    textAlign: 'center',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  display: "flex",
+    	flexDirection: "column",
+	  justifyContent: "center",
+	  fontSize: 36,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+  },
+  inputfield2: {
+    height: 100,
+	  width: 280,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+    paddingLeft: 10,
+  },
+  inputfield3: {
+    height: 30,
+	  width: 280,
+	  backgroundColor: '#F7F7F7',
+	  borderRadius: 10,
+    borderWidth: 1, //this is the border for input fields since react native shadow is weird
+	  marginTop: 4,
+	  marginBottom: 4,
+	  fontSize: 18,
+	  marginRight: "auto",
+	  marginLeft: "auto",
+    paddingLeft: 10,
+  },
+  loginbuttonfield: {
+    height: 50,
+	  width: 300,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    backgroundColor: '#FF7A70',
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
+  addbuttonfield: {
+    height: 30,
+	  width: 280,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    backgroundColor: '#FF7A70',
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
+  smallbuttontext: {
+    fontSize: 18,
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "auto"
+  },
+  buttontext: {
+    fontSize: 36,
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "auto"
+  },
+  footer: {
+    position: 'absolute', 
+    bottom: 0, 
+    height: 100, 
+    width: '100%',
+    alignSelf: 'center',
+    backgroundColor: '#93B7BE', 
+    alignContent: 'center', 
+    justifyContent: 'center',
+    flexDirection: 'row'
+  },
+  footerButton: {
+    height: 70,
+    width: 70,
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    marginRight: "auto",
+    marginLeft: "auto",
+  },
+  picker: {
+    height: 50,
+    width: 280,
+    marginLeft: "auto",
+	  marginRight: "auto",
+    marginTop: 1,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignContent: "center",
+    marginBottom: 70,
+  },
+  question: {
+    fontSize: 17,
+    marginTop: 0,
+    marginBottom: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+    zblock: {
+    width: 350,
+    backgroundColor: '#EAFCFF',
+    borderRadius: 21,
+    paddingTop: 8,
+    paddingBottom: 5,
+    zIndex: 1,
+    elevation: 1,
+    borderRadius: 21,
+  },
+  bulletlist: {
+    fontSize: 20,
+  },
+  deletebullet: {
+    alignContent: "center",
+    justifyContent: "center",
+    margin: "auto"
+  },
+});
+
