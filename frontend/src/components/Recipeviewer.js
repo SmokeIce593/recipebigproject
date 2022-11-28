@@ -39,15 +39,15 @@ function Recipeviewer()
         var directionCount = direction.length;
         var tagCount = tag.length;
 
-        var mainDiv1 = document.createElement("div");
+        var mainDiv1 = document.createElement("table");
         mainDiv1.className = "listIngredientTable";
         mainDiv1.id = "ingredienttable";
-        
-        var mainDiv2 = document.createElement("div");
+
+        var mainDiv2 = document.createElement("table");
         mainDiv2.className = "listDirectionTable";
         mainDiv2.id = "directiontable";
 
-        var mainDiv3 = document.createElement("div");
+        var mainDiv3 = document.createElement("table");
         mainDiv3.className = "listTagTable";
         mainDiv3.id = "tagtable";
 
@@ -56,13 +56,20 @@ function Recipeviewer()
         this.document.getElementById("tagslist").appendChild(mainDiv3);
 
         for (let i = 0; i < ingredientCount; i++) {
-            document.getElementById("ingredienttable").innerText = ingredient[i]["ingredient"];
+            let listIngredient = document.createElement("tr");
+            listIngredient.id = "ingredientElement"
+            document.getElementById("ingredientElement").innerText = ingredient[i]["ingredient"];
+            mainDiv1.appendChild(listIngredient);
         }
         for (let i = 0; i < directionCount; i++) {
-            document.getElementById("directiontable").innerText = direction[i]["directions"];
+            let listDirection = document.createElement("tr");
+            listDirection.id = "directionElement"
+            document.getElementById("directionElement").innerText = direction[i]["directions"];
         }
         for (let i = 0; i < tagCount; i++) {
-            document.getElementById("tagtable").innerText = tag[i]["tags"];
+            let listTag = document.createElement("tr");
+            listTag.id = "tagElement"
+            document.getElementById("tagElement").innerText = tag[i]["tags"];
         }
 }
     loadFlag++;
