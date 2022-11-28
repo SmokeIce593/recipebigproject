@@ -192,7 +192,7 @@ const AppNavigator = createStackNavigator({
     }
   },
 },{
-  initialRouteName: "Edit"
+  initialRouteName: "Login"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
