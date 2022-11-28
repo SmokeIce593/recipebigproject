@@ -43,7 +43,7 @@ function Recipes()
 
          var res = JSON.parse(await response.text());
          window.location.href = '/recipes';
-         alert(res.error);
+         //alert(res.error);
       }
       catch(e)
       {
