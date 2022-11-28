@@ -35,6 +35,7 @@ function Recipes()
    {
       return async function()
       {
+         if(window.confirm("Are you sure you want to delete this recipe?") == true){
          var obj = {id: recipeID};
          var js = JSON.stringify(obj);
          try
@@ -52,6 +53,7 @@ function Recipes()
             return;
          }    
       }
+   }
    };
 
    function goView(recipeID)
