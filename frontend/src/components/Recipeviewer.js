@@ -39,25 +39,30 @@ function Recipeviewer()
         var directionCount = direction.length;
         var tagCount = tag.length;
 
-        var mainDiv1 = document.createElement("ingredienttable");
+        var mainDiv1 = document.createElement("div");
         mainDiv1.className = "listIngredientTable";
-        var mainDiv2 = document.createElement("directiontable");
+        mainDiv1.id = "ingredienttable";
+        
+        var mainDiv2 = document.createElement("div");
         mainDiv2.className = "listDirectionTable";
-        var mainDiv3 = document.createElement("tagtable");
+        mainDiv2.id = "directiontable";
+
+        var mainDiv3 = document.createElement("div");
         mainDiv3.className = "listTagTable";
+        mainDiv3.id = "tagtable";
 
         this.document.getElementById("ingredientslist").appendChild(mainDiv1);
         this.document.getElementById("directionslist").appendChild(mainDiv2);
         this.document.getElementById("tagslist").appendChild(mainDiv3);
 
         for (let i = 0; i < ingredientCount; i++) {
-            document.getElementById("mainDiv1").innerText = ingredient[i]["ingredient"];
+            document.getElementById("ingredienttable").innerText = ingredient[i]["ingredient"];
         }
         for (let i = 0; i < directionCount; i++) {
-            document.getElementById("mainDiv2").innerText = direction[i]["directions"];
+            document.getElementById("directiontable").innerText = direction[i]["directions"];
         }
         for (let i = 0; i < tagCount; i++) {
-            document.getElementById("mainDiv3").innerText = tag[i]["tags"];
+            document.getElementById("tagtable").innerText = tag[i]["tags"];
         }
 }
     loadFlag++;
