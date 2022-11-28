@@ -34,12 +34,90 @@ function Recipeviewer()
    window.addEventListener('load', async function loadRecipe(){
     if(loadFlag == 0){		//for some reason the event kept firing 3 times and I couldn't figure out how to stop it, 
                             //loadFlag is a dirty solution to prevent that
-        document.getElementById("ingredientslist").innerText = ingredient[0]["ingredient"];
-        document.getElementById("directionslist").innerText = direction[0]["directions"];
-        document.getElementById("tagslist").innerText = tag[0]["tagname"];
+
+        var ingredientCount = ingredient.length;
+        var directionCount = direction.length;
+        var tagCount = tag.length;
+
+        var mainDiv1 = document.createElement("ingredienttable");
+        mainDiv1.className = "listIngredientTable";
+        var mainDiv2 = document.createElement("directiontable");
+        mainDiv2.className = "listDirectionTable";
+        var mainDiv3 = document.createElement("tagtable");
+        mainDiv3.className = "listTagTable";
+
+        this.document.getElementById("ingredientslist").appendChild(mainDiv1);
+        this.document.getElementById("directionslist").appendChild(mainDiv2);
+        this.document.getElementById("tagslist").appendChild(mainDiv3);
+
+        for (let i = 0; i < ingredientCount; i++) {
+            document.getElementById("mainDiv1").innerText = ingredient[i]["ingredient"];
+        }
+        for (let i = 0; i < directionCount; i++) {
+            document.getElementById("mainDiv2").innerText = direction[i]["directions"];
+        }
+        for (let i = 0; i < tagCount; i++) {
+            document.getElementById("mainDiv3").innerText = tag[i]["tags"];
+        }
 }
     loadFlag++;
 });
+
+// window.addEventListener('load', async function loadRecipes(){
+//     if(loadFlag == 0){		//for some reason the event kept firing 3 times and I couldn't figure out how to stop it, 
+//         loadFlag++;			   //loadFlag is a dirty solution to prevent that
+     
+//      var myIngredients = await getMyRecipes();
+//         ingredientsCount = myIngredients.length;
+//      console.log(myRecipes);
+
+//      if(recipeCount == 0){	//if no recipes, display this message
+//             document.getElementById("defaultMsg").style.display = "block";
+//             document.getElementById("defaultMsg").style.visibility = "visible";
+//         }
+
+//         else{		//else, load list of recipes to choose from
+//             let listCount = 0;
+//             let pageCount = 0;
+//             let mainDiv = document.createElement("table");
+//         mainDiv.className = "listTable";
+//             this.document.getElementById("IngredientsDiv").appendChild(mainDiv);
+//             for(let i = 0; i < recipeCount /*&& i < 10*/; i++){		//append a listItem per recipe listing
+//                                                                 //max of 10 recipes per page, if more load to next page
+//            recipeID = myRecipes[i]["id"];
+//                 let listItem = document.createElement("tr");
+//                     listItem.className = "recipeBox";
+//                     listItem.onclick = goView(recipeID);			//goes to specified recipe on click, probably needs a function
+//                 let recipeTitle = document.createElement("div");
+//                     recipeTitle.className = "recipeTitle";
+//                 let recipeDescription = document.createElement("div");
+//                     recipeDescription.className = "recipeDescription";
+//                 /*let recipeTags = document.createElement("div");
+//                     recipeTags.className = "recipeTags";*/
+//                 /*let editBTN = this.document.createElement("button");
+//                     editBTN.type = "button";
+//                     editBTN.className = "editButton";
+//                     editBTN.innerHTML = "Edit";
+//                     editBTN.onclick = {goEdit};*/
+//                 let title = myRecipes[i]["recipe"];				//place title here
+//                 let dscrp = myRecipes[i]["text_recipe"];		//place description here
+//                 //let tags = "Recipe Tags";				//place tags here. If tags are an array, maybe add the array 
+//                                                                  //here and loop to list all elements in a comma separated-list
+//                 recipeTitle.innerHTML = title;			//I will add overflow prevention to all of these later on.
+//                 recipeDescription.innerHTML = dscrp;
+//                 //recipeTags.innerHTML = "Tags: " + tags;
+//                 //append all created items into list
+//                 mainDiv.appendChild(listItem);
+//                 listItem.appendChild(deleteBTN);
+//                 //listItem.appendChild(editBTN);
+//                 listItem.appendChild(recipeTitle);
+//                 listItem.appendChild(recipeDescription);
+//                 //listItem.appendChild(recipeTags);
+//                 listCount++;
+//             }
+//         }
+//     }
+// });
 
    return(
         <div id="recipeviewerDiv" className="displayregionviewer">
