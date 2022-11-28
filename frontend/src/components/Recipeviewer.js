@@ -42,7 +42,7 @@ function Recipeviewer()
 });
 
    return(
-        <div id="recipeviewerDiv" className="displayregion">
+        <div id="recipeviewerDiv" className="displayregionviewer">
             <div id="recipeName" className="recipeHeader">{recipeName}</div>
             <div id="line"><hr /></div>
             <div id="description" className="description">{description}</div>

@@ -210,7 +210,7 @@ function Create()
 	  };
 
    return(
-        <div id="createDiv" className="displayregion">
+        <div id="createDiv" className="displayregioncreate">
         <form>
         <table>
         <td className = "col1">

@@ -220,7 +220,7 @@ function Recipes()
     return(
 		<body>
          <div>
-        <div id="recipesDiv" className="displayregion">
+        <div id="recipesDiv" className="displayregionrecipes">
             <input type="button" id="deleteButton" className="deletebuttonfield" value="Delete" 
                 onClick={goDelete}/>
                 <br />

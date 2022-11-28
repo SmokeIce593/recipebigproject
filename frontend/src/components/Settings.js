@@ -96,7 +96,7 @@ function Settings()
     }
 
    return(
-        <div id="settingsDiv" className="displayregion">
+        <div id="settingsDiv" className="displayregionsettings">
             <form>
                 <div id="settingsheader" className="pageheader">
                     Account Settings
