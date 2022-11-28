@@ -565,38 +565,6 @@ async function savedirections(directions, fkrecipeid){
   return error;
 }
 
-
-app.put('/api/editrecipe', async (req, res, next) => 
-{
-  // incoming: fkrecipeid, categoryname, categorycolor
-  // outgoing: id, fkrecipeid, categoryname, categorycolor
-	
-  var error = '';
-
-  const {recipeID, recipename, recipetext, fkuser } = req.body;
-  const connectionString = process.env.DATABASE_URL;
-
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: { rejectUnauthorized: false }
-  });
-
-  try{
-    await client.connect();
-    const text = 'Update recipes set recipe = $1, text_recipe = $2, userid = $3 where id = $4';
-    const value = [recipename, recipetext, fkuser, recipeID];
-    const now = await client.query(text, value);
-    await client.end();
-  }
-  catch{
-    error = "Server related issues, please try again.";
-  }
-  
-  var ret = {error: error};
-  res.status(200).json(ret);
-});
-
-
 app.post('/api/search', async (req, res, next) => 
 {
   // incoming: fkrecipeid, categoryname, categorycolor
@@ -615,7 +583,7 @@ app.post('/api/search', async (req, res, next) =>
 
   try{
     await client.connect();
-    const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON r.id = c.fkrecipeid left JOIN tags as t ON r.id = t.fkrecipeid left join users as u ON Cast(r.userid as varchar) = Cast(u.id as varchar) Where (r.recipe like $1 OR t.tagname like $1 OR c.categoryname like $1 OR u.firstname like $1 or u.lastname like $1) GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname ORDER BY r.date DESC";
+    const text = "Select r.*, u.firstname, u.lastname from recipes as r left JOIN categories as c ON r.id = c.fkrecipeid left JOIN tags as t ON r.id = t.fkrecipeid left join users as u ON Cast(r.userid as varchar) = Cast(u.id as varchar) Where (lower(r.recipe) like lower($1) OR lower(t.tagname) like lower($1) OR lower(c.categoryname) like lower($1) OR lower(u.firstname) like lower($1) or lower(u.lastname) like lower($1)) GROUP BY r.id, r.recipe, r.text_recipe, u.firstname, u.lastname ORDER BY r.date DESC";
     const value = [editedsearch];
     const now = await client.query(text, value);
     console.log("made it here");
@@ -1124,6 +1092,72 @@ app.post('/api/deleterecipe', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/editrecipe', async (req, res, next) => 
+{
+
+  var error = '';
+  const { recipeID, recipename, recipetext, fkuser, privaterecipe, tags, ingredients, directions } = req.body;
+  var deleterecipe = await deleterecipe(recipeID);
+
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+    await client.connect();
+    const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
+    const value = [recipeID, recipename, recipetext, fkuser, privaterecipe];
+    const now = await client.query(text, value);
+    await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+
+  saveingredients(ingredients, newid);
+  savedirections(directions, newid);
+  savetags(newid, tags, "orange", "test");
+
+  var ret = {error: error};
+  res.status(200).json(ret);
+
+});
+
+async function deleterecipe(id){
+  var error = '';
+  var rn = '';
+  const connectionString = process.env.DATABASE_URL;
+
+  console.log(id);
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try {
+    await client.connect();
+    const text = 'DELETE FROM recipes WHERE id = $1';
+    const value = [id];
+    const now = await client.query(text, value);
+    
+    const tagtext = 'DELETE FROM tags WHERE fkrecipeid = $1';
+    const tagvalue = [id];
+    const tagnow = await client.query(tagtext, tagvalue);
+
+    const cattext = 'DELETE FROM category WHERE fkrecipeid = $1';
+    const catvalue = [id];
+    const catnow = await client.query(cattext, catvalue);
+    await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+  var ret = { rid:id, error:error };
+  return ret;
+}
 
 
 

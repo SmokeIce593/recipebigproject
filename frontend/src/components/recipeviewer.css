@@ -87,3 +87,19 @@ hr {
     margin-left: 30%;
     margin-right: 30%;
 }
+
+.ingredientslist {
+    float: left;
+}
+
+.directionslist {
+    float: left;
+}
+
+.tagslist {
+    float: left;
+}
+
+.tableClass {
+    float: left;
+}
