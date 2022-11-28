@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { ImageBackground, ActivityIndicator, Button, LogBox, View, Text, TextInput, Image, FlatList } from 'react-native';
+import { ImageBackground, ScrollView, ActivityIndicator, Button, LogBox, View, Text, TextInput, Image, FlatList } from 'react-native';
 import { StyleSheet, Pressable } from 'react-native';
 // import { List, ListItem } from "react-native-elements";
 
@@ -10,14 +10,57 @@ export default class SearchScreen extends Component {
   constructor() 
   {
     super()
-    this.state = {
-      loading: false,
-      data: [],
-      page: 1,
-      seed: 1,
-      error: null,
-      refreshing: false,
-    };
+    this.state = 
+    {
+      message: ' ',
+      myRecipes: [],
+      test: 
+      [
+        {
+          id: '124312341234',
+          recipe: 'my recipe 1',
+          text_recipe: 'my description',
+          userid: '123412341234',
+          date: '11-11-11',
+          privateTable: false,
+        },
+        {
+          id: '124312341234',
+          recipe: 'my recipe 2',
+          text_recipe: 'my description',
+          userid: '123412341234',
+          date: '11-11-11',
+          privateTable: false,
+        },
+        {
+          id: '124312341234',
+          recipe: 'my recipe 3',
+          text_recipe: 'my description',
+          userid: '123412341234',
+          date: '11-11-11',
+          privateTable: false,
+        },
+      ],
+    }
+  }
+
+  loadRecipes = async (id) =>
+  { var recipes = await this.getMyRecipes(id);
+    console.log(recipes);
+    return recipes;
+  }
+
+  UNSAFE_componentDidMount()
+  {
+    var id = this.props.navigation.getParam('id');
+
+    this.setState({myRecipes: this.loadRecipes});
+    global.myRecipes.push(this.loadRecipes(id));
+
+    console.log("Printing state:");
+    console.log(this.state.myRecipes);
+    console.log("Printing global:");
+    console.log(global.myRecipes);
   }
 
   componentDidMount() {
@@ -53,28 +96,53 @@ export default class SearchScreen extends Component {
             </Pressable>
           </View>
 
-          {/* <View> 
-            <FlatList
-            data={this.state.data}
-            renderItem={({ renderItem }) => (
-              <ListItem
-                roundAvatar
-                title={`${item.name.first} ${item.name.last}`}
-                subtitle={item.email}
-                avatar={{ uri: item.picture.thumbnail }}
-                containerStyle={{ borderBottomWidth: 0 }}
-              />
-            )}
-            keyExtractor={item => item.email}
-            ItemSeparatorComponent={this.renderSeparator}
-            ListHeaderComponent={this.renderHeader}
-            ListFooterComponent={this.renderFooter}
-            onRefresh={this.handleRefresh}
-            refreshing={this.state.refreshing}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={50}
-            />
-          </View> */}
+          <View style={styles.container}>
+              <View style={styles.mainbox}>
+                <ScrollView style={styles.scrollView}>
+                <Text style={{fontSize:6}}> </Text>
+                  {/* to make gap at top of scroll view so first box does not collide */}
+
+
+                  {/* <Text style={styles.error}>{this.state.message}</Text> */}
+                  {this.state.test.map((prop, key) => {
+                    return (
+                      <View style={styles.container3}>
+                      <View style={styles.recipetab}>
+                        <Pressable style={styles.recipebutton} onPress={() => this.handleClickRecipe(prop, userInfo)}>
+                          <Text style={styles.titlefield}>{prop.recipe}</Text>
+                          <View style={{margin: 5}}>
+                            <Text style={styles.headerfield}>Description:</Text>
+                            <View style={styles.container2}>
+                              <Text style={styles.desctext}>{prop.text_recipe}</Text>
+                            </View>
+                          </View>
+                        </Pressable>
+                      </View>
+                      </View>
+                    
+                    )
+                  })
+                  }
+
+                    <Pressable style={styles.loginbuttonfield} onPress={() => this.loadRecipes(userInfo.id)}>
+                      <View style={{alignItems: 'center'}}>
+                        <Text style={styles.buttontext}>Refresh</Text>
+                      </View>
+                  </Pressable>
+                </ScrollView>
+              </View>
+            </View>
+
+
+
+
+
+
+
+
+
+
+
           
           <View style={styles.footer}>
           <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
@@ -183,8 +251,8 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    marginTop: 100,
-    top: 0,
+    marginTop: 50,
+    top: 1,
     alignItems: 'center',
     justifyContent:'center',
     flexDirection: 'row',
@@ -294,5 +362,63 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginRight: "auto",
     marginLeft: "auto",
+  },
+  mainbox: {
+    alignItems: "center",
+    position: "center",
+    backgroundColor: '#EAFCFF',
+    borderWidth: 3,
+    borderColor: '#000000',
+    borderRadius: 21,
+    height: 500,
+    width: 360,
+    justifyContent: "center",
+    marginRight: "auto",
+    marginReft: "auto",
+  },
+  container3: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 'auto'
+  },
+  titlefield: {
+    alignContent: 'center',
+    justifyContent: 'center',
+    fontSize: 30,
+    textAlign: "center",
+  },
+  headerfield: {
+    textDecorationLine: 'underline',
+    fontSize: 25,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  desctext: {
+    fontSize: 18,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  recipetab: {
+    backgroundColor: '#ffffff', 
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 21,
+    width: 340,
+    marginRight: "auto",
+    marginReft: "auto",
+    marginBottom: 10,
+  },
+  loginbuttonfield: {
+    height: 20,
+	  width: 300,
+    backgroundColor: '#FF7A70',
+    borderRadius: 10,
+    fontSize: 36,
+    marginTop: 4,
+    marginBottom: 2,
+    justifyContent: "center",
+    alignContent: "center",
+    zIndex: 1,
+    elevation: 1,
   },
 });
