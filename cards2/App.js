@@ -13,6 +13,7 @@ import VerifyScreen from './screens/VerifyScreen';
 import ResetScreen from './screens/ResetScreen';
 import SingleScreen from './screens/SingleScreen';
 import SingleAdminScreen from './screens/SingleOwnerScreen';
+import EditScreen from './screens/EditScreen'
 
 export default class App extends React.Component {
   render() {
@@ -158,6 +159,23 @@ const AppNavigator = createStackNavigator({
   },
   Setting: {
     screen: SettingScreen,
+    navigationOptions: {
+      title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
+  Edit: {
+    screen: EditScreen,
     navigationOptions: {
       title: '',
       gestureEnabled: false,

@@ -4,12 +4,11 @@ import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, LogBox, FlatLi
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 
-global.ingredients = [];
-global.tags = [];
-global.directions = [];
-global.ingredientsBullets = [];
-global.directionsBullets = [];
-global.tagsBullets = [];
+global.name = '';
+global.description = '';
+global.ingredient = '';
+global.tags = '';
+global.instructions = '';
 
 const questions = [
   "Set recipe to public", 
@@ -25,69 +24,12 @@ export default class Createscreen extends Component {
     super()
     this.state = 
     {
-      message: ' ',
-      myRecipe: {},
+      message: ' '
     }
   }
   
   componentDidMount() {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-  }
-
-  UNSAFE_componentWillMount()
-  {
-
-    var recipeID= this.props.navigation.getParam('myRecipe', -1);
-    this.getSingleRecipe(recipeID);
-
-  }
-
-  getSingleRecipe = async (recipeID) =>
-  {
-    try
-    {
-      var obj = {recipeID:recipeID};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/getsinglerecipe',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if (res.error !== '')
-      {
-        this.setState({message: "Error getting recipes"});
-      }
-      else
-      {
-        console.log('success');
-        this.setState({recipe: res.recipe.recipe});
-        this.setState({description: res.recipe.text_recipe});
-        this.setState({directions: [...res.directions]});
-        for (var i = 0; i < this.state.directions.length; i++)
-        {
-          global.directionsBullets.push({key: this.state.directions[i].directions})
-        }
-
-        this.setState({ingredients: [...res.ingredients]});
-        for (var i = 0; i < this.state.ingredients.length; i++)
-        {
-          global.ingredientsBullets.push({key: this.state.ingredients[i].ingredient})
-        }
-
-        this.setState({tags: [...res.tags]});
-        for (var i = 0; i < this.state.tags.length; i++)
-        {
-          global.tagsBullets.push({key: this.state.tags[i].tagname})
-        }
-
-        console.log(this.state.tags);
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
   }
 
   render(){
@@ -99,7 +41,6 @@ export default class Createscreen extends Component {
       lastName:navigation.getParam('lastName', 'default'),
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
-      myRecipe:navigation.getParam('myRecipe', ''),
     }
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
@@ -111,13 +52,12 @@ export default class Createscreen extends Component {
                 <ScrollView style={styles.scrollView}>
                   <Text></Text> 
                   {/* to make gap at top of scroll view so first box does not collide */}
-
-                      <View style={styles.recipetab}>
-                      <Text style={styles.titlefield}>{this.state.recipe}</Text>
+                    <View style={styles.recipetab}>
+                      <Text style={styles.titlefield}>Recipe Title</Text>
                       <View style={{margin: 5}}>
                         <Text style={styles.headerfield}>Description:</Text>
                         <View style={styles.container2}>
-                          <Text style={styles.desctext}>{this.state.description}</Text>
+                          <Text style={styles.desctext}>insert alot of description text here to make sure users know the full description</Text>
                         </View>
                         <Text></Text> 
                         <View style={styles.container3}>
@@ -139,7 +79,7 @@ export default class Createscreen extends Component {
                           <View style={styles.container2}>
                           <Text style={styles.headerfield}>Instructions:</Text>
                             <FlatList
-                            data={global.directionsBullets}
+                            data={global.ingredientsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -161,7 +101,7 @@ export default class Createscreen extends Component {
                           <View style={styles.container2}>
                           <Text style={styles.headerfield}>Tags:</Text>
                             <FlatList
-                            data={global.tagsBullets}
+                            data={global.ingredientsBullets}
                             extraData={this.state.refresh}
                             renderItem={({ item }) => {
                               return (
@@ -176,39 +116,27 @@ export default class Createscreen extends Component {
                         </View>
                         <Text></Text> 
                         <View style={styles.container3}>
-                          <Pressable style={styles.loginbuttonfield} onPress={() => this.handleEditClick(userInfo)}>
+                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
                             <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Edit</Text>
+                              <Text style={styles.buttontext}>Save</Text>
                             </View>
                           </Pressable>
                           <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
                             <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Delete</Text>
+                              <Text style={styles.buttontext}>Cancel</Text>
                             </View>
                           </Pressable>
                         </View>
+                        
                       </View>
                     </View>
-
-
-
-                 
-                    
                     </ScrollView>
                   </View>
                 </View>
         </KeyboardAvoidingView>
         <Text style={{fontSize:15}}> </Text>
-        <Pressable style={styles.loginbuttonfield} onPress={async () => this.refresh(userInfo.myRecipe)}>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.buttontext}>Refresh</Text>
-          </View>
-        </Pressable>
-       
-        
         
         <Text style={{fontSize:90}}> </Text>
-
 
         <View style={styles.footer}>
         <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
@@ -246,20 +174,36 @@ export default class Createscreen extends Component {
   );
   }
 
-  refresh = async (recipeID) =>
-  {
-    global.ingredients = [];
-    global.tags = [];
-    global.directions = [];
-    global.ingredientsBullets = [];
-    global.directionsBullets = [];
-    global.tagsBullets = [];
-    await this.getSingleRecipe(recipeID);
-    
-    this.setState({refresh: !this.state.refresh});
-  }
-
   handleClick = async () =>
+  {
+    try
+    {
+      var obj = {id:userInfo.id};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if( res.id <= 0 )
+      {
+        this.setState({message: "No recipes"});
+      }
+      else
+      {
+        global.firstName = res.firstName;
+        global.lastName = res.lastName;
+        global.userId = res.id;
+        //this.props.navigation.navigate('Search');
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
+  }  
+  editRecipeClick = async async =>
   {
     try
     {
@@ -317,14 +261,7 @@ export default class Createscreen extends Component {
       this.setState({message: e.message});
     }
   }  
-  handleEditClick = async (userInfo) =>
-  {
-    this.props.navigation.navigate('Edit', userInfo);
-  }
-  getDataFromState = async (data) =>
-  {
-    return await data;
-  }
+
 
   handleHomeClick = async (userInfo) =>
   {
