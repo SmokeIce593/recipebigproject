@@ -1,18 +1,19 @@
 import React, { Component, useState } from 'react';
-import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
+import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image, TouchableNativeFeedbackBase } from 'react-native';
 import { StyleSheet, Pressable, KeyboardAvoidingView, LogBox, ScrollView, FlatList, ListView } from 'react-native';
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 
-global.ingredients = [];
-global.tags = [];
-global.directions = [];
+
 
 const privacyoptions = [
   "Make recipe public", 
   "Make recipe private", 
 ];
 
+global.ingredients = [];
+global.tags = [];
+global.directions = [];
 global.ingredientsBullets = [];
 global.directionsBullets = [];
 global.tagsBullets = [];
@@ -182,7 +183,7 @@ export default class Createscreen extends Component {
             </View>
         </KeyboardAvoidingView>
         <Text style={{fontSize:15}}> </Text>
-        <Pressable style={styles.loginbuttonfield} onPress={() => this.createRecipe(userInfo)}>
+        <Pressable style={styles.loginbuttonfield} onPress={async () => this.createRecipe(userInfo)}>
           <View style={{alignItems: 'center'}}>
             <Text style={styles.buttontext}>Create Recipe</Text>
           </View>
@@ -249,9 +250,9 @@ export default class Createscreen extends Component {
 
       var res = JSON.parse(await response.text());
 
-      if( res.error !== '' )
+      if(res.error)
       {
-        this.setState({message: "Error creating recipe"});
+        this.setState({message: res.error});
       }
       else
       {
@@ -265,7 +266,8 @@ export default class Createscreen extends Component {
           name: '',
           description: '',
           private: 'false',
-          refresh: !this.state.refresh
+          message: '',
+          refresh: !this.state.refresh,
         })
         this.props.navigation.navigate('Recipe', userInfo);
       }
@@ -298,28 +300,28 @@ export default class Createscreen extends Component {
 
   changeNameHandler = async (val) =>
   {
-    this.state.name = val;
+    this.setState({name: val});
   }  
   changeDescHandler = async (val) =>
   {
-    this.state.description = val;
+    this.setState({description: val});
   }  
 
   addIngredientClick = async () =>
   {
     global.ingredientsBullets.push({key: this.state.ingredient});
     global.ingredients.push(this.state.ingredient);
-    this.state.ingredient = '';
     this.setState({
-      refresh: !this.state.refresh
+      ingredient: '',
+      refresh: !this.state.refresh,
     })
   } 
   addDirectionClick = async () =>
   {
     global.directionsBullets.push({key: this.state.direction});
     global.directions.push(this.state.direction);
-    this.state.direction = '';
     this.setState({
+      direction: '',
       refresh: !this.state.refresh
     })
   }
@@ -327,22 +329,22 @@ export default class Createscreen extends Component {
   {
     global.tagsBullets.push({key: this.state.tag});
     global.tags.push(this.state.tag);
-    this.state.tag = '';
     this.setState({
+      tag: '',
       refresh: !this.state.refresh
     })
   }
   changeIngredientHandler = async (val) =>
   {
-    this.state.ingredient = val;
+    this.setState({ingredient: val});
   }  
   changeDirectionHandler = async (val) =>
   {
-    this.state.direction = val;
+    this.setState({direction: val});
   }
   changeTagHandler = async (val) =>
   {
-    this.state.tag = val;
+    this.setState({tag: val});
   }
 
 }

@@ -4,18 +4,6 @@ import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList, List
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 
-global.name = '';
-global.description = '';
-global.ingredient = '';
-global.tags = '';
-global.instructions = '';
-
-const questions = [
-  "Set recipe to public", 
-  "Set recipe to private", 
-];
-
-global.myRecipes = [];
 
 export default class RecipeScreen extends Component {
 
@@ -56,24 +44,6 @@ export default class RecipeScreen extends Component {
     }
   }
 
-  loadRecipes = async (id) =>
-  { var recipes = await this.getMyRecipes(id);
-    console.log(recipes);
-    return recipes;
-  }
-
-  UNSAFE_componentDidMount()
-  {
-    var id = this.props.navigation.getParam('id');
-
-    this.setState({myRecipes: this.loadRecipes});
-    global.myRecipes.push(this.loadRecipes(id));
-
-    console.log("Printing state:");
-    console.log(this.state.myRecipes);
-    console.log("Printing global:");
-    console.log(global.myRecipes);
-  }
 
   render(){
 
@@ -101,7 +71,7 @@ export default class RecipeScreen extends Component {
 
 
                   <Text style={styles.error}>{this.state.message}</Text>
-                  {this.state.test.map((prop, key) => {
+                  {this.state.myRecipes.map((prop, key) => {
                     return (
                       
                       <View style={styles.recipetab}>
@@ -120,11 +90,7 @@ export default class RecipeScreen extends Component {
                   })
                   }
 
-                    <Pressable style={styles.loginbuttonfield} onPress={() => this.loadRecipes(userInfo.id)}>
-                      <View style={{alignItems: 'center'}}>
-                        <Text style={styles.buttontext}>Refresh</Text>
-                      </View>
-                  </Pressable>
+                    
                 </ScrollView>
               </View>
             </View>
@@ -132,7 +98,11 @@ export default class RecipeScreen extends Component {
         <Text style={{fontSize:15}}> </Text>
         
        
-        
+        <Pressable style={styles.loginbuttonfield} onPress={async () => this.refresh(userInfo.id)}>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.buttontext}>Refresh</Text>
+          </View>
+        </Pressable>
         
         <Text style={{fontSize:90}}> </Text>
 
@@ -197,7 +167,7 @@ export default class RecipeScreen extends Component {
       else
       {
         this.setState({message: "success"});
-        return res.filter;
+        this.setState({myRecipes: res.filter});
       }
     }
     catch(e)
@@ -206,93 +176,10 @@ export default class RecipeScreen extends Component {
     }
   }
 
-  handleClick = async () =>
+  refresh = async (id) =>
   {
-    try
-    {
-      var obj = {id:userInfo.id};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
-      {
-        this.setState({message: "No recipes"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
-  }  
-  editRecipeClick = async async =>
-  {
-    try
-    {
-      var obj = {id:userInfo.id};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
-      {
-        this.setState({message: "No recipes"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
-  }  
-  deleteRecipeClick = async async =>
-  {
-    try
-    {
-      var obj = {};
-      var js = JSON.stringify(obj);
-
-      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/delete',
-        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-      var res = JSON.parse(await response.text());
-
-      if( res.id <= 0 )
-      {
-        this.setState({message: "No recipes"});
-      }
-      else
-      {
-        global.firstName = res.firstName;
-        global.lastName = res.lastName;
-        global.userId = res.id;
-        //this.props.navigation.navigate('Search');
-      }
-    }
-    catch(e)
-    {
-      this.setState({message: e.message});
-    }
-  }  
+    await this.getMyRecipes(id);
+  }
 
   handleClickRecipe = async (prop, userInfo) =>
   {
@@ -421,8 +308,8 @@ const styles = StyleSheet.create({
 	  marginLeft: "auto",
   },
   loginbuttonfield: {
-    height: '100%',
-	  width: 360,
+    width: 200,
+    height: 50,
     backgroundColor: '#FF7A70',
     borderRadius: 10,
     fontSize: 36,
