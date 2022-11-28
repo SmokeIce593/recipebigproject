@@ -116,17 +116,18 @@ export default class Createscreen extends Component {
                         </View>
                         <Text></Text> 
                         <View style={styles.container3}>
-                          <Pressable style={styles.loginbuttonfield} onPress={() => this.handleEditClick(userInfo)}>
+                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
                             <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Edit</Text>
+                              <Text style={styles.buttontext}>Save</Text>
                             </View>
                           </Pressable>
                           <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
                             <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Delete</Text>
+                              <Text style={styles.buttontext}>Cancel</Text>
                             </View>
                           </Pressable>
                         </View>
+                        
                       </View>
                     </View>
                     </ScrollView>
@@ -135,11 +136,7 @@ export default class Createscreen extends Component {
         </KeyboardAvoidingView>
         <Text style={{fontSize:15}}> </Text>
         
-       
-        
-        
         <Text style={{fontSize:90}}> </Text>
-
 
         <View style={styles.footer}>
         <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>
@@ -206,6 +203,35 @@ export default class Createscreen extends Component {
       this.setState({message: e.message});
     }
   }  
+  editRecipeClick = async async =>
+  {
+    try
+    {
+      var obj = {id:userInfo.id};
+      var js = JSON.stringify(obj);
+
+      const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/search',
+        {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response.text());
+
+      if( res.id <= 0 )
+      {
+        this.setState({message: "No recipes"});
+      }
+      else
+      {
+        global.firstName = res.firstName;
+        global.lastName = res.lastName;
+        global.userId = res.id;
+        //this.props.navigation.navigate('Search');
+      }
+    }
+    catch(e)
+    {
+      this.setState({message: e.message});
+    }
+  }  
   deleteRecipeClick = async async =>
   {
     try
@@ -235,10 +261,7 @@ export default class Createscreen extends Component {
       this.setState({message: e.message});
     }
   }  
-  handleEditClick = async (userInfo) =>
-  {
-    this.props.navigation.navigate('Edit', userInfo);
-  }
+
 
   handleHomeClick = async (userInfo) =>
   {
