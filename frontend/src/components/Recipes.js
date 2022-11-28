@@ -55,37 +55,39 @@ function Recipes()
 
    function goView(recipeID)
    {
-      return async function(){
-      var obj = {recipeID: recipeID};
-      var js = JSON.stringify(obj);
+      return async function()
+      {
+         var obj = {recipeID: recipeID};
+         var js = JSON.stringify(obj);
 
-      try
-      {    
-         const response = await fetch(buildPath('api/getsinglerecipe'),
-               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+         try
+         {    
+            const response = await fetch(buildPath('api/getsinglerecipe'),
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
-         var res = JSON.parse(await response.text());
-         var direction = res.directions;
-         var ingredient = res.ingredients;
-         var recipe = res.recipe;
-         var tag = res.tags;
-         //alert(direction[0]["directions"]);
-         //alert(ingredient[0]["ingredient"]);
-         //alert(tag[0]["tagname"]);
-         //alert(recipe["recipe"]);
-         var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
-         localStorage.setItem('recipe_data', JSON.stringify(recipe));
+            var res = JSON.parse(await response.text());
+            var direction = res.directions;
+            var ingredient = res.ingredients;
+            var recipe = res.recipe;
+            var tag = res.tags;
+            //alert(direction[0]["directions"]);
+            //alert(ingredient[0]["ingredient"]);
+            //alert(tag[0]["tagname"]);
+            //alert(recipe["recipe"]);
+            var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
+            localStorage.setItem('recipe_data', JSON.stringify(recipe));
 
-         if(res.error != null){
-            window.location.href = '/recipeviewer';
+            if(res.error != null)
+            {
+               window.location.href = '/recipeviewer';
+            }
+         }
+         catch(e)
+         {
+            alert(e.toString());
+            return;
          }
       }
-      catch(e)
-      {
-         alert(e.toString());
-         return;
-      }
-   }
    };
 
    const goEdit= async event => 
@@ -108,7 +110,8 @@ function Recipes()
          var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
          localStorage.setItem('recipe_data', JSON.stringify(recipe));
 
-         if(res.error != null){
+         if(res.error != null)
+         {
             window.location.href = '/edit';
          }
       }
@@ -177,11 +180,11 @@ function Recipes()
 						recipeDescription.className = "recipeDescription";
 					/*let recipeTags = document.createElement("div");
 						recipeTags.className = "recipeTags";*/
-					/*let editBTN = this.document.createElement("button");
+					let editBTN = this.document.createElement("button");
 						editBTN.type = "button";
 						editBTN.className = "editButton";
 						editBTN.innerHTML = "Edit";
-						editBTN.onclick = {goEdit};*/
+						editBTN.onclick = {goEdit};
 					let deleteBTN = this.document.createElement("button");
 						deleteBTN.type = "button";
 						deleteBTN.className = "deleteButton";
@@ -197,7 +200,7 @@ function Recipes()
 					//append all created items into list
 					mainDiv.appendChild(listItem);
 					listItem.appendChild(deleteBTN);
-					//listItem.appendChild(editBTN);
+					listItem.appendChild(editBTN);
 					listItem.appendChild(recipeTitle);
 					listItem.appendChild(recipeDescription);
 					//listItem.appendChild(recipeTags);

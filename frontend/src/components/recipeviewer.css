@@ -2,12 +2,13 @@
 	position: relative;
     background-color: #EAFCFF;
     width: calc(100%-200px);
-    height: 100%;
+    height: auto;
     margin-top: 10px;
     margin-left: 100px;
     margin-right: 100px;
     justify-content: center;
-    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5)
+    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
 }
 
 .recipeHeader {
@@ -77,6 +78,7 @@ hr {
 
 .description {
     font-size: 18px;
+    text-align: center;
     margin-left: 30%;
     margin-right: 30%;
 }
@@ -86,6 +88,7 @@ hr {
     text-align: center;
     margin-left: 30%;
     margin-right: 30%;
+    margin-bottom: 1%;
 }
 
 .ingredientslist {
