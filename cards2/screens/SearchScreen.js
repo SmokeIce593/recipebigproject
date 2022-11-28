@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image, FlatList } from 'react-native';
+import { ImageBackground, ActivityIndicator, Button, LogBox, View, Text, TextInput, Image, FlatList } from 'react-native';
 import { StyleSheet, Pressable } from 'react-native';
 // import { List, ListItem } from "react-native-elements";
 
@@ -18,6 +18,10 @@ export default class SearchScreen extends Component {
       error: null,
       refreshing: false,
     };
+  }
+
+  componentDidMount() {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }
 
   render(){
@@ -49,10 +53,10 @@ export default class SearchScreen extends Component {
             </Pressable>
           </View>
 
-          <View>
+          {/* <View> 
             <FlatList
             data={this.state.data}
-            renderItem={({ item }) => (
+            renderItem={({ renderItem }) => (
               <ListItem
                 roundAvatar
                 title={`${item.name.first} ${item.name.last}`}
@@ -70,7 +74,7 @@ export default class SearchScreen extends Component {
             onEndReached={this.handleLoadMore}
             onEndReachedThreshold={50}
             />
-          </View>
+          </View> */}
           
           <View style={styles.footer}>
           <Pressable style={styles.footerButton} onPress={() => this.handleHomeClick(userInfo)}>

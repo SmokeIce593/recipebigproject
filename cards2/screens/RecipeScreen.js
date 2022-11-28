@@ -27,13 +27,6 @@ export default class Createscreen extends Component {
       message: ' '
     }
   }
-  
-
-  renderRow(data) {
-    return (
-      <Text>{`\u2022 ${data}`}</Text>
-    );
-  }
 
   render(){
     const { navigation } = this.props;
@@ -56,50 +49,40 @@ export default class Createscreen extends Component {
                   <Text></Text> 
                   {/* to make gap at top of scroll view so first box does not collide */}
                     <View style={styles.recipetab}>
-                      <Text style={styles.titlefield}>Recipe Title</Text>
-                      <View style={{margin: 5}}>
-                        <Text style={styles.headerfield}>Description:</Text>
-                        <View style={styles.container2}>
-                          <Text style={styles.desctext}>insert alot of description text here to make sure users know the full description</Text>
-                        </View>
-                        <Text></Text> 
-                        <View style={styles.container3}>
+                      <Pressable style={styles.loginbuttonfield} onPress={this.ExpandClick}>
+                        <Text style={styles.titlefield}>Recipe Title</Text>
+                        <View style={{margin: 5}}>
+                          <Text style={styles.headerfield}>Description:</Text>
                           <View style={styles.container2}>
-                            <Text style={styles.headerfield}>Ingredients:</Text>
-                            <Text>-waterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
+                            <Text style={styles.desctext}>insert alot of description text here to make sure users know the full description</Text>
                           </View>
-                          <View style={styles.container2}>
-                          <Text style={styles.headerfield}>Tags:</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
-                            <Text>-water</Text>
+                          <Text></Text> 
+                          <View style={styles.container3}>
+                            <View style={styles.container2}>
+                              <Text style={styles.headerfield}>Ingredients:</Text>
+                              <Text>-waterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                            </View>
+                            <View style={styles.container2}>
+                            <Text style={styles.headerfield}>Tags:</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                              <Text>-water</Text>
+                            </View>
                           </View>
+                          <Text></Text> 
+                          <Text style={styles.headerfield}>Privacy:</Text>
+                          <Text>Public</Text>
+                          <Text></Text> 
                         </View>
-                        <Text></Text> 
-                        <Text style={styles.headerfield}>Privacy:</Text>
-                        <Text>Public</Text>
-                        <Text></Text> 
-                        <View style={styles.container3}>
-                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-                            <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Edit</Text>
-                            </View>
-                          </Pressable>
-                          <Pressable style={styles.loginbuttonfield} onPress={this.handleClick}>
-                            <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Delete</Text>
-                            </View>
-                          </Pressable>
-                        </View>
-                      </View>
+                      </Pressable>
                     </View>
                     </ScrollView>
                   </View>
@@ -237,7 +220,10 @@ export default class Createscreen extends Component {
     }
   }  
 
-
+  ExpandClick = async () =>
+  {
+    this.props.navigation.navigate('SingleAdmin', userInfo);
+  }
   handleHomeClick = async (userInfo) =>
   {
     this.props.navigation.navigate('Search', userInfo);
@@ -358,10 +344,8 @@ const styles = StyleSheet.create({
 	  marginLeft: "auto",
   },
   loginbuttonfield: {
-    height: 50,
-	  width: 150,
-    marginLeft: "auto",
-	  marginRight: "auto",
+    height: '100%',
+	  width: 360,
     backgroundColor: '#FF7A70',
     borderRadius: 10,
     fontSize: 36,
@@ -369,8 +353,8 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     justifyContent: "center",
     alignContent: "center",
-    marginRight: "auto",
-    marginLeft: "auto",
+    zIndex: 1,
+    elevation: 1,
   },
   addbuttonfield: {
     height: 30,
