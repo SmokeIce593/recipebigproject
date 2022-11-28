@@ -2,7 +2,7 @@ table {
     border-collapse: collapse;
   }
 
-.displayregion{
+.displayregionrecipes{
 	position: relative;
     background-color: #EAFCFF;
     width: calc(100%-200px);
@@ -12,6 +12,7 @@ table {
     margin-right: 100px;
     justify-content: center;
     box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
 }
 
 .defaultMsg{
@@ -65,6 +66,14 @@ table {
     visibility: hidden;
 }
 
+.viewbuttonField{
+    margin-left: 10px;
+}
+
+.deletebuttonfield{
+    margin-left: 10px;
+}
+
 .editButton{
     float: right;
     margin-top: 1%;
@@ -79,4 +88,6 @@ table {
 
 .listTable{
     padding: 5px;
+    margin-left: 10px;
+    width: calc(100% - 20px);
 }

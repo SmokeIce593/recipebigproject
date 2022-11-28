@@ -42,23 +42,22 @@ function Recipeviewer()
 });
 
    return(
-        <div id="recipeviewerDiv" className="displayregion">
+        <div id="recipeviewerDiv" className="displayregionviewer">
             <div id="recipeName" className="recipeHeader">{recipeName}</div>
             <div id="line"><hr /></div>
             <div id="description" className="description">{description}</div>
-            <div id="line"><hr /></div>
+            <br></br>
             <div id="columns" className="col-container">
                 <div id="leftcol" className="col-child1">
                     <div id="text1" className="smallHeader">Directions</div> 
-                    <div id="directionslist" className="recipelist">{recipe}</div>
+                    <div id="directionslist" className="directionsstyle">{recipe}</div>
                 </div>
                 <div id="rightcol" className="col-child2">
                     <div id="text1" className="smallHeader">Ingredients</div> 
-                    <div id="ingredientslist" defaultValue={ingredients} className="recipelist"></div>
+                    <div id="ingredientslist" defaultValue={ingredients} className="ingredientsstyle"></div>
                 </div>
             </div>
-            <br></br>
-            <div id="line"><hr /></div>
+            <div id="line2"><br></br><hr/></div>
             <div id="text3" className="smallHeader">Tags</div> 
             <div id="tagslist" className="tags">{tags}</div>
         </div>

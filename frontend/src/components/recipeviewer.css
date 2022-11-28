@@ -1,4 +1,4 @@
-.displayregion{
+.displayregionviewer{
 	position: relative;
     background-color: #EAFCFF;
     width: calc(100%-200px);
@@ -31,6 +31,14 @@ hr {
     margin-bottom: 1%;
 }
 
+#line2 {
+    float: left;
+    width: 100%;
+    height: 10px;
+    margin-bottom: 2%;
+}
+
+
 .col-container {
     width: 100%;
     height: auto;
@@ -53,11 +61,18 @@ hr {
     font-size: 26px;
 }
 
-.recipelist {
+.directionsstyle {
     padding-left: 20px;
     padding-right: 20px;
     margin-top: 0.5%;
-    margin-left: 30%;
+    margin-left: 41%;
+}
+
+.ingredientsstyle {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 0.5%;
+    margin-left: 40%;
 }
 
 .description {

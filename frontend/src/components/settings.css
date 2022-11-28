@@ -1,18 +1,18 @@
-.displayregion{
+.displayregionsettings{
 	position: relative;
-    background-color: rgba(234,252,255,0.1);
-    width: calc(100%-200px);
-    height: 100%;
+    background-color: #EAFCFF;
+    width: 600px;
+    height: auto;
     margin-top: 10px;
-    margin-left: 100px;
-    margin-right: 100px;
+    margin-left: auto;
+    margin-right: auto;
     justify-content: space-between;
-    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.1)
+    box-shadow: 0 10px 20px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
 }
 
 .pageheader {
     text-align: center;
-    background-color: rgba(234,252,255,0.1);
     border-right: none;
     border-left: none;
     border-top: none;
@@ -89,6 +89,7 @@ hr {
     margin-top: 20px;
     justify-content: center;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 2%;
 }
 .savebutton:hover{
     background-color: #D14358;
