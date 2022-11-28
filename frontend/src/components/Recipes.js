@@ -200,9 +200,9 @@ function Recipes()
 					//recipeTags.innerHTML = "Tags: " + tags;
 					//append all created items into list
 					mainDiv.appendChild(listItem);
-					listItem.appendChild(deleteBTN);
-					listItem.appendChild(editBTN);
+					//listItem.appendChild(deleteBTN);
 					listItem.appendChild(recipeTitle);
+               listItem.appendChild(editBTN);
                listItem.appendChild(deleteBTN);
 					listItem.appendChild(recipeDescription);
 					//listItem.appendChild(recipeTags);
