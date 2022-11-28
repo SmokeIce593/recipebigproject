@@ -68,9 +68,8 @@ table {
 }
 
 .editButton{
-    float: right;
     margin-top: 1%;
-    margin-right: 1%;
+    margin-left: 1%;
     border-radius: 25px;
 	padding-bottom: 5px;
 	padding-top: 5px;
@@ -88,9 +87,8 @@ table {
 }
 
 .deleteButton{
-    float: right;
     margin-top: 1%;
-    margin-right: 1%;
+    margin-left: 1%;
     margin-bottom: 1%;
     border-radius: 25px;
 	padding-bottom: 5px;
