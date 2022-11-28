@@ -220,16 +220,6 @@ function Recipes()
     return(
 		<body>
          <div>
-        <div id="recipesDiv" className="displayregionrecipes">
-            <input type="button" id="deleteButton" className="deletebuttonfield" value="Delete" 
-                onClick={goDelete}/>
-                <br />
-        </div>
-        <div id="recipesDiv" className="displayregionrecipes">
-            <input type="button" id="viewButton" className="viewbuttonfield" value="View" 
-                onClick={goView}/>
-                <br />
-        </div>
     </div>
         <div id="recipesDiv" className="displayregionrecipes">
         </div>
@@ -241,20 +231,6 @@ function Recipes()
 				<button type="button" id="next" className="nextButton" onClick={nextPage()}>Next Page</button>
 			</div>
 		</body>
-   /*return(
-    <div>
-        <div id="recipesDiv" className="displayregionrecipes">
-            <input type="button" id="deleteButton" className="deletebuttonfield" value="Delete" 
-                onClick={goDelete}/>
-                <br />
-        </div>
-        <div id="recipesDiv" className="displayregionrecipes">
-            <input type="button" id="viewButton" className="viewbuttonfield" value="View" 
-                onClick={goView}/>
-                <br />
-        </div>
-    </div>
-     */   
    );
 };
 
