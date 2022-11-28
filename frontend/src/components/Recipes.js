@@ -31,26 +31,27 @@ function Recipes()
 
    //var recipeID = '70730eaf-30a4-45cd-9191-63684c646a55';
    var recipeID;
-   function goDelete(recipeID){
-   return async function(){
+   function goDelete(recipeID)
    {
-      var obj = {id: recipeID};
-      var js = JSON.stringify(obj);
-      try
-      {    
-         const response = await fetch(buildPath('api/deleterecipe'),
-               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-         var res = JSON.parse(await response.text());
-         window.location.href = '/recipes';
-         //alert(res.error);
-      }
-      catch(e)
+      return async function()
       {
-         alert(e.toString());
-         return;
-      }    
-  }}
+         var obj = {id: recipeID};
+         var js = JSON.stringify(obj);
+         try
+         {    
+            const response = await fetch(buildPath('api/deleterecipe'),
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+            window.location.href = '/recipes';
+            //alert(res.error);
+         }
+         catch(e)
+         {
+            alert(e.toString());
+            return;
+         }    
+      }
    };
 
    function goView(recipeID)
@@ -92,34 +93,42 @@ function Recipes()
 
    const goEdit= async event => 
    {
-      event.preventDefault();
-
-      var obj = {recipeID: recipeID};
-      var js = JSON.stringify(obj);
-
-      try
-      {    
-         const response = await fetch(buildPath('api/getsinglerecipe'),
-               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-
-         var res = JSON.parse(await response.text());
-         var direction = res.directions;
-         var ingredient = res.ingredients;
-         var recipe = res.recipe;
-         var tag = res.tags;
-         var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
-         localStorage.setItem('recipe_data', JSON.stringify(recipe));
-
-         if(res.error != null)
-         {
-            window.location.href = '/edit';
-         }
-      }
-      catch(e)
+      console.log("entered goEdit");
+      
+      return async function()
       {
-         alert(e.toString());
-         return;
-      }    
+         console.log("entered goEdit's return function");
+         event.preventDefault();
+
+         var obj = {recipeID: recipeID};
+         var js = JSON.stringify(obj);
+
+         try
+         {
+            console.log("trying to connect to editrecipe api");
+            const response = await fetch(buildPath('api/editrecipe'),
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+            var direction = res.directions;
+            var ingredient = res.ingredients;
+            var recipe = res.recipe;
+            var tag = res.tags;
+            var recipe = {recipe: recipe, direction: direction, ingredient: ingredient, tag: tag};
+            localStorage.setItem('recipe_data', JSON.stringify(recipe));
+
+            if(res.error != null)
+            {
+               console.log("res.error != null");
+               window.location.href = '/edit';
+            }
+         }
+         catch(e)
+         {
+            alert(e.toString());
+            return;
+         }  
+      }   
    };
 
    async function getMyRecipes()
@@ -184,7 +193,7 @@ function Recipes()
 						editBTN.type = "button";
 						editBTN.className = "editButton";
 						editBTN.innerHTML = "Edit";
-						editBTN.onclick = {goEdit};
+						editBTN.onclick = goEdit(recipeID);
 					let deleteBTN = this.document.createElement("button");
 						deleteBTN.type = "button";
 						deleteBTN.className = "deleteButton";
