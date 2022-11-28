@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList, ListView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, LogBox, ScrollView, FlatList, ListView } from 'react-native';
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 
@@ -27,11 +27,8 @@ export default class Createscreen extends Component {
       message: ' '
     }
   }
-
-  renderRow(data) {
-    return (
-      <Text>{`\u2022 ${data}`}</Text>
-    );
+  componentDidMount() {
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }
 
   render(){
@@ -44,6 +41,7 @@ export default class Createscreen extends Component {
       username:navigation.getParam('username', 'default'),
       email:navigation.getParam('email', 'default'),
     }
+    
     return(
       <ImageBackground source={require('../assets/backgroundmobilefinal.png')} resizeMode="cover" style={{alignItems: "center", flex: 1, justifyContent: "center"}}> 
         <KeyboardAvoidingView 
@@ -243,7 +241,7 @@ export default class Createscreen extends Component {
                 fkuser:userInfo.id, privaterecipe:this.state.private,
                 tags:global.tags, ingredients: global.ingredients,
                 directions: global.directions};
-                console.log(obj);
+
       var js = JSON.stringify(obj);
 
       const response = await fetch('https://recipeprojectlarge.herokuapp.com/api/saverecipe',
