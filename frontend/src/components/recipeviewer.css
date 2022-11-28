@@ -1,4 +1,4 @@
-.displayregion{
+.displayregionviewer{
 	position: relative;
     background-color: #EAFCFF;
     width: calc(100%-200px);
@@ -31,12 +31,28 @@ hr {
     margin-bottom: 1%;
 }
 
-.col-container {
-    padding: 10px;
+#line2 {
+    float: left;
+    width: 100%;
+    height: 10px;
+    margin-bottom: 2%;
 }
 
-.col-child {
-    width: 50%;
+
+.col-container {
+    width: 100%;
+    height: auto;
+}
+
+.col-child1 {
+    width: 49.9%;
+    float: left;
+    border-right: 1px;
+    border-color: #6e6e6e;
+    border-right-style: inset;
+}
+.col-child2 {
+    width: 49.9%;
     float: left;
 }
 
@@ -45,10 +61,18 @@ hr {
     font-size: 26px;
 }
 
-.recipelist {
+.directionsstyle {
     padding-left: 20px;
     padding-right: 20px;
     margin-top: 0.5%;
+    margin-left: 41%;
+}
+
+.ingredientsstyle {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: 0.5%;
+    margin-left: 40%;
 }
 
 .description {
@@ -59,6 +83,7 @@ hr {
 
 .tags {
     font-size: 18px;
+    text-align: center;
     margin-left: 30%;
     margin-right: 30%;
 }

@@ -298,7 +298,7 @@ export default class RecipeScreen extends Component {
   {
     userInfo.myRecipe = prop.id;
     console.log("Prop" + prop.recipe);
-    this.props.navigation.navigate('Search', userInfo);
+    this.props.navigation.navigate('SingleAdmin', userInfo);
   }
 
   handleHomeClick = async (userInfo) =>
@@ -421,10 +421,8 @@ const styles = StyleSheet.create({
 	  marginLeft: "auto",
   },
   loginbuttonfield: {
-    height: 50,
-	  width: 150,
-    marginLeft: "auto",
-	  marginRight: "auto",
+    height: '100%',
+	  width: 360,
     backgroundColor: '#FF7A70',
     borderRadius: 10,
     fontSize: 36,
@@ -432,8 +430,8 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     justifyContent: "center",
     alignContent: "center",
-    marginRight: "auto",
-    marginLeft: "auto",
+    zIndex: 1,
+    elevation: 1,
   },
   addbuttonfield: {
     height: 30,

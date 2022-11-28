@@ -6,6 +6,18 @@ const logo = new URL("/public/logo.png",import.meta.url);
 
 function Home()
 {
+   const app_name = 'recipeprojectlarge'
+   function buildPath(route)
+   {
+       if (process.env.NODE_ENV === 'production') 
+       {
+           return 'https://' + app_name +  '.herokuapp.com/' + route;
+       }
+       else
+       {        
+           return 'http://localhost:5000/' + route;
+       }
+   }
 
     var _ud = localStorage.getItem('user_data');
     var ud = JSON.parse(_ud);
@@ -15,24 +27,39 @@ function Home()
 
     const doSearch = async event=>
     {
-        window.location.href = '/home';
-    }
+        let searchQuery = document.getElementById('search').value;
+        var obj = {search: searchQuery};
+         var js = JSON.stringify(obj);
+         try
+         {    
+            const response = await fetch(buildPath('api/search'),
+                  {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            var res = JSON.parse(await response.text());
+            console.log(res);
+            //window.location.href = '/search';
+            alert(res.error);
+         }
+         catch(e)
+         {
+            alert(e.toString());
+            return;
+         }
+      }
 
    return(
-        <div id="homeDiv">
+      <body>
+         <div id="homeDiv">
             <div id="userName" className="user">Hi {firstName} {lastName}</div>
             <img src={logo} alt="logo" className="logohome"></img>
-
             <form>
             <div id="search" className="Search">
                 <input type="text" id="search" placeholder="Search" className="searchBox"></input>
-                <button type="submit" id="searchBut" class="searchButton" onClick={doSearch}>
+                <button type="button" id="searchBut" class="searchButton" onClick={doSearch}>
                     <img src={glass} alt="glass icon" width="40" className="glassimg"></img></button>
             </div>
             </form>
-
-
-        </div>
+         </div>
+      </body>
    );
 };
 

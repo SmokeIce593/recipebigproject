@@ -11,6 +11,8 @@ import SettingScreen from './screens/SettingScreen';
 import RecoverScreen from './screens/RecoverScreen';
 import VerifyScreen from './screens/VerifyScreen';
 import ResetScreen from './screens/ResetScreen';
+import SingleScreen from './screens/SingleScreen';
+import SingleAdminScreen from './screens/SingleOwnerScreen';
 
 export default class App extends React.Component {
   render() {
@@ -46,6 +48,40 @@ const AppNavigator = createStackNavigator({
   },
   Search: {
     screen: SearchScreen,
+    navigationOptions: {
+      title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
+  Single: {
+    screen: SingleScreen,
+    navigationOptions: {
+      title: '',
+      gestureEnabled: false,
+      animationEnabled: false,
+      headerShown: true,  // Will hide header for HomePage
+      headerLeft: ()=> null,
+      headerStyle: {
+        height: 100,
+        backgroundColor: '#93B7BE'
+      },
+      headerTitle: () => (
+        <Image style={{ width: 200, height: 52, }} source={require('./assets/logo.png')}/>
+      ),
+    }
+  },
+  SingleAdmin: {
+    screen: SingleAdminScreen,
     navigationOptions: {
       title: '',
       gestureEnabled: false,
@@ -138,7 +174,7 @@ const AppNavigator = createStackNavigator({
     }
   },
 },{
-  initialRouteName: "Recipe"
+  initialRouteName: "Single"
 });
 const AppContainer = createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
