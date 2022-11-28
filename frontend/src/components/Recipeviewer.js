@@ -26,9 +26,9 @@ function Recipeviewer()
    var recipeName = recipeall["recipe"];
    var description = recipeall["text_recipe"];
    
-   var recipe = "wow this sentence is going to be really long I am typing it for a test.. hey this is still going? okay imma stop typing now";
+   var recipe;
    var ingredients;
-   var tags = "this recipe has no gluten!";
+   var tags;
    let loadFlag = 0;
 
    window.addEventListener('load', async function loadRecipe(){
@@ -37,7 +37,7 @@ function Recipeviewer()
         document.getElementById("ingredientslist").innerText = ingredient[0]["ingredient"];
         document.getElementById("directionslist").innerText = direction[0]["directions"];
         document.getElementById("tagslist").innerText = tag[0]["tagname"];
-    }
+}
     loadFlag++;
 });
 
@@ -46,16 +46,18 @@ function Recipeviewer()
             <div id="recipeName" className="recipeHeader">{recipeName}</div>
             <div id="line"><hr /></div>
             <div id="description" className="description">{description}</div>
+            <div id="line"><hr /></div>
             <div id="columns" className="col-container">
-                <div id="leftcol" className="col-child">
+                <div id="leftcol" className="col-child1">
                     <div id="text1" className="smallHeader">Directions</div> 
                     <div id="directionslist" className="recipelist">{recipe}</div>
                 </div>
-                <div id="rightcol" className="col-child">
+                <div id="rightcol" className="col-child2">
                     <div id="text1" className="smallHeader">Ingredients</div> 
                     <div id="ingredientslist" defaultValue={ingredients} className="recipelist"></div>
                 </div>
             </div>
+            <br></br>
             <div id="line"><hr /></div>
             <div id="text3" className="smallHeader">Tags</div> 
             <div id="tagslist" className="tags">{tags}</div>
