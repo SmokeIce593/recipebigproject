@@ -22,6 +22,7 @@ export default class RecipeScreen extends Component {
     var id= this.props.navigation.getParam('id', -1);
     this.getMyRecipes(id);
   }
+
   componentDidMount() {
     LogBox.ignoreLogs(['Each child in a list should have a unique "key" prop.']);
   }
