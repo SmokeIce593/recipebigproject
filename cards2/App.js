@@ -13,7 +13,7 @@ import VerifyScreen from './screens/VerifyScreen';
 import ResetScreen from './screens/ResetScreen';
 import SingleScreen from './screens/SingleScreen';
 import SingleAdminScreen from './screens/SingleOwnerScreen';
-import EditScreen from './screens/EditScreen'
+import EditScreen from './screens/EditScreen';
 
 export default class App extends React.Component {
   render() {
