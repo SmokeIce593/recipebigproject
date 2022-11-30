@@ -1092,41 +1092,7 @@ app.post('/api/deleterecipe', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
-app.post('/api/editrecipe', async (req, res, next) => 
-{
-
-  var error = '';
-  const { recipeID, recipename, recipetext, fkuser, privaterecipe, tags, ingredients, directions } = req.body;
-  var deleterecipe = await deleterecipe(recipeID);
-
-  const connectionString = process.env.DATABASE_URL;
-
-  const client = new Client({
-    connectionString: connectionString,
-    ssl: { rejectUnauthorized: false }
-  });
-
-  try{
-    await client.connect();
-    const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
-    const value = [recipeID, recipename, recipetext, fkuser, privaterecipe];
-    const now = await client.query(text, value);
-    await client.end();
-  }
-  catch{
-    error = "Server related issues, please try again.";
-  }
-
-  saveingredients(ingredients, newid);
-  savedirections(directions, newid);
-  savetags(newid, tags, "orange", "test");
-
-  var ret = {error: error};
-  res.status(200).json(ret);
-
-});
-
-async function deleterecipe(id){
+async function deleterecipe1(id){
   var error = '';
   var rn = '';
   const connectionString = process.env.DATABASE_URL;
@@ -1158,6 +1124,42 @@ async function deleterecipe(id){
   var ret = { rid:id, error:error };
   return ret;
 }
+
+app.post('/api/editrecipe', async (req, res, next) => 
+{
+
+  var error = '';
+  const { recipeID, recipename, recipetext, fkuser, privaterecipe, tags, ingredients, directions } = req.body;
+  var deleterecipe = await deleterecipe1(recipeID);
+
+  const connectionString = process.env.DATABASE_URL;
+
+  const client = new Client({
+    connectionString: connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try{
+    await client.connect();
+    const text = 'Insert into recipes (id, recipe, text_recipe, userid, privatetable) values ($1, $2, $3, $4, $5)';
+    const value = [recipeID, recipename, recipetext, fkuser, privaterecipe];
+    const now = await client.query(text, value);
+    await client.end();
+  }
+  catch{
+    error = "Server related issues, please try again.";
+  }
+
+  saveingredients(ingredients, recipeID);
+  savedirections(directions, recipeID);
+  savetags(recipeID, tags, "orange", "test");
+
+  var ret = {error: error};
+  res.status(200).json(ret);
+
+});
+
+
 
 
 

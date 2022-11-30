@@ -105,7 +105,7 @@ function Recipes()
          try
          {
             console.log("trying to connect to editrecipe api");
-            const response = await fetch(buildPath('api/editrecipe'),
+            const response = await fetch(buildPath('api/getsinglerecipe'),
                   {method:'POST',body:js,headers:{'Content-Type': 'application/json'}})
             var res = JSON.parse(await response.text());
             console.log(res);
