@@ -315,12 +315,9 @@ export default class Createscreen extends Component {
   {
     try
     {
-        
-      var obj = {recipeID: userInfo.myRecipe,recipename:this.state.name, recipetext:this.state.description,
-                fkuser:userInfo.id, privaterecipe:this.state.private,
-                tags:this.state.tagsBullets, ingredients: this.state.ingredientsBullets,
-                directions: this.state.directionsBullets};
-    
+      var recipeID= this.props.navigation.getParam('myRecipe', -1);
+      var obj = { recipeID: recipeID, recipename:this.state.name, recipetext:this.state.description, fkuser:userInfo.id, privaterecipe:this.state.private, tags:this.state.tagsBullets, ingredients: this.state.ingredientsBullets, directions: this.state.directionsBullets };
+      console.log(recipeID);
 
       var js = JSON.stringify(obj);
 
