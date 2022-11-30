@@ -316,8 +316,9 @@ export default class Createscreen extends Component {
     try
     {
       
-      var obj = { recipeID: userInfo.recipeID, recipename:this.state.name, recipetext:this.state.description, fkuser:userInfo.id, privaterecipe:this.state.private, tags:this.state.tagsBullets, ingredients: this.state.ingredientsBullets, directions: this.state.directionsBullets };
-      console.log(userInfo.recipeID);
+      var obj = { recipeID: userInfo.myRecipe, recipename:this.state.name, recipetext:this.state.description, fkuser:userInfo.id, 
+        privaterecipe:this.state.private, tags:this.state.tags, ingredients: this.state.ingredients, directions: this.state.directions };
+      console.log(obj.ingredients);
 
       var js = JSON.stringify(obj);
 
@@ -332,18 +333,19 @@ export default class Createscreen extends Component {
       }
       else
       {
-        global.tags = [];
-        global.ingredients = [];
-        global.directions = [];
-        global.ingredientsBullets = [];
-        global.directionsBullets = [];
-        global.tagsBullets = [];
         this.setState({
           name: '',
           description: '',
           private: 'false',
           message: '',
+          ingredients: [],
+          tags: [],
+          directions: [],
+          ingredientsBullets: [],
+          directionsBullets: [],
+          tagsBullets: [],
           refresh: !this.state.refresh,
+          
         })
         this.props.navigation.navigate('Recipe', userInfo);
       }

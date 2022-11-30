@@ -189,11 +189,7 @@ export default class Createscreen extends Component {
                         </View>
                         <Text></Text> 
                         <View style={styles.container3}>
-                          <Pressable style={styles.loginbuttonfield} onPress={() => this.handleEditClick(userInfo)}>
-                            <View style={{alignItems: 'center'}}>
-                              <Text style={styles.buttontext}>Edit</Text>
-                            </View>
-                          </Pressable>
+                          
                           <Pressable style={styles.loginbuttonfield} onPress={() => this.handleClickDelete(userInfo)}>
                             <View style={{alignItems: 'center'}}>
                               <Text style={styles.buttontext}>Delete</Text>
