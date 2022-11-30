@@ -91,7 +91,7 @@ function Recipes()
       }
    };
 
-   function goEdit(recipeID)
+   /*function goEdit(recipeID)
    {
       console.log("entered goEdit");
       
@@ -128,7 +128,7 @@ function Recipes()
             return;
          }  
       }  
-   };
+   };*/
 
    async function getMyRecipes()
    {
@@ -188,11 +188,11 @@ function Recipes()
 						recipeDescription.className = "recipeDescription";
 					/*let recipeTags = document.createElement("div");
 						recipeTags.className = "recipeTags";*/
-					let editBTN = this.document.createElement("button");
+					/*let editBTN = this.document.createElement("button");
 						editBTN.type = "button";
 						editBTN.className = "editButton";
-						editBTN.innerHTML = "Edit";
-						editBTN.onclick = goEdit(recipeID);
+						editBTN.innerHTML = "Edit";*/
+						//editBTN.onclick = goEdit(recipeID);
 					let deleteBTN = this.document.createElement("button");
 						deleteBTN.type = "button";
 						deleteBTN.className = "deleteButton";
@@ -208,9 +208,8 @@ function Recipes()
 					//recipeTags.innerHTML = "Tags: " + tags;
 					//append all created items into list
 					mainDiv.appendChild(listItem);
-					//listItem.appendChild(deleteBTN);
 					listItem.appendChild(recipeTitle);
-               listItem.appendChild(editBTN);
+               //listItem.appendChild(editBTN);
                listItem.appendChild(deleteBTN);
 					listItem.appendChild(recipeDescription);
 					//listItem.appendChild(recipeTags);
