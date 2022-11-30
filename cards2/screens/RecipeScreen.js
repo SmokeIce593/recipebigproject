@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
 import { ImageBackground, ActivityIndicator, Button, View, Text, TextInput, Image } from 'react-native';
-import { StyleSheet, Pressable, KeyboardAvoidingView, ScrollView, FlatList, ListView } from 'react-native';
+import { StyleSheet, Pressable, KeyboardAvoidingView, LogBox, ScrollView, FlatList, ListView } from 'react-native';
 import { createRef } from 'react';
 import { Picker } from '@react-native-picker/picker';
 
@@ -22,7 +22,10 @@ export default class RecipeScreen extends Component {
     var id= this.props.navigation.getParam('id', -1);
     this.getMyRecipes(id);
   }
-
+  componentDidMount() {
+    LogBox.ignoreLogs(['Each child in a list should have a unique "key" prop.']);
+  }
+  
 
   render(){
 
